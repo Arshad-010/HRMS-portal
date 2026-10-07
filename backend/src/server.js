@@ -1,11 +1,17 @@
 import app from './app.js';
 import { connectDB } from './config/db.js';
+import { seedInitialAdmin } from './services/seedService.js';
 import { logger } from './utils/logger.js';
 
 const PORT = process.env.PORT || 5001;
 
-// Initialize database connection
-connectDB();
+// Initialize database connection and initial admin bootstrap
+const startServer = async () => {
+  await connectDB();
+  await seedInitialAdmin();
+};
+
+startServer();
 
 // Start HTTP server
 const server = app.listen(PORT, () => {
