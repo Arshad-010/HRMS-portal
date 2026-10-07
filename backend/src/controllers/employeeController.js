@@ -2,6 +2,7 @@ import Employee from '../models/Employee.js';
 import User from '../models/User.js';
 import Department from '../models/Department.js';
 import { getNextEmployeeCode } from '../models/Counter.js';
+import { logActivity } from '../services/activityService.js';
 
 /**
  * Get paginated employees list with search and filters
@@ -228,6 +229,19 @@ export const createEmployee = async (req, res, next) => {
     await user.save();
     await employee.save();
 
+    logActivity({
+      actor: req.user._id,
+      action: 'EMPLOYEE_CREATED',
+      entityType: 'EMPLOYEE',
+      entityId: employee._id,
+      description: `Employee ${employee.firstName} ${employee.lastName} (${employee.employeeCode}) was created`,
+      metadata: {
+        employeeCode: employee.employeeCode,
+        designation: employee.designation,
+        email: user.email,
+      },
+    });
+
     // Populate department info for response
     await employee.populate('departmentId', 'name code');
 
@@ -330,6 +344,20 @@ export const updateEmployee = async (req, res, next) => {
     }
 
     await employee.save();
+
+    logActivity({
+      actor: req.user._id,
+      action: 'EMPLOYEE_UPDATED',
+      entityType: 'EMPLOYEE',
+      entityId: employee._id,
+      description: `Employee ${employee.firstName} ${employee.lastName} (${employee.employeeCode}) was updated`,
+      metadata: {
+        employeeCode: employee.employeeCode,
+        designation: employee.designation,
+        status: employee.status,
+      },
+    });
+
     await employee.populate('departmentId', 'name code');
     await employee.populate('reportingManagerId', 'firstName lastName employeeCode');
 
@@ -363,6 +391,17 @@ export const deleteEmployee = async (req, res, next) => {
     await employee.save();
 
     await User.findByIdAndUpdate(employee.userId, { isActive: false });
+
+    logActivity({
+      actor: req.user._id,
+      action: 'EMPLOYEE_DEACTIVATED',
+      entityType: 'EMPLOYEE',
+      entityId: employee._id,
+      description: `Employee ${employee.firstName} ${employee.lastName} (${employee.employeeCode}) was deactivated`,
+      metadata: {
+        employeeCode: employee.employeeCode,
+      },
+    });
 
     res.status(200).json({
       success: true,

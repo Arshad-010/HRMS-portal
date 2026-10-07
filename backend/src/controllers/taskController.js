@@ -1,6 +1,11 @@
 import Task from '../models/Task.js';
 import Employee from '../models/Employee.js';
 import Department from '../models/Department.js';
+import {
+  notifyTaskAssigned,
+  notifyTaskStatusChanged,
+} from '../services/notificationService.js';
+import { logActivity } from '../services/activityService.js';
 
 /**
  * Helper to verify if a manager has authority over an employee
@@ -157,6 +162,22 @@ export const createTask = async (req, res, next) => {
     });
 
     await task.save();
+
+    // Trigger Notification & Activity Log
+    await notifyTaskAssigned(task, req.user.role);
+    await logActivity({
+      actor: req.user._id,
+      action: 'TASK_CREATED',
+      entityType: 'TASK',
+      entityId: task._id,
+      description: `Task "${task.title}" was created and assigned to ${employee.firstName} ${employee.lastName}`,
+      metadata: {
+        title: task.title,
+        priority: task.priority,
+        dueDate: task.dueDate,
+        department: deptDoc.name,
+      },
+    });
 
     await task.populate([
       {
@@ -668,6 +689,16 @@ export const deleteTask = async (req, res, next) => {
 
     await task.deleteOne();
 
+    // Log Activity
+    logActivity({
+      actor: req.user._id,
+      action: 'TASK_DELETED',
+      entityType: 'TASK',
+      entityId: task._id,
+      description: `Task "${task.title}" was deleted`,
+      metadata: { title: task.title },
+    });
+
     res.status(200).json({
       success: true,
       message: 'Task deleted successfully',
@@ -734,6 +765,17 @@ export const updateTaskStatus = async (req, res, next) => {
     }
 
     await task.save();
+
+    // Trigger Notification & Activity Log
+    await notifyTaskStatusChanged(task, req.user.role, status);
+    await logActivity({
+      actor: req.user._id,
+      action: status === 'COMPLETED' ? 'TASK_COMPLETED' : 'TASK_STATUS_CHANGED',
+      entityType: 'TASK',
+      entityId: task._id,
+      description: `Task "${task.title}" status changed to ${status}`,
+      metadata: { title: task.title, status },
+    });
 
     await task.populate([
       {
@@ -829,6 +871,21 @@ export const assignTask = async (req, res, next) => {
     task.assignedTo = employee._id;
     task.department = deptDoc._id;
     await task.save();
+
+    // Trigger Notification & Activity Log
+    await notifyTaskAssigned(task, req.user.role);
+    await logActivity({
+      actor: req.user._id,
+      action: 'TASK_ASSIGNED',
+      entityType: 'TASK',
+      entityId: task._id,
+      description: `Task "${task.title}" reassigned to ${employee.firstName} ${employee.lastName}`,
+      metadata: {
+        title: task.title,
+        assignedTo: employee._id,
+        department: deptDoc.name,
+      },
+    });
 
     await task.populate([
       {

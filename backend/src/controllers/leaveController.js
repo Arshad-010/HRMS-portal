@@ -4,6 +4,13 @@ import {
   syncApprovedLeaveToAttendance,
   revertApprovedLeaveFromAttendance,
 } from '../services/leaveAttendanceService.js';
+import {
+  notifyLeaveApplied,
+  notifyLeaveApproved,
+  notifyLeaveRejected,
+  notifyLeaveCancelled,
+} from '../services/notificationService.js';
+import { logActivity } from '../services/activityService.js';
 
 /**
  * Maps leaveType enum string to Employee.leaveBalances key
@@ -147,6 +154,22 @@ export const applyLeave = async (req, res, next) => {
     });
 
     await leave.save();
+
+    // Trigger Notification and Activity Logging
+    await notifyLeaveApplied(leave, employee);
+    await logActivity({
+      actor: req.user._id,
+      action: 'LEAVE_APPLIED',
+      entityType: 'LEAVE',
+      entityId: leave._id,
+      description: `${employee.firstName} ${employee.lastName} applied for ${leave.numberOfDays} day(s) of ${leave.leaveType} leave`,
+      metadata: {
+        leaveType: leave.leaveType,
+        numberOfDays: leave.numberOfDays,
+        startDate: leave.startDate,
+        endDate: leave.endDate,
+      },
+    });
 
     await leave.populate({
       path: 'employee',
@@ -580,6 +603,21 @@ export const approveLeave = async (req, res, next) => {
 
     await leave.save();
 
+    // Trigger Notification & Activity Log
+    await notifyLeaveApproved(leave, req.user.role);
+    await logActivity({
+      actor: req.user._id,
+      action: 'LEAVE_APPROVED',
+      entityType: 'LEAVE',
+      entityId: leave._id,
+      description: `Leave request for ${leave.numberOfDays} day(s) was approved`,
+      metadata: {
+        leaveType: leave.leaveType,
+        numberOfDays: leave.numberOfDays,
+        reviewerComment: leave.reviewerComment,
+      },
+    });
+
     // Sync to Attendance records (mark as ON_LEAVE)
     await syncApprovedLeaveToAttendance(leave);
 
@@ -670,6 +708,21 @@ export const rejectLeave = async (req, res, next) => {
 
     await leave.save();
 
+    // Trigger Notification & Activity Log
+    await notifyLeaveRejected(leave, req.user.role, leave.reviewerComment);
+    await logActivity({
+      actor: req.user._id,
+      action: 'LEAVE_REJECTED',
+      entityType: 'LEAVE',
+      entityId: leave._id,
+      description: `Leave request for ${leave.numberOfDays} day(s) was rejected`,
+      metadata: {
+        leaveType: leave.leaveType,
+        numberOfDays: leave.numberOfDays,
+        reviewerComment: leave.reviewerComment,
+      },
+    });
+
     res.status(200).json({
       success: true,
       message: 'Leave request rejected',
@@ -739,6 +792,20 @@ export const cancelLeave = async (req, res, next) => {
 
     leave.status = 'CANCELLED';
     await leave.save();
+
+    // Trigger Notification & Activity Log
+    await notifyLeaveCancelled(leave, 'Employee');
+    await logActivity({
+      actor: req.user._id,
+      action: 'LEAVE_CANCELLED',
+      entityType: 'LEAVE',
+      entityId: leave._id,
+      description: `Leave request for ${leave.numberOfDays} day(s) was cancelled`,
+      metadata: {
+        leaveType: leave.leaveType,
+        numberOfDays: leave.numberOfDays,
+      },
+    });
 
     res.status(200).json({
       success: true,

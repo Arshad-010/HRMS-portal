@@ -1,5 +1,6 @@
 import Department from '../models/Department.js';
 import Employee from '../models/Employee.js';
+import { logActivity } from '../services/activityService.js';
 
 /**
  * Get all departments with employee counts
@@ -141,6 +142,15 @@ export const createDepartment = async (req, res, next) => {
       isActive: true,
     });
 
+    logActivity({
+      actor: req.user._id,
+      action: 'DEPARTMENT_CREATED',
+      entityType: 'DEPARTMENT',
+      entityId: department._id,
+      description: `Department "${department.name}" (${department.code}) was created`,
+      metadata: { name: department.name, code: department.code },
+    });
+
     res.status(201).json({
       success: true,
       message: 'Department created successfully',
@@ -188,6 +198,15 @@ export const updateDepartment = async (req, res, next) => {
 
     await department.save();
 
+    logActivity({
+      actor: req.user._id,
+      action: 'DEPARTMENT_UPDATED',
+      entityType: 'DEPARTMENT',
+      entityId: department._id,
+      description: `Department "${department.name}" (${department.code}) was updated`,
+      metadata: { name: department.name, code: department.code },
+    });
+
     res.status(200).json({
       success: true,
       message: 'Department updated successfully',
@@ -219,19 +238,25 @@ export const deleteDepartment = async (req, res, next) => {
       status: { $ne: 'TERMINATED' },
     });
 
-    if (activeMemberCount > 0) {
-      department.isActive = false;
-      await department.save();
+    department.isActive = false;
+    await department.save();
 
+    logActivity({
+      actor: req.user._id,
+      action: 'DEPARTMENT_DEACTIVATED',
+      entityType: 'DEPARTMENT',
+      entityId: department._id,
+      description: `Department "${department.name}" (${department.code}) was deactivated`,
+      metadata: { name: department.name, code: department.code },
+    });
+
+    if (activeMemberCount > 0) {
       return res.status(200).json({
         success: true,
         message: `Department has been deactivated rather than deleted because ${activeMemberCount} active employee(s) belong to it.`,
         data: department,
       });
     }
-
-    department.isActive = false;
-    await department.save();
 
     res.status(200).json({
       success: true,
