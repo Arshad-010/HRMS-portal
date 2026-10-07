@@ -11,6 +11,7 @@ import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
 import Notifications from '../pages/Notifications';
 import Activity from '../pages/Activity';
+import Profile from '../pages/Profile';
 import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -115,6 +116,15 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Activity />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
           </ProtectedRoute>
         }
       />

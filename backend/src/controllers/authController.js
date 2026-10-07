@@ -163,3 +163,64 @@ export const changePassword = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Upload profile picture (Base64 string)
+ * @route   POST /api/auth/profile-picture
+ * @access  Private (All Roles)
+ */
+export const uploadProfilePicture = async (req, res, next) => {
+  try {
+    const { image } = req.body; // Expecting base64 string
+
+    if (!image) {
+      return res.status(400).json({
+        success: false,
+        message: 'No image data provided',
+      });
+    }
+
+    if (!req.user.employeeId) {
+      return res.status(400).json({
+        success: false,
+        message: 'No associated employee profile found to update image',
+      });
+    }
+
+    // Basic validation to ensure it's a base64 string
+    if (!image.startsWith('data:image/')) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid image format. Must be a base64 data URI starting with data:image/',
+      });
+    }
+
+    // Check size roughly (5MB max) - Base64 string length * (3/4) = bytes
+    const sizeInBytes = image.length * (3 / 4);
+    if (sizeInBytes > 5 * 1024 * 1024) {
+      return res.status(400).json({
+        success: false,
+        message: 'Image size exceeds 5MB limit',
+      });
+    }
+
+    const employee = await Employee.findById(req.user.employeeId);
+    if (!employee) {
+      return res.status(404).json({
+        success: false,
+        message: 'Employee profile not found',
+      });
+    }
+
+    employee.profilePicture = image;
+    await employee.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile picture updated successfully',
+      profilePicture: employee.profilePicture,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
