@@ -148,6 +148,13 @@ export const createEmployee = async (req, res, next) => {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(normalizedEmail)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address format',
+      });
+    }
 
     // Prevent duplicate email records
     const existingUser = await User.findOne({ email: normalizedEmail });
@@ -165,6 +172,17 @@ export const createEmployee = async (req, res, next) => {
         success: false,
         message: 'The selected department does not exist',
       });
+    }
+
+    // Validate reporting manager if specified
+    if (reportingManagerId) {
+      const managerExists = await Employee.findById(reportingManagerId);
+      if (!managerExists) {
+        return res.status(400).json({
+          success: false,
+          message: 'The selected reporting manager does not exist',
+        });
+      }
     }
 
     // Safely generate next sequential employee code
