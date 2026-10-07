@@ -3,6 +3,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Login from '../pages/Login';
 import DashboardOverview from '../pages/DashboardOverview';
+import Attendance from '../pages/Attendance';
 import Departments from '../pages/Departments';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
@@ -38,6 +39,15 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <DashboardOverview />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/attendance"
+        element={
+          <ProtectedRoute>
+            <Attendance />
           </ProtectedRoute>
         }
       />

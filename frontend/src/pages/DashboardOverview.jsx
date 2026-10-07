@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   User, 
@@ -11,7 +12,8 @@ import {
   Clock, 
   Sparkles,
   Lock,
-  X
+  X,
+  ArrowRight
 } from 'lucide-react';
 
 export const DashboardOverview = () => {
@@ -68,6 +70,13 @@ export const DashboardOverview = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              to="/attendance"
+              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer no-underline"
+            >
+              <Clock className="w-4 h-4" />
+              Clock In / Attendance
+            </Link>
             <button
               onClick={() => setShowPasswordModal(true)}
               className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
@@ -186,15 +195,23 @@ export const DashboardOverview = () => {
       </div>
 
       {/* Architecture Readiness Card */}
-      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400">
-        <h4 className="text-sm font-semibold text-white mb-2 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-indigo-400" />
-          Phase 2 Foundation Ready
-        </h4>
-        <p>
-          Authentication state, route protection, role management, and core schema relationships are fully operational.
-          Next phases will implement full Employee/Department management (Phase 3), Attendance &amp; Leave workflows (Phase 4), and Analytical Dashboards (Phase 5).
-        </p>
+      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h4 className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
+            <Clock className="w-4 h-4 text-indigo-400" />
+            Phase 4 Attendance &amp; Workforce Tracking Live
+          </h4>
+          <p className="m-0">
+            Real-time digital punch-clock, automatic work-hour calculation, RBAC workforce logs, and status filtering are active.
+          </p>
+        </div>
+        <Link
+          to="/attendance"
+          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition-colors shrink-0 no-underline cursor-pointer"
+        >
+          <span>Open Punch Clock</span>
+          <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />
+        </Link>
       </div>
 
       {/* Change Password Modal */}

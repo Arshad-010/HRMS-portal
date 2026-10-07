@@ -9,6 +9,7 @@ import {
   LayoutDashboard,
   Users,
   Building2,
+  Clock,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -30,6 +31,7 @@ export const Navbar = () => {
 
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
+    { name: 'Attendance', path: '/attendance', icon: Clock },
     { name: 'Employees', path: '/employees', icon: Users },
     { name: 'Departments', path: '/departments', icon: Building2 },
     { name: 'System Health', path: '/health', icon: Activity },

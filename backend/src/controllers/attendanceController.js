@@ -164,11 +164,27 @@ export const getMyAttendance = async (req, res, next) => {
       date: today,
     });
 
+    const presentCount = records.filter((r) => r.status === 'PRESENT').length;
+    const halfDayCount = records.filter((r) => r.status === 'HALF_DAY').length;
+    const onLeaveCount = records.filter((r) => r.status === 'ON_LEAVE').length;
+    const absentCount = records.filter((r) => r.status === 'ABSENT').length;
+    const totalHours = records.reduce((acc, r) => acc + (r.workHours || 0), 0);
+    const avgHours = records.length > 0 ? parseFloat((totalHours / (presentCount + halfDayCount || 1)).toFixed(2)) : 0;
+
     res.status(200).json({
       success: true,
       data: {
         todayRecord,
         records,
+        attendance: records,
+        stats: {
+          presentDays: presentCount,
+          halfDays: halfDayCount,
+          onLeaveDays: onLeaveCount,
+          absentDays: absentCount,
+          totalWorkHours: parseFloat(totalHours.toFixed(2)),
+          avgWorkHours: avgHours,
+        },
       },
     });
   } catch (error) {
@@ -288,23 +304,32 @@ export const getAttendance = async (req, res, next) => {
     // 3. Department filter
     if (department) {
       const deptEmployees = await Employee.find({ departmentId: department }).select('_id');
-      const deptEmpIds = deptEmployees.map((e) => e._id);
-      query.employee = query.employee ? { $in: deptEmpIds.filter((id) => query.employee === id.toString()) } : { $in: deptEmpIds };
+      const deptEmpIds = deptEmployees.map((e) => e._id.toString());
+
+      if (!query.employee) {
+        query.employee = { $in: deptEmpIds };
+      } else if (query.employee.$in) {
+        const intersection = query.employee.$in.filter((id) => deptEmpIds.includes(id.toString()));
+        query.employee = { $in: intersection };
+      } else {
+        if (!deptEmpIds.includes(query.employee.toString())) {
+          query.employee = { $in: [] };
+        }
+      }
     }
 
     // 4. Date filtering
     if (date) {
       query.date = normalizeToMidnightUTC(new Date(date));
-    } else if (startDate && endDate) {
-      query.date = {
-        $gte: normalizeToMidnightUTC(new Date(startDate)),
-        $lte: normalizeToMidnightUTC(new Date(endDate)),
-      };
+    } else if (startDate || endDate) {
+      query.date = {};
+      if (startDate) query.date.$gte = normalizeToMidnightUTC(new Date(startDate));
+      if (endDate) query.date.$lte = normalizeToMidnightUTC(new Date(endDate));
     }
 
-    // 5. Status filter
+    // 5. Status filter (supports exact enum or prefix like PRE)
     if (status) {
-      query.status = status;
+      query.status = new RegExp(`^${status}`, 'i');
     }
 
     const total = await Attendance.countDocuments(query);
@@ -383,16 +408,17 @@ export const getAttendanceById = async (req, res, next) => {
  */
 export const createAttendance = async (req, res, next) => {
   try {
-    const { employeeId, date, checkIn, checkOut, status = 'PRESENT', remarks } = req.body;
+    const targetEmployeeId = req.body.employeeId || req.body.employee;
+    const { date, checkIn, checkOut, status = 'PRESENT', remarks } = req.body;
 
-    if (!employeeId || !date) {
+    if (!targetEmployeeId || !date) {
       return res.status(400).json({
         success: false,
         message: 'Employee ID and date are required',
       });
     }
 
-    const employee = await Employee.findById(employeeId);
+    const employee = await Employee.findById(targetEmployeeId);
     if (!employee) {
       return res.status(404).json({
         success: false,

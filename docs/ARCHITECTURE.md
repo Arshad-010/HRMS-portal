@@ -211,21 +211,20 @@ erDiagram
 
 #### 4. Attendance Model
 * **Collection**: `attendances`
-* **Purpose**: Daily work presence tracking, punch timestamps, and hours calculation.
+* **Purpose**: Daily work presence tracking, punch timestamps, and server-side work hours calculation.
 * **Fields**:
-  * `employeeId` (ObjectId, ref: `'Employee'`, required): Record owner.
-  * `date` (Date, required): Date normalized to UTC midnight.
-  * `checkInTime` (Date, optional): Check-in punch timestamp.
-  * `checkOutTime` (Date, optional): Check-out punch timestamp.
-  * `totalWorkHours` (Number, default: 0): Computed duration in hours.
-  * `status` (String, enum: `['PRESENT', 'ABSENT', 'HALF_DAY', 'LATE', 'ON_LEAVE', 'HOLIDAY']`, default: `'PRESENT'`).
-  * `workLocation` (String, enum: `['OFFICE', 'REMOTE', 'HYBRID']`, default: `'OFFICE'`).
-  * `ipAddress` (String, optional): Client IP address for audit.
-  * `notes` (String, optional): Explanatory note or punch exception.
+  * `employee` (ObjectId, ref: `'Employee'`, required): Record owner.
+  * `date` (Date, required): Date normalized to UTC midnight (e.g. `YYYY-MM-DDT00:00:00.000Z`).
+  * `checkIn` (Date, optional): Check-in punch timestamp.
+  * `checkOut` (Date, optional): Check-out punch timestamp.
+  * `workHours` (Number, default: 0): Server-calculated duration in hours (`(checkOut - checkIn) / 3600000`, rounded to 2 decimals).
+  * `status` (String, enum: `['PRESENT', 'ABSENT', 'HALF_DAY', 'ON_LEAVE', 'WEEKEND', 'HOLIDAY']`, default: `'PRESENT'`). Automatically flags `HALF_DAY` if duration is `< 4.5` hours.
+  * `remarks` (String, optional, trim): Explanatory note or punch exception.
   * `timestamps` (Boolean, default: `true`).
 * **Indexes**:
-  * `{ employeeId: 1, date: 1 }` (unique compound index: one attendance document per employee per day)
-  * `{ date: 1, status: 1 }`
+  * `{ employee: 1, date: 1 }` (unique compound index: strictly one attendance document per employee per day)
+  * `{ date: 1 }`
+  * `{ status: 1 }`
 
 #### 5. Leave Model
 * **Collection**: `leaves`
@@ -308,8 +307,9 @@ The application supports four hierarchical and functional roles:
 | | Create / Update Department Details | ✅ | ✅ | ❌ | ❌ |
 | | Delete Department | ✅ | ❌ | ❌ | ❌ |
 | **Attendance** | Check-in / Check-out (Self) | ✅ | ✅ | ✅ | ✅ |
-| | View Attendance History | All | All | Team Reports | Own Records |
-| | Manual Attendance Adjustment / Correction | ✅ | ✅ | ❌ | ❌ |
+| | View Attendance History | All Org | All Org | Direct Reports + Self | Own Records Only |
+| | Manual Attendance Entry / Modification | ✅ | ✅ | ✅ (Direct Reports) | ❌ |
+| | Delete Attendance Record | ✅ | ❌ | ❌ | ❌ |
 | **Leave Management** | Submit Leave Request | ✅ | ✅ | ✅ | ✅ |
 | | View Leave Balance & History | All | All | Team Reports | Own Records |
 | | Approve / Reject Leave Request | ✅ (All) | ✅ (All) | ✅ (Team Reports) | ❌ |
@@ -358,6 +358,41 @@ The application supports four hierarchical and functional roles:
 | `POST` | `/auth/login` | Authenticate user & issue JWT | Public | Anyone | `{ email, password }` | `200 OK`: `{ token, user: { id, email, role, employeeId } }` | `400 Bad Request`<br>`401 Unauthorized` |
 | `GET` | `/auth/me` | Fetch active user session | Required | All | None | `200 OK`: `{ user, employeeProfile }` | `401 Unauthorized`<br>`404 Not Found` |
 | `POST` | `/auth/register` | Initial system setup or admin creation | Required (or Public on initial bootstrap) | ADMIN, HR | `{ email, password, role, employeeCode, firstName, lastName, departmentId }` | `201 Created`: `{ user, employee }` | `400 Validation Error`<br>`409 Email/Code Exists` |
+
+#### 2. Employees (`/api/employees`)
+
+| Method | Endpoint | Purpose | Auth | Roles | Request Body | Success Response | Error Responses |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/employees` | List employees with filters & pagination | Required | All (salary hidden for non-Admin/HR) | Query: `?page=1&limit=10&search=&department=&status=` | `200 OK`: `{ data: { employees, total, pages } }` | `401 Unauthorized` |
+| `POST` | `/employees` | Create employee and linked user account | Required | ADMIN, HR | `{ firstName, lastName, email, role, departmentId, designation, ... }` | `201 Created`: `{ data: employee }` | `400 Bad Request`<br>`409 Email Exists` |
+| `GET` | `/employees/:id` | Get employee details by ID | Required | All (salary hidden for non-Admin/HR) | None | `200 OK`: `{ data: employee }` | `404 Not Found` |
+| `PUT` | `/employees/:id` | Update employee information | Required | ADMIN, HR | Updated employee fields | `200 OK`: `{ data: employee }` | `400 Bad Request`<br>`404 Not Found` |
+| `DELETE` | `/employees/:id` | Soft delete / deactivate employee | Required | ADMIN | None | `200 OK`: `{ message: 'Employee deactivated' }` | `403 Forbidden`<br>`404 Not Found` |
+
+#### 3. Departments (`/api/departments`)
+
+| Method | Endpoint | Purpose | Auth | Roles | Request Body | Success Response | Error Responses |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/departments` | List all departments with member count | Required | All | Query: `?status=ACTIVE` | `200 OK`: `{ data: [...] }` | `401 Unauthorized` |
+| `POST` | `/departments` | Create new organizational department | Required | ADMIN, HR | `{ name, code, description, managerId }` | `201 Created`: `{ data: department }` | `400 Bad Request`<br>`409 Code Exists` |
+| `GET` | `/departments/:id` | Get department details and member list | Required | All | None | `200 OK`: `{ data: department }` | `404 Not Found` |
+| `PUT` | `/departments/:id` | Update department details / manager | Required | ADMIN, HR | `{ name, description, managerId, isActive }` | `200 OK`: `{ data: department }` | `400 Bad Request`<br>`404 Not Found` |
+| `DELETE` | `/departments/:id` | Deactivate/remove department safely | Required | ADMIN | None | `200 OK`: `{ message: 'Department deactivated' }` | `400 Has Active Members`<br>`403 Forbidden` |
+
+#### 4. Attendance (`/api/attendance`)
+
+| Method | Endpoint | Purpose | Auth | Roles | Request Body / Query | Success Response | Error Responses |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `POST` | `/attendance/check-in` | Punch-in for current workday | Required | All Active Employees | `{ remarks? }` | `200 OK`: `{ message, data: attendance }` | `400 Already Checked In`<br>`400 Inactive Profile` |
+| `POST` | `/attendance/check-out` | Punch-out & calculate work hours | Required | All Active Employees | `{ remarks? }` | `200 OK`: `{ message, data: attendance }` | `400 No Active Check-In`<br>`400 Already Checked Out` |
+| `GET` | `/attendance/my` | Personal attendance history & today status | Required | All | Query: `?month=10&year=2026` | `200 OK`: `{ data: { todayRecord, records, stats } }` | `401 Unauthorized` |
+| `GET` | `/attendance/summary` | Today's headcount & attendance summary | Required | All | Query: `?date=2026-10-07&department=` | `200 OK`: `{ data: { totalEmployees, present, halfDay, ... } }` | `401 Unauthorized` |
+| `GET` | `/attendance/employee/:employeeId` | Specific employee attendance history | Required | ADMIN, HR, MANAGER | None | `200 OK`: `{ data: [...] }` | `403 Forbidden`<br>`404 Not Found` |
+| `GET` | `/attendance` | Paginated listing with multi-parameter filter | Required | All (scoped by RBAC) | Query: `?startDate=&endDate=&department=&status=&page=` | `200 OK`: `{ data: { records, total, page, pages } }` | `401 Unauthorized` |
+| `GET` | `/attendance/:id` | Get attendance entry by ID | Required | All (scoped by RBAC) | None | `200 OK`: `{ data: record }` | `403 Forbidden`<br>`404 Not Found` |
+| `POST` | `/attendance` | Manual attendance logging | Required | ADMIN, HR, MANAGER (direct reports) | `{ employeeId, date, checkIn, checkOut, status, remarks }` | `201 Created`: `{ message, data: attendance }` | `400 Bad Request`<br>`409 Duplicate Record` |
+| `PUT` | `/attendance/:id` | Update attendance entry | Required | ADMIN, HR, MANAGER (direct reports) | `{ checkIn, checkOut, status, remarks }` | `200 OK`: `{ message, data: attendance }` | `400 Bad Request`<br>`403 Forbidden` |
+| `DELETE` | `/attendance/:id` | Remove attendance entry | Required | ADMIN | None | `200 OK`: `{ message: 'Attendance record deleted' }` | `403 Forbidden`<br>`404 Not Found` |
 | `POST` | `/auth/change-password` | Update account password | Required | All | `{ currentPassword, newPassword }` | `200 OK`: `{ message: 'Password updated' }` | `400 Weak Password`<br>`401 Invalid Current` |
 
 #### 2. Employees (`/api/employees`)
@@ -455,6 +490,7 @@ gantt
 * **Phase 1 (Completed)**: Architecture scaffolding, dev server pipelines, health check diagnostic endpoint, Git configuration.
 * **Phase 2 (Completed)**: Backend authentication endpoints, JWT token generation, bcrypt hashing, User/Department/Employee models, and React auth state with protected routes.
 * **Phase 3 (Completed)**: Department & Employee management (CRUD APIs, soft deactivation, atomic sequential employee code generator EMP-100x, RBAC salary field protection, and full React frontend directory pages).
-* **Phase 4 (Next)**: Attendance punch-in/out and Leave submission/approval workflow with annual quota deductions.
-* **Phase 5**: Task delegation, notification distribution, and Recharts-powered role dashboards.
-* **Phase 6**: Security hardening, edge case validation, production build testing, and Docker/cloud deployment preparation.
+* **Phase 4 (Completed)**: Attendance Management (Mongoose Attendance model with UTC midnight normalization and compound unique index `{ employee: 1, date: 1 }`, server-calculated `workHours = checkOut - checkIn`, self-service punch-in/out endpoints, RBAC-scoped team and organization attendance listing/filtering, automated test suite, live digital punch clock, metrics summary, and React UI).
+* **Phase 5 (Next)**: Leave Management (Leave request application, approval/rejection pipeline, annual quota balance tracking).
+* **Phase 6**: Task delegation, notification distribution, and Recharts-powered role dashboards.
+* **Phase 7**: Security hardening, edge case validation, production build testing, and Docker/cloud deployment preparation.
