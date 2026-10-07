@@ -85,10 +85,12 @@ const employeeSchema = new mongoose.Schema(
     },
     // Annual leave quotas (configurable per employee / policy)
     leaveBalances: {
-      casual: { type: Number, default: 12 },
-      sick: { type: Number, default: 10 },
-      paid: { type: Number, default: 12 },
+      casual: { type: Number, default: 12, min: 0 },
+      sick: { type: Number, default: 10, min: 0 },
+      earned: { type: Number, default: 12, min: 0 },
+      paid: { type: Number, default: 12, min: 0 },
       unpaid: { type: Number, default: 0 },
+      other: { type: Number, default: 5, min: 0 },
     },
     emergencyContact: {
       name: { type: String, default: '' },

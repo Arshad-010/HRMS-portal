@@ -10,7 +10,8 @@
     "seed": "node src/scripts/seed.js",
     "test:auth": "node src/scripts/testAuth.js",
     "test:phase3": "node src/scripts/testPhase3.js",
-    "test:attendance": "node src/scripts/testAttendance.js"
+    "test:attendance": "node src/scripts/testAttendance.js",
+    "test:leave": "node src/scripts/testLeave.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
