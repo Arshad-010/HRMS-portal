@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import { 
   User, 
@@ -34,6 +35,60 @@ export const DashboardOverview = () => {
     MANAGER: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
     EMPLOYEE: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
   };
+
+  const [leaveData, setLeaveData] = useState({
+    balances: employee?.leaveBalances || { casual: 12, sick: 10, earned: 12, paid: 12 },
+    pendingCount: 0,
+    approvedCount: 0,
+    queueCount: 0,
+  });
+
+  useEffect(() => {
+    const fetchLeaves = async () => {
+      try {
+        const [myRes, balRes] = await Promise.allSettled([
+          api.get('/leaves/my'),
+          api.get('/leaves/balance'),
+        ]);
+
+        let pCount = 0;
+        let aCount = 0;
+        let b = employee?.leaveBalances || { casual: 12, sick: 10, earned: 12, paid: 12 };
+
+        if (myRes.status === 'fulfilled' && myRes.value.data?.data) {
+          const d = myRes.value.data.data;
+          pCount = d.stats?.pendingCount || 0;
+          aCount = d.stats?.approvedCount || 0;
+          if (d.balances) b = d.balances;
+        }
+
+        if (balRes.status === 'fulfilled' && balRes.value.data?.data?.balances) {
+          b = balRes.value.data.data.balances;
+        }
+
+        let qCount = 0;
+        if (role === 'ADMIN' || role === 'HR' || role === 'MANAGER') {
+          try {
+            const qRes = await api.get('/leaves?status=PENDING&limit=1');
+            qCount = qRes.data?.data?.total || 0;
+          } catch {
+            // ignore
+          }
+        }
+
+        setLeaveData({
+          balances: b,
+          pendingCount: pCount,
+          approvedCount: aCount,
+          queueCount: qCount,
+        });
+      } catch {
+        // ignore
+      }
+    };
+
+    fetchLeaves();
+  }, [role, employee]);
 
   const handlePasswordSubmit = async (e) => {
     e.preventDefault();
@@ -72,14 +127,21 @@ export const DashboardOverview = () => {
           <div className="flex items-center gap-3">
             <Link
               to="/attendance"
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer no-underline"
             >
               <Clock className="w-4 h-4" />
               Clock In / Attendance
             </Link>
+            <Link
+              to="/leaves"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer no-underline"
+            >
+              <Calendar className="w-4 h-4 text-indigo-400" />
+              Time Off / Leaves
+            </Link>
             <button
               onClick={() => setShowPasswordModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
             >
               <KeyRound className="w-4 h-4 text-indigo-400" />
               Change Password
@@ -132,32 +194,56 @@ export const DashboardOverview = () => {
           </div>
         </div>
 
-        {/* Annual Leave Quotas (Pre-configured architecture) */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Annual Leave Balances</span>
-            <span className="text-xs text-slate-500">Year 2026</span>
+        {/* Annual Leave Balances Card */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Annual Leave Balances</span>
+              <span className="text-xs text-slate-500">Year 2026</span>
+            </div>
+            <div className="grid grid-cols-3 gap-3 mt-4">
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Casual</p>
+                <p className="text-xl font-bold text-indigo-400 mt-1">{leaveData.balances?.casual ?? 12}</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+              </div>
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Sick</p>
+                <p className="text-xl font-bold text-rose-400 mt-1">{leaveData.balances?.sick ?? 10}</p>
+                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+              </div>
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Earned</p>
+                <p className="text-xl font-bold text-emerald-400 mt-1">
+                  {leaveData.balances?.earned ?? leaveData.balances?.paid ?? 12}
+                </p>
+                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+              {leaveData.pendingCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">
+                  {leaveData.pendingCount} pending request(s)
+                </span>
+              )}
+              {(role === 'ADMIN' || role === 'HR' || role === 'MANAGER') && leaveData.queueCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
+                  {leaveData.queueCount} queue request(s)
+                </span>
+              )}
+            </div>
           </div>
-          <div className="grid grid-cols-3 gap-3 mt-4">
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
-              <p className="text-[10px] uppercase font-semibold text-slate-400">Casual</p>
-              <p className="text-xl font-bold text-indigo-400 mt-1">{employee?.leaveBalances?.casual ?? 12}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
-            </div>
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
-              <p className="text-[10px] uppercase font-semibold text-slate-400">Sick</p>
-              <p className="text-xl font-bold text-emerald-400 mt-1">{employee?.leaveBalances?.sick ?? 10}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
-            </div>
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
-              <p className="text-[10px] uppercase font-semibold text-slate-400">Paid</p>
-              <p className="text-xl font-bold text-amber-400 mt-1">{employee?.leaveBalances?.paid ?? 12}</p>
-              <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
-            </div>
+
+          <div className="mt-4 pt-3 border-t border-slate-800/60">
+            <Link
+              to="/leaves"
+              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center justify-between no-underline"
+            >
+              <span>Apply or Review Leaves</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
-          <p className="text-[11px] text-slate-500 mt-4 text-center">
-            Leave submission and approval pipelines will activate in Phase 4.
-          </p>
         </div>
 
         {/* Authentication & Security Card */}
@@ -198,20 +284,22 @@ export const DashboardOverview = () => {
       <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h4 className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
-            <Clock className="w-4 h-4 text-indigo-400" />
-            Phase 4 Attendance &amp; Workforce Tracking Live
+            <Calendar className="w-4 h-4 text-indigo-400" />
+            Phase 5 Leave Management &amp; Quotas Live
           </h4>
           <p className="m-0">
-            Real-time digital punch-clock, automatic work-hour calculation, RBAC workforce logs, and status filtering are active.
+            Leave applications, atomic balance deductions, manager approval pipeline, and attendance sync are fully active.
           </p>
         </div>
-        <Link
-          to="/attendance"
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-medium border border-slate-700 transition-colors shrink-0 no-underline cursor-pointer"
-        >
-          <span>Open Punch Clock</span>
-          <ArrowRight className="w-3.5 h-3.5 text-indigo-400" />
-        </Link>
+        <div className="flex items-center gap-2">
+          <Link
+            to="/leaves"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-md shadow-indigo-600/20 transition-all shrink-0 no-underline cursor-pointer"
+          >
+            <span>Open Leave Portal</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
       </div>
 
       {/* Change Password Modal */}

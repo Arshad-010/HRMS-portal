@@ -228,22 +228,24 @@ erDiagram
 
 #### 5. Leave Model
 * **Collection**: `leaves`
-* **Purpose**: Time-off booking, quota consumption, and hierarchical approval tracking.
+* **Purpose**: Time-off booking, quota consumption, hierarchical approval tracking, and attendance integration.
 * **Fields**:
-  * `employeeId` (ObjectId, ref: `'Employee'`, required): Requesting employee.
-  * `leaveType` (String, enum: `['CASUAL', 'SICK', 'PAID', 'UNPAID', 'MATERNITY', 'PATERNITY']`, required).
-  * `startDate` (Date, required): First day of requested leave.
-  * `endDate` (Date, required): Final day of requested leave.
-  * `totalDays` (Number, required): Number of calendar/business work days.
-  * `reason` (String, required, trim): Explanation for request.
+  * `employee` (ObjectId, ref: `'Employee'`, required): Requesting employee.
+  * `leaveType` (String, enum: `['CASUAL', 'SICK', 'EARNED', 'UNPAID', 'OTHER']`, required).
+  * `startDate` (Date, required): First day of requested leave normalized to UTC midnight.
+  * `endDate` (Date, required): Final day of requested leave normalized to UTC midnight.
+  * `numberOfDays` (Number, required, computed server-side): Inclusive working/calendar duration in days.
+  * `reason` (String, required, trim, maxlength 500): Explanation for time-off request.
   * `status` (String, enum: `['PENDING', 'APPROVED', 'REJECTED', 'CANCELLED']`, default: `'PENDING'`).
-  * `reviewedBy` (ObjectId, ref: `'Employee'`, optional): Reviewing Manager or HR.
-  * `reviewNote` (String, optional): Feedback or reason for rejection.
+  * `appliedAt` (Date, default: `Date.now`).
   * `reviewedAt` (Date, optional): Review decision timestamp.
+  * `reviewedBy` (ObjectId, ref: `'Employee'`, optional): Reviewing Manager, HR, or Admin.
+  * `reviewerComment` (String, optional, trim, maxlength 500): Reviewer notes or rejection justification.
   * `timestamps` (Boolean, default: `true`).
 * **Indexes**:
-  * `{ employeeId: 1, status: 1 }`
+  * `{ employee: 1, status: 1 }`
   * `{ startDate: 1, endDate: 1 }`
+  * `{ employee: 1, startDate: 1, endDate: 1 }`
   * `{ status: 1 }`
 
 #### 6. Task Model
@@ -427,13 +429,19 @@ The application supports four hierarchical and functional roles:
 
 #### 5. Leave (`/api/leaves`)
 
-| Method | Endpoint | Purpose | Auth | Roles | Request Body | Success Response | Error Responses |
+| Method | Endpoint | Purpose | Auth | Roles | Request Body / Query | Success Response | Error Responses |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/leaves` | Apply for time off | Required | All | `{ leaveType, startDate, endDate, reason }` | `201 Created`: `{ leave }` | `400 Invalid Dates`<br>`400 Overlapping Leave` |
-| `GET` | `/leaves/my-leaves` | View personal leave requests & balance | Required | All | Query: `?year=2026` | `200 OK`: `{ leaves: [...], balance }` | `401 Unauthorized` |
-| `GET` | `/leaves` | View team or company leave requests | Required | ADMIN, HR, MANAGER | Query: `?status=PENDING&department=` | `200 OK`: `{ leaves: [...] }` | `403 Forbidden` |
-| `PATCH` | `/leaves/:id/status` | Approve or reject a leave request | Required | ADMIN, HR, MANAGER | `{ status: 'APPROVED' | 'REJECTED', reviewNote }` | `200 OK`: `{ leave }` | `400 Already Processed`<br>`403 Not Authorized` |
-| `DELETE` | `/leaves/:id` | Cancel a pending leave request | Required | All (owner) | None | `200 OK`: `{ message: 'Leave cancelled' }` | `400 Cannot Cancel Non-Pending` |
+| `POST` | `/leaves` | Apply for time-off | Required | All Active Employees | `{ leaveType, startDate, endDate, reason }` | `201 Created`: `{ message, data: leave }` | `400 Insufficient Balance`<br>`400 Overlapping Leave`<br>`400 Inactive Employee` |
+| `GET` | `/leaves/my` | View personal leave requests & stats | Required | All | Query: `?status=&leaveType=&year=&page=&limit=` | `200 OK`: `{ data: { leaves, stats, balances } }` | `401 Unauthorized` |
+| `GET` | `/leaves/balance` | View logged-in user leave quotas | Required | All | None | `200 OK`: `{ data: { balances, used } }` | `401 Unauthorized` |
+| `GET` | `/leaves/balance/:employeeId` | View specific employee quotas | Required | ADMIN, HR, MANAGER (direct reports) | None | `200 OK`: `{ data: { balances, used } }` | `403 Forbidden`<br>`404 Not Found` |
+| `GET` | `/leaves` | Multi-filter team & org leave requests | Required | All (scoped by RBAC) | Query: `?status=&leaveType=&department=&startDate=&endDate=` | `200 OK`: `{ data: { leaves, total, pages } }` | `401 Unauthorized` |
+| `GET` | `/leaves/:id` | View specific leave details | Required | Owner, Manager, HR, Admin | None | `200 OK`: `{ data: leave }` | `403 Forbidden`<br>`404 Not Found` |
+| `PUT` | `/leaves/:id` | Edit pending leave request | Required | Owner (while PENDING) or Admin/HR | `{ leaveType?, startDate?, endDate?, reason? }` | `200 OK`: `{ message, data: leave }` | `400 Non-Pending Status`<br>`403 Forbidden` |
+| `PATCH` | `/leaves/:id/approve` | Approve request, deduct balance & sync attendance | Required | ADMIN, HR, MANAGER (direct reports) | `{ reviewerComment? }` | `200 OK`: `{ message, data: leave }` | `400 Insufficient Balance`<br>`400 Duplicate Approval`<br>`403 Forbidden` |
+| `PATCH` | `/leaves/:id/reject` | Reject request & restore balance if needed | Required | ADMIN, HR, MANAGER (direct reports) | `{ reviewerComment? }` | `200 OK`: `{ message, data: leave }` | `400 Already Processed`<br>`403 Forbidden` |
+| `POST` | `/leaves/:id/cancel` | Cancel request & restore quota if approved | Required | Owner, HR, Admin | None | `200 OK`: `{ message, data: leave }` | `400 Already Cancelled`<br>`400 Already Rejected` |
+| `DELETE` | `/leaves/:id` | Delete leave request | Required | ADMIN (or Owner if PENDING) | None | `200 OK`: `{ message: 'Leave record deleted' }` | `403 Forbidden`<br>`404 Not Found` |
 
 #### 6. Tasks (`/api/tasks`)
 
@@ -491,6 +499,6 @@ gantt
 * **Phase 2 (Completed)**: Backend authentication endpoints, JWT token generation, bcrypt hashing, User/Department/Employee models, and React auth state with protected routes.
 * **Phase 3 (Completed)**: Department & Employee management (CRUD APIs, soft deactivation, atomic sequential employee code generator EMP-100x, RBAC salary field protection, and full React frontend directory pages).
 * **Phase 4 (Completed)**: Attendance Management (Mongoose Attendance model with UTC midnight normalization and compound unique index `{ employee: 1, date: 1 }`, server-calculated `workHours = checkOut - checkIn`, self-service punch-in/out endpoints, RBAC-scoped team and organization attendance listing/filtering, automated test suite, live digital punch clock, metrics summary, and React UI).
-* **Phase 5 (Next)**: Leave Management (Leave request application, approval/rejection pipeline, annual quota balance tracking).
-* **Phase 6**: Task delegation, notification distribution, and Recharts-powered role dashboards.
+* **Phase 5 (Completed)**: Leave Management (Mongoose Leave model with UTC midnight normalization, multi-type annual quotas with atomic balance deductions on approval and restoration on cancellation, 21-case automated test suite, Attendance ON_LEAVE integration, and full React self-service & manager approval queue UI).
+* **Phase 6 (Next)**: Task Delegation, Notification Distribution, and Recharts-powered Analytical Dashboards.
 * **Phase 7**: Security hardening, edge case validation, production build testing, and Docker/cloud deployment preparation.
