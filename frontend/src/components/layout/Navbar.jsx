@@ -27,7 +27,8 @@ import {
   Moon,
   Shield,
   Home,
-  Phone
+  Phone,
+  Camera
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -43,25 +44,30 @@ export const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const profileDropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
-  // Close dropdown on outside click
+  // Close dropdowns on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
+      if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
+        setIsProfileDropdownOpen(false);
+      }
     };
 
-    if (isDropdownOpen) {
+    if (isDropdownOpen || isProfileDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isDropdownOpen]);
+  }, [isDropdownOpen, isProfileDropdownOpen]);
 
   // Fetch recent notifications when dropdown opens
   const handleToggleDropdown = () => {
@@ -69,6 +75,12 @@ export const Navbar = () => {
       fetchRecentNotifications();
     }
     setIsDropdownOpen((prev) => !prev);
+    setIsProfileDropdownOpen(false);
+  };
+
+  const handleToggleProfileDropdown = () => {
+    setIsProfileDropdownOpen((prev) => !prev);
+    setIsDropdownOpen(false);
   };
 
   const handleLogout = () => {
@@ -151,6 +163,11 @@ export const Navbar = () => {
     if (diffDays < 7) return `${diffDays}d ago`;
     return d.toLocaleDateString();
   };
+
+  const employee = user?.employee;
+  const initials = employee?.firstName 
+    ? `${employee.firstName[0]}${employee.lastName?.[0] || ''}`.toUpperCase()
+    : user?.email?.[0].toUpperCase();
 
   return (
     <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 backdrop-blur-md sticky top-0 z-50">
@@ -337,38 +354,93 @@ export const Navbar = () => {
                 )}
               </div>
 
-              {/* User Identity Pill */}
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700">
-                <div className="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs font-bold">
-                  {user?.employee?.firstName ? user.employee.firstName[0] : user?.email[0].toUpperCase()}
-                </div>
-                <div className="hidden lg:block text-left">
-                  <p className="text-xs font-semibold text-slate-900 dark:text-white leading-tight m-0">
-                    {user?.employee?.firstName
-                      ? `${user.employee.firstName} ${user.employee.lastName}`
-                      : user?.email}
-                  </p>
-                  <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono m-0">
-                    {user?.employee?.employeeCode || user?.role}
-                  </p>
-                </div>
-                <span
-                  className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border ${
-                    roleBadgeColors[user?.role] || roleBadgeColors.EMPLOYEE
-                  }`}
+              {/* Compact Profile Control & Dropdown */}
+              <div className="relative" ref={profileDropdownRef}>
+                <button
+                  type="button"
+                  onClick={handleToggleProfileDropdown}
+                  className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer"
                 >
-                  {user?.role}
-                </span>
-              </div>
+                  <div className="w-8 h-8 rounded-full overflow-hidden bg-indigo-500 text-white flex items-center justify-center text-xs font-bold border border-white/20 dark:border-slate-800">
+                    {employee?.profilePicture ? (
+                      <img src={employee.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                    ) : (
+                      initials
+                    )}
+                  </div>
+                  <div className="hidden sm:flex items-center gap-1">
+                    <span className="text-[11px] font-bold text-slate-700 dark:text-slate-300 tracking-wide">
+                      {user?.role}
+                    </span>
+                    <svg className="w-3.5 h-3.5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
+                </button>
 
-              {/* Logout Button */}
-              <button
-                onClick={handleLogout}
-                title="Log out"
-                className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-colors cursor-pointer"
-              >
-                <LogOut className="w-4 h-4" />
-              </button>
+                {isProfileDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                    <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full overflow-hidden bg-indigo-500 text-white flex items-center justify-center text-sm font-bold shrink-0">
+                        {employee?.profilePicture ? (
+                          <img src={employee.profilePicture} alt="Profile" className="w-full h-full object-cover" />
+                        ) : (
+                          initials
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white truncate">
+                          {employee?.firstName ? `${employee.firstName} ${employee.lastName}` : user?.email}
+                        </p>
+                        <div className="flex items-center gap-1.5 mt-0.5">
+                          <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
+                            {employee?.employeeCode || 'N/A'}
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-700"></span>
+                          <span className={`text-[9px] font-bold uppercase tracking-wider ${
+                            roleBadgeColors[user?.role] || roleBadgeColors.EMPLOYEE
+                          } px-1.5 py-0.5 rounded-full`}>
+                            {user?.role}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="p-2">
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors no-underline"
+                      >
+                        <Users className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                        My Profile
+                      </Link>
+                      
+                      <Link
+                        to="/profile"
+                        onClick={() => setIsProfileDropdownOpen(false)}
+                        className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors no-underline"
+                      >
+                        <Camera className="w-4 h-4 text-indigo-500 dark:text-indigo-400" />
+                        Change Profile Photo
+                      </Link>
+                    </div>
+
+                    <div className="p-2 border-t border-slate-100 dark:border-slate-800">
+                      <button
+                        onClick={() => {
+                          setIsProfileDropdownOpen(false);
+                          handleLogout();
+                        }}
+                        className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm font-medium text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-colors cursor-pointer text-left"
+                      >
+                        <LogOut className="w-4 h-4" />
+                        Logout
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           ) : (
             <div className="flex items-center gap-2">

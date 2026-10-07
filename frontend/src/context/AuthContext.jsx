@@ -84,6 +84,35 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  /**
+   * Upload user profile picture
+   */
+  const uploadProfilePicture = async (base64Image) => {
+    try {
+      const response = await api.post('/auth/profile-picture', {
+        image: base64Image,
+      });
+      
+      // Update local user state with new profile picture
+      if (response.data.success && user && user.employee) {
+        setUser({
+          ...user,
+          employee: {
+            ...user.employee,
+            profilePicture: response.data.profilePicture
+          }
+        });
+      }
+      
+      return { success: true, message: response.data.message };
+    } catch (err) {
+      return {
+        success: false,
+        error: err.message || 'Failed to upload profile picture',
+      };
+    }
+  };
+
   const value = {
     user,
     token,
@@ -93,6 +122,7 @@ export const AuthProvider = ({ children }) => {
     login,
     logout,
     changePassword,
+    uploadProfilePicture,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

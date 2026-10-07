@@ -8,6 +8,7 @@ import leaveRoutes from './leaveRoutes.js';
 import taskRoutes from './taskRoutes.js';
 import notificationRoutes from './notificationRoutes.js';
 import activityRoutes from './activityRoutes.js';
+import dashboardRoutes from './dashboardRoutes.js';
 
 const router = express.Router();
 
@@ -21,5 +22,6 @@ router.use('/leaves', leaveRoutes);
 router.use('/tasks', taskRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/activity', activityRoutes);
+router.use('/dashboard', dashboardRoutes);
 
 export default router;

@@ -55,6 +55,7 @@ export const getEmployees = async (req, res, next) => {
 
     const total = await Employee.countDocuments(query);
     const employees = await Employee.find(query)
+      .select('-profilePicture')
       .populate('departmentId', 'name code')
       .populate('reportingManagerId', 'firstName lastName employeeCode designation')
       .populate('userId', 'email role isActive')

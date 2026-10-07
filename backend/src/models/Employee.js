@@ -34,6 +34,10 @@ const employeeSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    profilePicture: {
+      type: String, // Will store base64 data URI
+      default: null,
+    },
     gender: {
       type: String,
       enum: {
