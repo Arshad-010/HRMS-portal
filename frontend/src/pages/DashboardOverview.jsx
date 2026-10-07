@@ -5,22 +5,17 @@ import { useAuth } from '../context/AuthContext';
 import { StatCard } from '../components/dashboard/StatCard';
 import { 
   Users, UserCheck, CalendarClock, ListTodo, AlertTriangle, 
-  Bell, History, Clock, KeyRound, Sparkles, X, Lock, ArrowRight,
+  Bell, History, Clock, ArrowRight,
   UserX, Briefcase, Calendar, CheckSquare
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 
 export const DashboardOverview = () => {
-  const { user, changePassword } = useAuth();
+  const { user } = useAuth();
 
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
   const [error, setError] = useState(null);
-
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
-  const [currentPassword, setCurrentPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [passwordStatus, setPasswordStatus] = useState({ loading: false, message: '', error: '' });
 
   const employee = user?.employee;
   const role = user?.role || 'EMPLOYEE';
@@ -61,21 +56,6 @@ export const DashboardOverview = () => {
     fetchDashboard();
   }, []);
 
-  const handlePasswordSubmit = async (e) => {
-    e.preventDefault();
-    setPasswordStatus({ loading: true, message: '', error: '' });
-
-    const result = await changePassword(currentPassword, newPassword);
-    if (result.success) {
-      setPasswordStatus({ loading: false, message: result.message, error: '' });
-      setCurrentPassword('');
-      setNewPassword('');
-      setTimeout(() => setShowPasswordModal(false), 1500);
-    } else {
-      setPasswordStatus({ loading: false, message: '', error: result.error });
-    }
-  };
-
   // Prepare chart data if available
   const taskChartData = dashboardData ? [
     { name: 'To Do', value: dashboardData.tasks.todo, color: 'var(--color-slate-400)' },
@@ -91,10 +71,6 @@ export const DashboardOverview = () => {
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-indigo-500/5 to-transparent pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-500 dark:text-indigo-400 text-xs font-semibold mb-3">
-              <Sparkles className="w-3.5 h-3.5" />
-              Authenticated Session Active
-            </div>
             <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Welcome back, {employee?.firstName ? `${employee.firstName} ${employee.lastName}` : user?.email}!
             </h2>
@@ -103,7 +79,7 @@ export const DashboardOverview = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
             <Link
               to="/attendance"
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer no-underline"
@@ -118,13 +94,6 @@ export const DashboardOverview = () => {
               <Calendar className="w-4 h-4 text-indigo-400" />
               Time Off
             </Link>
-            <button
-              onClick={() => setShowPasswordModal(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
-            >
-              <KeyRound className="w-4 h-4 text-indigo-400" />
-              Change Password
-            </button>
           </div>
         </div>
       </div>
@@ -254,78 +223,6 @@ export const DashboardOverview = () => {
             </div>
           </div>
         </>
-      )}
-
-      {/* Change Password Modal */}
-      {showPasswordModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
-            <button
-              onClick={() => setShowPasswordModal(false)}
-              className="absolute top-4 right-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors cursor-pointer"
-            >
-              <X className="w-5 h-5" />
-            </button>
-            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-              <Lock className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
-              Change Account Password
-            </h3>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
-              Enter your current password and choose a secure replacement.
-            </p>
-
-            {passwordStatus.message && (
-              <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-300 text-xs">
-                {passwordStatus.message}
-              </div>
-            )}
-            {passwordStatus.error && (
-              <div className="mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-300 text-xs">
-                {passwordStatus.error}
-              </div>
-            )}
-
-            <form onSubmit={handlePasswordSubmit} className="space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Current Password</label>
-                <input
-                  type="password"
-                  value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
-                  required
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none"
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">New Password (min 8 chars)</label>
-                <input
-                  type="password"
-                  value={newPassword}
-                  onChange={(e) => setNewPassword(e.target.value)}
-                  required
-                  minLength={8}
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none"
-                />
-              </div>
-              <div className="flex justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => setShowPasswordModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={passwordStatus.loading}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-500 disabled:opacity-50 cursor-pointer"
-                >
-                  {passwordStatus.loading ? 'Updating...' : 'Update Password'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
       )}
     </div>
   );
