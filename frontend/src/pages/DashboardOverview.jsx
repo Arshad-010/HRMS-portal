@@ -78,10 +78,10 @@ export const DashboardOverview = () => {
 
   // Prepare chart data if available
   const taskChartData = dashboardData ? [
-    { name: 'To Do', value: dashboardData.tasks.todo, color: '#94a3b8' },
-    { name: 'In Progress', value: dashboardData.tasks.inProgress, color: '#38bdf8' },
-    { name: 'Review', value: dashboardData.tasks.review, color: '#c084fc' },
-    { name: 'Completed', value: dashboardData.tasks.completed, color: '#34d399' }
+    { name: 'To Do', value: dashboardData.tasks.todo, color: 'var(--color-slate-400)' },
+    { name: 'In Progress', value: dashboardData.tasks.inProgress, color: 'var(--color-cyan-400)' },
+    { name: 'Review', value: dashboardData.tasks.review, color: 'var(--color-purple-400)' },
+    { name: 'Completed', value: dashboardData.tasks.completed, color: 'var(--color-emerald-400)' }
   ].filter(d => d.value > 0) : [];
 
   return (

@@ -8,15 +8,12 @@ import {
   Activity,
   LogOut,
   LogIn,
-  LayoutDashboard,
   Users,
-  Building2,
   Clock,
   Calendar,
   CheckSquare,
   Bell,
   CheckCheck,
-  History,
   ArrowRight,
   Sparkles,
   Info,
@@ -28,10 +25,13 @@ import {
   Shield,
   Home,
   Phone,
-  Camera
+  Camera,
+  Palette,
+  Check,
+  Menu
 } from 'lucide-react';
 
-export const Navbar = () => {
+export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const {
     unreadCount,
@@ -41,12 +41,14 @@ export const Navbar = () => {
     markAsRead,
     markAllAsRead,
   } = useNotifications();
-  const { theme, toggleTheme } = useTheme();
+  const { themeMode, setThemeMode, themeFamily, setThemeFamily } = useTheme();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isProfileDropdownOpen, setIsProfileDropdownOpen] = useState(false);
+  const [isThemeDropdownOpen, setIsThemeDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const profileDropdownRef = useRef(null);
+  const themeDropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -59,9 +61,12 @@ export const Navbar = () => {
       if (profileDropdownRef.current && !profileDropdownRef.current.contains(event.target)) {
         setIsProfileDropdownOpen(false);
       }
+      if (themeDropdownRef.current && !themeDropdownRef.current.contains(event.target)) {
+        setIsThemeDropdownOpen(false);
+      }
     };
 
-    if (isDropdownOpen || isProfileDropdownOpen) {
+    if (isDropdownOpen || isProfileDropdownOpen || isThemeDropdownOpen) {
       document.addEventListener('mousedown', handleClickOutside);
     }
     return () => {
@@ -117,16 +122,6 @@ export const Navbar = () => {
     EMPLOYEE: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
   };
 
-  const navLinks = [
-    { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-    { name: 'Attendance', path: '/attendance', icon: Clock },
-    { name: 'Leaves', path: '/leaves', icon: Calendar },
-    { name: 'Tasks', path: '/tasks', icon: CheckSquare },
-    { name: 'Employees', path: '/employees', icon: Users },
-    { name: 'Departments', path: '/departments', icon: Building2 },
-    { name: 'Activity', path: '/activity', icon: History },
-  ];
-
   // Helper for notification type icon
   const getNotificationIcon = (type) => {
     switch (type) {
@@ -171,57 +166,117 @@ export const Navbar = () => {
 
   return (
     <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 backdrop-blur-md sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        {/* Brand & Main Nav */}
-        <div className="flex items-center gap-8">
-          <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-3 no-underline">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-              <Layers className="w-5 h-5" />
-            </div>
-            <div>
-              <h1 className="text-base font-bold tracking-tight text-slate-900 dark:text-white m-0">HRMS Portal</h1>
-              <p className="text-[10px] text-slate-500 dark:text-slate-400 m-0">Enterprise HR Suite</p>
-            </div>
-          </Link>
-
-          {/* Primary Nav Links (when authenticated) */}
-          {isAuthenticated && (
-            <nav className="hidden lg:flex items-center gap-1">
-              {navLinks.map((link) => {
-                const Icon = link.icon;
-                const isActive =
-                  location.pathname === link.path ||
-                  (link.path !== '/dashboard' && location.pathname.startsWith(link.path));
-
-                return (
-                  <Link
-                    key={link.path}
-                    to={link.path}
-                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium transition-colors ${
-                      isActive
-                        ? 'bg-indigo-600/15 text-indigo-400 border border-indigo-500/30'
-                        : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:bg-slate-800'
-                    }`}
-                  >
-                    <Icon className="w-3.5 h-3.5" />
-                    <span>{link.name}</span>
-                  </Link>
-                );
-              })}
-            </nav>
+      <div className="px-4 lg:px-6 h-16 flex items-center justify-between">
+        {/* Brand & Hamburger */}
+        <div className="flex items-center gap-4">
+          {isAuthenticated ? (
+            <>
+              {/* Mobile Hamburger */}
+              <button 
+                onClick={toggleMobileSidebar}
+                className="lg:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+              
+              {/* Desktop Hamburger / Collapse Toggle */}
+              <button 
+                onClick={toggleCollapse}
+                className="hidden lg:flex p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                <Menu className="w-5 h-5" />
+              </button>
+            </>
+          ) : (
+            <Link to="/" className="flex items-center gap-3 no-underline">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
+                <Layers className="w-5 h-5" />
+              </div>
+              <div>
+                <h1 className="text-base font-bold tracking-tight text-slate-900 dark:text-white m-0">HRMS Portal</h1>
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 m-0 leading-tight">Enterprise HR Suite</p>
+              </div>
+            </Link>
           )}
         </div>
 
         {/* Right Nav & User Actions */}
         <div className="flex items-center gap-3">
-          {/* Theme Toggle */}
-          <button
-            onClick={toggleTheme}
-            title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
-            className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-          >
-            {theme === 'light' ? <Moon className="w-4 h-4" /> : <Sun className="w-4 h-4" />}
-          </button>
+          {/* Theme / Appearance Dropdown */}
+          <div className="relative" ref={themeDropdownRef}>
+            <button
+              onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
+              title="Appearance settings"
+              className={`p-2 rounded-xl transition-colors cursor-pointer ${
+                isThemeDropdownOpen
+                  ? 'bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
+                  : 'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+              }`}
+            >
+              <Palette className="w-4 h-4" />
+            </button>
+
+            {isThemeDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
+                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Appearance</h4>
+                </div>
+                
+                <div className="p-2 border-b border-slate-100 dark:border-slate-800">
+                  <span className="block px-2 mb-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Color Theme</span>
+                  <div className="space-y-1">
+                    <button
+                      onClick={() => setThemeFamily('sage')}
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#3F6B5B]"></span>
+                        Sage
+                      </span>
+                      {themeFamily === 'sage' && <Check className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
+                    </button>
+                    <button
+                      onClick={() => setThemeFamily('ocean')}
+                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+                    >
+                      <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
+                        <span className="w-2.5 h-2.5 rounded-full bg-[#287A96]"></span>
+                        Ocean
+                      </span>
+                      {themeFamily === 'ocean' && <Check className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="p-2">
+                  <span className="block px-2 mb-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Mode</span>
+                  <div className="flex bg-slate-100 dark:bg-slate-800/50 rounded-xl p-1">
+                    <button
+                      onClick={() => setThemeMode('light')}
+                      className={`flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        themeMode === 'light'
+                          ? 'bg-white text-indigo-600 shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      <Sun className="w-3 h-3" /> Light
+                    </button>
+                    <button
+                      onClick={() => setThemeMode('dark')}
+                      className={`flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                        themeMode === 'dark'
+                          ? 'bg-slate-700 text-indigo-400 shadow-sm'
+                          : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
+                      }`}
+                    >
+                      <Moon className="w-3 h-3" /> Dark
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
 
           {!isAuthenticated && (
             <nav className="hidden md:flex items-center gap-2 mr-2">
