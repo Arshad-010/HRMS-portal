@@ -250,23 +250,26 @@ erDiagram
 
 #### 6. Task Model
 * **Collection**: `tasks`
-* **Purpose**: Work assignment, due dates, priority scheduling, and delivery tracking.
+* **Purpose**: Task delegation, project deliverables, deadline scheduling, priority governance, and progress tracking.
 * **Fields**:
-  * `title` (String, required, trim): Concise task summary.
-  * `description` (String, optional): Detailed requirements or acceptance criteria.
-  * `assignedTo` (ObjectId, ref: `'Employee'`, required): Responsible team member.
-  * `assignedBy` (ObjectId, ref: `'Employee'`, required): Delegating manager or peer.
-  * `departmentId` (ObjectId, ref: `'Department'`, optional): Department context.
-  * `priority` (String, enum: `['LOW', 'MEDIUM', 'HIGH', 'URGENT']`, default: `'MEDIUM'`).
-  * `status` (String, enum: `['TODO', 'IN_PROGRESS', 'IN_REVIEW', 'COMPLETED', 'BLOCKED']`, default: `'TODO'`).
-  * `dueDate` (Date, optional): Deadline timestamp.
-  * `completedAt` (Date, optional): Completion record timestamp.
+  * `title` (String, required, trim, maxlength: 200): Task title.
+  * `description` (String, trim, maxlength: 2000): Detailed task scope and requirements.
+  * `assignedTo` (ObjectId, ref: `'Employee'`, required, indexed): Responsible employee.
+  * `assignedBy` (ObjectId, ref: `'User'`, required, indexed): Authenticated author who delegated the task.
+  * `department` (ObjectId, ref: `'Department'`, required, indexed): Target department context.
+  * `priority` (String, enum: `['LOW', 'MEDIUM', 'HIGH', 'URGENT']`, default: `'MEDIUM'`, indexed).
+  * `status` (String, enum: `['TODO', 'IN_PROGRESS', 'REVIEW', 'COMPLETED', 'CANCELLED']`, default: `'TODO'`, indexed).
+  * `dueDate` (Date, required, indexed): Deliverable deadline.
+  * `estimatedHours` (Number, default: 0, min: 0): Estimated workload.
+  * `completedAt` (Date, default: `null`): Automatically set when status moves to `COMPLETED`; cleared upon reopening.
   * `timestamps` (Boolean, default: `true`).
-* **Indexes**:
+* **Virtual Fields**:
+  * `isOverdue` (Boolean): Dynamically evaluated as `dueDate < Date.now()` when status is neither `COMPLETED` nor `CANCELLED`.
+* **Compound Indexes**:
   * `{ assignedTo: 1, status: 1 }`
-  * `{ assignedBy: 1 }`
-  * `{ dueDate: 1 }`
-  * `{ priority: 1 }`
+  * `{ department: 1, status: 1 }`
+  * `{ assignedTo: 1, dueDate: 1 }`
+  * `{ department: 1, dueDate: 1 }`
 
 #### 7. Notification Model
 * **Collection**: `notifications`
@@ -447,11 +450,14 @@ The application supports four hierarchical and functional roles:
 
 | Method | Endpoint | Purpose | Auth | Roles | Request Body | Success Response | Error Responses |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `POST` | `/tasks` | Create and assign a task | Required | ADMIN, HR, MANAGER | `{ title, description, assignedTo, priority, dueDate }` | `201 Created`: `{ task }` | `400 Validation Error`<br>`404 Assignee Not Found` |
-| `GET` | `/tasks/my-tasks` | Get tasks assigned to current user | Required | All | Query: `?status=TODO` | `200 OK`: `{ tasks: [...] }` | `401 Unauthorized` |
-| `GET` | `/tasks` | List company or team tasks | Required | ADMIN, HR, MANAGER | Query: `?assignedTo=&status=&priority=` | `200 OK`: `{ tasks: [...] }` | `403 Forbidden` |
-| `PATCH` | `/tasks/:id/status` | Update task progress state | Required | All (assigned or assigner) | `{ status: 'TODO' | 'IN_PROGRESS' | 'COMPLETED' }` | `200 OK`: `{ task }` | `400 Invalid Status`<br>`404 Not Found` |
-| `DELETE` | `/tasks/:id` | Remove task | Required | ADMIN, Task Assigner | None | `200 OK`: `{ message: 'Task deleted' }` | `403 Forbidden`<br>`404 Not Found` |
+| `POST` | `/tasks` | Create and assign a task | Required | ADMIN, HR, MANAGER | `{ title, description?, department, assignedTo, priority?, dueDate, estimatedHours? }` | `201 Created`: `{ task }` | `400 Validation Error`<br>`400 Inactive Employee/Dept`<br>`403 Forbidden` |
+| `GET` | `/tasks/my` | Get current employee's tasks & stats | Required | Authenticated Employee | Query: `?status=&priority=&overdue=` | `200 OK`: `{ tasks: [...], stats }` | `401 Unauthorized` |
+| `GET` | `/tasks` | List company/team tasks with multi-filter | Required | Scoped (ADMIN, HR, MANAGER, EMPLOYEE) | Query: `?status=&priority=&department=&assignedTo=&overdue=&search=&page=&limit=` | `200 OK`: `{ tasks: [...], total, pages, stats }` | `403 Forbidden` |
+| `GET` | `/tasks/:id` | View single task details | Required | Scoped by Role | None | `200 OK`: `{ task }` | `403 Forbidden`<br>`404 Not Found` |
+| `PUT` | `/tasks/:id` | Update task fields (title, priority, due date, etc.) | Required | ADMIN, HR, MANAGER | `{ title?, description?, department?, assignedTo?, priority?, dueDate?, estimatedHours? }` | `200 OK`: `{ message, data: task }` | `400 Invalid Date/Dept`<br>`403 Forbidden` |
+| `PATCH` | `/tasks/:id/status` | Advance or reopen task status | Required | Assignee, MANAGER, HR, ADMIN | `{ status: 'TODO' \| 'IN_PROGRESS' \| 'REVIEW' \| 'COMPLETED' \| 'CANCELLED' }` | `200 OK`: `{ message, data: task }` | `400 Invalid Status`<br>`403 Forbidden` |
+| `PATCH` | `/tasks/:id/assign` | Reassign task to a different employee | Required | ADMIN, HR, MANAGER | `{ assignedTo, department? }` | `200 OK`: `{ message, data: task }` | `400 Inactive / Mismatched`<br>`403 Forbidden` |
+| `DELETE` | `/tasks/:id` | Permanently remove task | Required | ADMIN, HR, Task Creator MANAGER | None | `200 OK`: `{ message: 'Task deleted successfully' }` | `403 Forbidden`<br>`404 Not Found` |
 
 #### 7. Dashboard (`/api/dashboard`)
 
@@ -480,19 +486,22 @@ gantt
     section Phase 1: Foundation
     Scaffolding & Architecture Verification  :done, p1, 2026-10-07, 1d
     section Phase 2: Auth & RBAC
-    User/Employee Model & JWT Auth API       :active, p2_1, 2026-10-08, 2d
-    Login/Profile Client UI & Route Guards   :active, p2_2, 2026-10-08, 2d
+    User/Employee Model & JWT Auth API       :done, p2_1, 2026-10-08, 2d
+    Login/Profile Client UI & Route Guards   :done, p2_2, 2026-10-08, 2d
     section Phase 3: Personnel & Org
-    Department & Employee CRUD APIs          :p3_1, 2026-10-10, 3d
-    Employee Directory & Dept Views          :p3_2, 2026-10-10, 3d
+    Department & Employee CRUD APIs          :done, p3_1, 2026-10-10, 3d
+    Employee Directory & Dept Views          :done, p3_2, 2026-10-10, 3d
     section Phase 4: Time & Attendance
-    Attendance Clock & Leave Request APIs    :p4_1, 2026-10-13, 3d
-    Attendance Calendar & Leave Approvals UI :p4_2, 2026-10-13, 3d
-    section Phase 5: Tasks & Dashboard
-    Task Management & Notifications API      :p5_1, 2026-10-16, 2d
-    Task Board & Analytics Dashboard UI      :p5_2, 2026-10-16, 2d
-    section Phase 6: Polish & Release
-    End-to-End Testing & Production Release  :p6, 2026-10-18, 2d
+    Attendance Clock & Work Hours APIs       :done, p4_1, 2026-10-13, 3d
+    Attendance Calendar & Clock UI           :done, p4_2, 2026-10-13, 3d
+    section Phase 5: Leaves & Quotas
+    Leave Model & Balance Quotas APIs        :done, p5_1, 2026-10-16, 2d
+    Leave Requests & Approval Queue UI       :done, p5_2, 2026-10-16, 2d
+    section Phase 6: Tasks & Tracking
+    Task Model, Workflow APIs & Test Suite   :done, p6_1, 2026-10-18, 2d
+    Task Management Board & Dashboard Card   :done, p6_2, 2026-10-18, 2d
+    section Phase 7: Analytics & Release
+    End-to-End Testing & Production Release  :active, p7, 2026-10-20, 2d
 ```
 
 * **Phase 1 (Completed)**: Architecture scaffolding, dev server pipelines, health check diagnostic endpoint, Git configuration.
@@ -500,5 +509,6 @@ gantt
 * **Phase 3 (Completed)**: Department & Employee management (CRUD APIs, soft deactivation, atomic sequential employee code generator EMP-100x, RBAC salary field protection, and full React frontend directory pages).
 * **Phase 4 (Completed)**: Attendance Management (Mongoose Attendance model with UTC midnight normalization and compound unique index `{ employee: 1, date: 1 }`, server-calculated `workHours = checkOut - checkIn`, self-service punch-in/out endpoints, RBAC-scoped team and organization attendance listing/filtering, automated test suite, live digital punch clock, metrics summary, and React UI).
 * **Phase 5 (Completed)**: Leave Management (Mongoose Leave model with UTC midnight normalization, multi-type annual quotas with atomic balance deductions on approval and restoration on cancellation, 21-case automated test suite, Attendance ON_LEAVE integration, and full React self-service & manager approval queue UI).
-* **Phase 6 (Next)**: Task Delegation, Notification Distribution, and Recharts-powered Analytical Dashboards.
-* **Phase 7**: Security hardening, edge case validation, production build testing, and Docker/cloud deployment preparation.
+* **Phase 6 (Completed)**: Task Management & Tracking (Mongoose Task model with compound indexes and dynamic `isOverdue` virtual, full REST endpoints `/api/tasks`, employee self-service `/api/tasks/my`, status lifecycle transitions with automated `completedAt` timestamp maintenance, 21-case automated test suite, React task board with filters and modals, and dashboard integration).
+* **Phase 7 (Next)**: Notifications, Organization Analytics, and Docker deployment preparation.
+

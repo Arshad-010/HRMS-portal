@@ -11,6 +11,7 @@ import {
   Building2,
   Clock,
   Calendar,
+  CheckSquare,
 } from 'lucide-react';
 
 export const Navbar = () => {
@@ -34,6 +35,7 @@ export const Navbar = () => {
     { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
     { name: 'Attendance', path: '/attendance', icon: Clock },
     { name: 'Leaves', path: '/leaves', icon: Calendar },
+    { name: 'Tasks', path: '/tasks', icon: CheckSquare },
     { name: 'Employees', path: '/employees', icon: Users },
     { name: 'Departments', path: '/departments', icon: Building2 },
     { name: 'System Health', path: '/health', icon: Activity },

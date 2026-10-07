@@ -5,6 +5,7 @@ import Login from '../pages/Login';
 import DashboardOverview from '../pages/DashboardOverview';
 import Attendance from '../pages/Attendance';
 import Leaves from '../pages/Leaves';
+import Tasks from '../pages/Tasks';
 import Departments from '../pages/Departments';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
@@ -58,6 +59,15 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Leaves />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute>
+            <Tasks />
           </ProtectedRoute>
         }
       />

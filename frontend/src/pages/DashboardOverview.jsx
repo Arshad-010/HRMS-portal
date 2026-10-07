@@ -14,7 +14,9 @@ import {
   Sparkles,
   Lock,
   X,
-  ArrowRight
+  ArrowRight,
+  CheckSquare,
+  AlertTriangle
 } from 'lucide-react';
 
 export const DashboardOverview = () => {
@@ -43,8 +45,17 @@ export const DashboardOverview = () => {
     queueCount: 0,
   });
 
+  const [taskData, setTaskData] = useState({
+    total: 0,
+    todo: 0,
+    inProgress: 0,
+    review: 0,
+    completed: 0,
+    overdue: 0,
+  });
+
   useEffect(() => {
-    const fetchLeaves = async () => {
+    const fetchLeavesAndTasks = async () => {
       try {
         const [myRes, balRes] = await Promise.allSettled([
           api.get('/leaves/my'),
@@ -82,12 +93,23 @@ export const DashboardOverview = () => {
           approvedCount: aCount,
           queueCount: qCount,
         });
+
+        // Fetch tasks stats
+        try {
+          const taskEndpoint = role === 'EMPLOYEE' ? '/tasks/my?limit=1' : '/tasks?limit=1';
+          const taskRes = await api.get(taskEndpoint);
+          if (taskRes.data?.data?.stats) {
+            setTaskData(taskRes.data.data.stats);
+          }
+        } catch {
+          // ignore
+        }
       } catch {
         // ignore
       }
     };
 
-    fetchLeaves();
+    fetchLeavesAndTasks();
   }, [role, employee]);
 
   const handlePasswordSubmit = async (e) => {
@@ -139,6 +161,13 @@ export const DashboardOverview = () => {
               <Calendar className="w-4 h-4 text-indigo-400" />
               Time Off / Leaves
             </Link>
+            <Link
+              to="/tasks"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer no-underline"
+            >
+              <CheckSquare className="w-4 h-4 text-sky-400" />
+              Task Board
+            </Link>
             <button
               onClick={() => setShowPasswordModal(true)}
               className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
@@ -150,8 +179,8 @@ export const DashboardOverview = () => {
         </div>
       </div>
 
-      {/* Profile & Security Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      {/* Profile & Operations Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         {/* User Profile Card */}
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between pb-4 border-b border-slate-800">
@@ -180,8 +209,8 @@ export const DashboardOverview = () => {
                 <Building2 className="w-3.5 h-3.5 text-slate-500" />
                 Department:
               </span>
-              <span className="font-medium text-slate-200">
-                {employee?.departmentId?.name ? `${employee.departmentId.name} (${employee.departmentId.code})` : 'Unassigned'}
+              <span className="font-medium text-slate-200 truncate max-w-[120px]">
+                {employee?.departmentId?.name ? `${employee.departmentId.name}` : 'Unassigned'}
               </span>
             </div>
             <div className="flex items-center justify-between">
@@ -189,7 +218,7 @@ export const DashboardOverview = () => {
                 <Shield className="w-3.5 h-3.5 text-slate-500" />
                 Account Email:
               </span>
-              <span className="font-mono text-slate-200 truncate max-w-[160px]">{user?.email}</span>
+              <span className="font-mono text-slate-200 truncate max-w-[130px]">{user?.email}</span>
             </div>
           </div>
         </div>
@@ -198,38 +227,38 @@ export const DashboardOverview = () => {
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Annual Leave Balances</span>
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Leave Balances</span>
               <span className="text-xs text-slate-500">Year 2026</span>
             </div>
-            <div className="grid grid-cols-3 gap-3 mt-4">
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
                 <p className="text-[10px] uppercase font-semibold text-slate-400">Casual</p>
-                <p className="text-xl font-bold text-indigo-400 mt-1">{leaveData.balances?.casual ?? 12}</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+                <p className="text-lg font-bold text-indigo-400 mt-1">{leaveData.balances?.casual ?? 12}</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">days left</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
                 <p className="text-[10px] uppercase font-semibold text-slate-400">Sick</p>
-                <p className="text-xl font-bold text-rose-400 mt-1">{leaveData.balances?.sick ?? 10}</p>
-                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+                <p className="text-lg font-bold text-rose-400 mt-1">{leaveData.balances?.sick ?? 10}</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">days left</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-center">
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
                 <p className="text-[10px] uppercase font-semibold text-slate-400">Earned</p>
-                <p className="text-xl font-bold text-emerald-400 mt-1">
+                <p className="text-lg font-bold text-emerald-400 mt-1">
                   {leaveData.balances?.earned ?? leaveData.balances?.paid ?? 12}
                 </p>
-                <p className="text-[10px] text-slate-500 mt-0.5">days left</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">days left</p>
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px]">
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-1 text-[11px]">
               {leaveData.pendingCount > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20 font-medium">
-                  {leaveData.pendingCount} pending request(s)
+                  {leaveData.pendingCount} pending
                 </span>
               )}
               {(role === 'ADMIN' || role === 'HR' || role === 'MANAGER') && leaveData.queueCount > 0 && (
                 <span className="px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium">
-                  {leaveData.queueCount} queue request(s)
+                  {leaveData.queueCount} queue
                 </span>
               )}
             </div>
@@ -246,10 +275,66 @@ export const DashboardOverview = () => {
           </div>
         </div>
 
+        {/* Task & Workflow Tracking Card */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+                {role === 'EMPLOYEE' ? 'My Tasks' : 'Workforce Tasks'}
+              </span>
+              <span className="text-xs text-slate-500">Live Status</span>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 mt-4">
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Active</p>
+                <p className="text-lg font-bold text-sky-400 mt-1">{taskData.inProgress}</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">in progress</p>
+              </div>
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Review</p>
+                <p className="text-lg font-bold text-purple-400 mt-1">{taskData.review}</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">pending</p>
+              </div>
+              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-400">Done</p>
+                <p className="text-lg font-bold text-emerald-400 mt-1">{taskData.completed}</p>
+                <p className="text-[9px] text-slate-500 mt-0.5">completed</p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-wrap items-center justify-between gap-1 text-[11px]">
+              <span className="text-slate-400 font-medium">
+                Total: <span className="text-white font-bold">{taskData.total}</span>
+              </span>
+              {taskData.overdue > 0 ? (
+                <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium flex items-center gap-1">
+                  <AlertTriangle className="w-3 h-3" />
+                  {taskData.overdue} overdue
+                </span>
+              ) : (
+                <span className="px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium">
+                  On schedule
+                </span>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-slate-800/60">
+            <Link
+              to="/tasks"
+              className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center justify-between no-underline"
+            >
+              <span>View Task Board</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
         {/* Authentication & Security Card */}
         <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
           <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Security Credentials</span>
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Security Info</span>
             <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
               <CheckCircle2 className="w-3.5 h-3.5" />
               JWT Valid
@@ -259,21 +344,21 @@ export const DashboardOverview = () => {
             <div className="flex items-center justify-between">
               <span className="text-slate-400">Auth Token:</span>
               <span className="font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded text-[11px]">
-                Bearer (HMAC-SHA256)
+                Bearer JWT
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Password Hashing:</span>
+              <span className="text-slate-400">Hashing:</span>
               <span className="font-mono text-slate-300">bcrypt (10 rounds)</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Last Login:</span>
+              <span className="text-slate-400">Session:</span>
               <span className="font-mono text-slate-300">
-                {user?.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Current Session'}
+                {user?.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Active'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400">Field Protection:</span>
+              <span className="text-slate-400">Protection:</span>
               <span className="font-mono text-slate-300">RBAC Filtered</span>
             </div>
           </div>
@@ -284,19 +369,19 @@ export const DashboardOverview = () => {
       <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h4 className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
-            <Calendar className="w-4 h-4 text-indigo-400" />
-            Phase 5 Leave Management &amp; Quotas Live
+            <CheckSquare className="w-4 h-4 text-indigo-400" />
+            Phase 6 Task Management &amp; Tracking Live
           </h4>
           <p className="m-0">
-            Leave applications, atomic balance deductions, manager approval pipeline, and attendance sync are fully active.
+            Interactive task assignments, milestone tracking, priority levels, overdue calculations, and workflow lifecycles are fully operational.
           </p>
         </div>
         <div className="flex items-center gap-2">
           <Link
-            to="/leaves"
+            to="/tasks"
             className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-medium shadow-md shadow-indigo-600/20 transition-all shrink-0 no-underline cursor-pointer"
           >
-            <span>Open Leave Portal</span>
+            <span>Open Task Board</span>
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
