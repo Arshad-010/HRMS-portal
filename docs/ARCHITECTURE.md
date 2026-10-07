@@ -453,8 +453,8 @@ gantt
 ```
 
 * **Phase 1 (Completed)**: Architecture scaffolding, dev server pipelines, health check diagnostic endpoint, Git configuration.
-* **Phase 2 (Next)**: Backend authentication endpoints, JWT token generation, password hashing, and React auth state with protected routes.
-* **Phase 3**: Department and Employee management (Admin & HR capabilities, Employee profile management).
-* **Phase 4**: Attendance punch-in/out and Leave submission/approval workflow.
+* **Phase 2 (Completed)**: Backend authentication endpoints, JWT token generation, bcrypt hashing, User/Department/Employee models, and React auth state with protected routes.
+* **Phase 3 (Completed)**: Department & Employee management (CRUD APIs, soft deactivation, atomic sequential employee code generator EMP-100x, RBAC salary field protection, and full React frontend directory pages).
+* **Phase 4 (Next)**: Attendance punch-in/out and Leave submission/approval workflow with annual quota deductions.
 * **Phase 5**: Task delegation, notification distribution, and Recharts-powered role dashboards.
 * **Phase 6**: Security hardening, edge case validation, production build testing, and Docker/cloud deployment preparation.

@@ -3,6 +3,9 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Login from '../pages/Login';
 import DashboardOverview from '../pages/DashboardOverview';
+import Departments from '../pages/Departments';
+import Employees from '../pages/Employees';
+import EmployeeDetails from '../pages/EmployeeDetails';
 import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -29,12 +32,39 @@ export const AppRoutes = () => {
       {/* Public Authentication Route */}
       <Route path="/login" element={<Login />} />
 
-      {/* Protected Application Shell */}
+      {/* Protected Routes */}
       <Route
         path="/dashboard"
         element={
           <ProtectedRoute>
             <DashboardOverview />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/departments"
+        element={
+          <ProtectedRoute>
+            <Departments />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/employees"
+        element={
+          <ProtectedRoute>
+            <Employees />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/employees/:id"
+        element={
+          <ProtectedRoute>
+            <EmployeeDetails />
           </ProtectedRoute>
         }
       />
