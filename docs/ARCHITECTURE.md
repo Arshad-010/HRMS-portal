@@ -469,11 +469,19 @@ The application supports four hierarchical and functional roles:
 
 #### 8. Notifications (`/api/notifications`)
 
-| Method | Endpoint | Purpose | Auth | Roles | Request Body | Success Response | Error Responses |
+| Method | Endpoint | Purpose | Auth | Roles | Request Body / Query | Success Response | Error Responses |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| `GET` | `/notifications` | Retrieve unread/recent notifications | Required | All | Query: `?limit=20` | `200 OK`: `{ notifications: [...], unreadCount }` | `401 Unauthorized` |
-| `PATCH` | `/notifications/:id/read` | Mark single notification as read | Required | All (owner) | None | `200 OK`: `{ notification }` | `404 Not Found` |
-| `PATCH` | `/notifications/read-all` | Mark all user notifications as read | Required | All | None | `200 OK`: `{ message: 'All marked as read' }` | `401 Unauthorized` |
+| `GET` | `/notifications` | List recipient notifications with pagination & filtering | Required | All (strictly scoped to owner) | Query: `?page=1&limit=10&unreadOnly=false` | `200 OK`: `{ notifications: [...], total, pages, unreadCount }` | `401 Unauthorized` |
+| `GET` | `/notifications/unread` | Efficient unread notification count | Required | All (owner only) | None | `200 OK`: `{ unreadCount: number }` | `401 Unauthorized` |
+| `PATCH` | `/notifications/:id/read` | Mark single notification as read | Required | All (owner only) | None | `200 OK`: `{ message, data: notification }` | `403 Forbidden`<br>`404 Not Found` |
+| `PATCH` | `/notifications/read-all` | Mark all recipient notifications as read | Required | All (owner only) | None | `200 OK`: `{ message, count }` | `401 Unauthorized` |
+| `DELETE` | `/notifications/:id` | Delete notification from recipient inbox | Required | All (owner only) | None | `200 OK`: `{ message: 'Notification deleted successfully' }` | `403 Forbidden`<br>`404 Not Found` |
+
+#### 9. Activity & Audit Logs (`/api/activity`)
+
+| Method | Endpoint | Purpose | Auth | Roles | Request Body / Query | Success Response | Error Responses |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/activity` | List chronological organizational audit logs | Required | Scoped by Role (ADMIN: all, HR: HR/org, MANAGER: team, EMPLOYEE: self) | Query: `?page=1&limit=15&action=&entityType=&actor=&startDate=&endDate=` | `200 OK`: `{ logs: [...], total, pages }` | `401 Unauthorized` |
 
 ---
 
@@ -500,8 +508,11 @@ gantt
     section Phase 6: Tasks & Tracking
     Task Model, Workflow APIs & Test Suite   :done, p6_1, 2026-10-18, 2d
     Task Management Board & Dashboard Card   :done, p6_2, 2026-10-18, 2d
-    section Phase 7: Analytics & Release
-    End-to-End Testing & Production Release  :active, p7, 2026-10-20, 2d
+    section Phase 7: Notifications & Activity
+    Notification & Audit Log Models/Services :done, p7_1, 2026-10-20, 2d
+    Navbar Bell, /notifications & /activity  :done, p7_2, 2026-10-20, 2d
+    section Phase 8: Advanced Analytics
+    Organizational Metrics & Release Polish  :active, p8, 2026-10-22, 2d
 ```
 
 * **Phase 1 (Completed)**: Architecture scaffolding, dev server pipelines, health check diagnostic endpoint, Git configuration.
@@ -510,5 +521,6 @@ gantt
 * **Phase 4 (Completed)**: Attendance Management (Mongoose Attendance model with UTC midnight normalization and compound unique index `{ employee: 1, date: 1 }`, server-calculated `workHours = checkOut - checkIn`, self-service punch-in/out endpoints, RBAC-scoped team and organization attendance listing/filtering, automated test suite, live digital punch clock, metrics summary, and React UI).
 * **Phase 5 (Completed)**: Leave Management (Mongoose Leave model with UTC midnight normalization, multi-type annual quotas with atomic balance deductions on approval and restoration on cancellation, 21-case automated test suite, Attendance ON_LEAVE integration, and full React self-service & manager approval queue UI).
 * **Phase 6 (Completed)**: Task Management & Tracking (Mongoose Task model with compound indexes and dynamic `isOverdue` virtual, full REST endpoints `/api/tasks`, employee self-service `/api/tasks/my`, status lifecycle transitions with automated `completedAt` timestamp maintenance, 21-case automated test suite, React task board with filters and modals, and dashboard integration).
-* **Phase 7 (Next)**: Notifications, Organization Analytics, and Docker deployment preparation.
+* **Phase 7 (Completed)**: Notifications & Activity Management (Mongoose Notification and ActivityLog models with compound indexing, backend NotificationService with 5-second duplicate suppression, ActivityService with zero-secret metadata sanitation, automated event dispatch across Leave, Task, Employee, and Department workflows, ownership-enforced REST endpoints `/api/notifications` and RBAC-scoped `/api/activity`, 23-case backend test suite, Navbar notification bell with live unread counter badge and popover dropdown, dedicated `/notifications` management center, dedicated `/activity` audit timeline, and Dashboard alert/audit previews).
+* **Phase 8 (Next)**: Advanced Analytics & Reporting, Executive Metrics Dashboard, and Production Release Hardening.
 

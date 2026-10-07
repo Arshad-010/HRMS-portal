@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useNotifications } from '../../context/NotificationContext';
 import {
   Layers,
   Activity,
@@ -12,16 +13,82 @@ import {
   Clock,
   Calendar,
   CheckSquare,
+  Bell,
+  CheckCheck,
+  History,
+  ArrowRight,
+  Sparkles,
+  Info,
+  CheckCircle,
+  XCircle,
+  AlertCircle
 } from 'lucide-react';
 
 export const Navbar = () => {
   const { user, isAuthenticated, logout } = useAuth();
+  const {
+    unreadCount,
+    recentNotifications,
+    loading: notificationsLoading,
+    fetchRecentNotifications,
+    markAsRead,
+    markAllAsRead,
+  } = useNotifications();
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
+
+  // Close dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  // Fetch recent notifications when dropdown opens
+  const handleToggleDropdown = () => {
+    if (!isDropdownOpen) {
+      fetchRecentNotifications();
+    }
+    setIsDropdownOpen((prev) => !prev);
+  };
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const handleNotificationItemClick = async (notif) => {
+    if (!notif.isRead) {
+      await markAsRead(notif._id);
+    }
+    setIsDropdownOpen(false);
+
+    // Route to respective domain view
+    if (notif.relatedEntityType === 'LEAVE') {
+      navigate('/leaves');
+    } else if (notif.relatedEntityType === 'TASK') {
+      navigate('/tasks');
+    } else if (notif.relatedEntityType === 'ATTENDANCE') {
+      navigate('/attendance');
+    } else if (notif.relatedEntityType === 'EMPLOYEE') {
+      navigate('/employees');
+    } else if (notif.relatedEntityType === 'DEPARTMENT') {
+      navigate('/departments');
+    } else {
+      navigate('/notifications');
+    }
   };
 
   const roleBadgeColors = {
@@ -38,8 +105,46 @@ export const Navbar = () => {
     { name: 'Tasks', path: '/tasks', icon: CheckSquare },
     { name: 'Employees', path: '/employees', icon: Users },
     { name: 'Departments', path: '/departments', icon: Building2 },
+    { name: 'Activity', path: '/activity', icon: History },
     { name: 'System Health', path: '/health', icon: Activity },
   ];
+
+  // Helper for notification type icon
+  const getNotificationIcon = (type) => {
+    switch (type) {
+      case 'LEAVE_APPLIED':
+        return <Calendar className="w-3.5 h-3.5 text-amber-400" />;
+      case 'LEAVE_APPROVED':
+        return <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />;
+      case 'LEAVE_REJECTED':
+      case 'LEAVE_CANCELLED':
+        return <XCircle className="w-3.5 h-3.5 text-rose-400" />;
+      case 'TASK_ASSIGNED':
+        return <CheckSquare className="w-3.5 h-3.5 text-indigo-400" />;
+      case 'TASK_STATUS_CHANGED':
+      case 'TASK_COMPLETED':
+        return <CheckCircle className="w-3.5 h-3.5 text-cyan-400" />;
+      case 'ATTENDANCE_REMINDER':
+        return <Clock className="w-3.5 h-3.5 text-blue-400" />;
+      default:
+        return <Info className="w-3.5 h-3.5 text-indigo-400" />;
+    }
+  };
+
+  const formatTimeAgo = (date) => {
+    if (!date) return '';
+    const now = new Date();
+    const d = new Date(date);
+    const diffSec = Math.floor((now - d) / 1000);
+    if (diffSec < 60) return 'Just now';
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHrs = Math.floor(diffMin / 60);
+    if (diffHrs < 24) return `${diffHrs}h ago`;
+    const diffDays = Math.floor(diffHrs / 24);
+    if (diffDays < 7) return `${diffDays}d ago`;
+    return d.toLocaleDateString();
+  };
 
   return (
     <header className="border-b border-slate-800 bg-slate-900/80 backdrop-blur-md sticky top-0 z-50">
@@ -58,7 +163,7 @@ export const Navbar = () => {
 
           {/* Primary Nav Links (when authenticated) */}
           {isAuthenticated && (
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-1">
               {navLinks.map((link) => {
                 const Icon = link.icon;
                 const isActive =
@@ -97,7 +202,119 @@ export const Navbar = () => {
           )}
 
           {isAuthenticated ? (
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              {/* Notification Bell with Dropdown */}
+              <div className="relative" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={handleToggleDropdown}
+                  title="Notifications"
+                  className={`relative p-2 rounded-xl transition-all cursor-pointer ${
+                    isDropdownOpen
+                      ? 'bg-indigo-600/20 text-indigo-300 border border-indigo-500/40'
+                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800/80 border border-transparent'
+                  }`}
+                >
+                  <Bell className="w-4 h-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 flex items-center justify-center min-w-4.5 h-4.5 px-1 text-[10px] font-bold text-white bg-rose-500 rounded-full shadow-md shadow-rose-500/40 animate-pulse">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+
+                {/* Dropdown Popover */}
+                {isDropdownOpen && (
+                  <div className="absolute right-0 mt-2 w-80 sm:w-96 rounded-2xl bg-slate-900 border border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
+                    {/* Header */}
+                    <div className="px-4 py-3 bg-slate-900/90 border-b border-slate-800/80 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-white">Notifications</span>
+                        {unreadCount > 0 && (
+                          <span className="px-1.5 py-0.5 rounded-full text-[10px] font-semibold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
+                      {unreadCount > 0 && (
+                        <button
+                          type="button"
+                          onClick={markAllAsRead}
+                          className="inline-flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-300 font-medium transition-colors cursor-pointer"
+                        >
+                          <CheckCheck className="w-3.5 h-3.5" />
+                          <span>Mark all read</span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Notification Items List */}
+                    <div className="max-h-80 overflow-y-auto divide-y divide-slate-800/50">
+                      {notificationsLoading && recentNotifications.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-slate-400">
+                          Loading alerts...
+                        </div>
+                      ) : recentNotifications.length === 0 ? (
+                        <div className="py-8 px-4 text-center">
+                          <div className="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center mx-auto mb-2 text-slate-400">
+                            <Sparkles className="w-5 h-5 text-indigo-400" />
+                          </div>
+                          <p className="text-xs font-medium text-slate-300 mb-0.5">All caught up!</p>
+                          <p className="text-[11px] text-slate-500 mb-0">No new notifications for you right now.</p>
+                        </div>
+                      ) : (
+                        recentNotifications.map((notif) => (
+                          <div
+                            key={notif._id}
+                            onClick={() => handleNotificationItemClick(notif)}
+                            className={`p-3.5 flex items-start gap-3 transition-colors cursor-pointer hover:bg-slate-800/60 ${
+                              !notif.isRead ? 'bg-indigo-950/20' : 'bg-transparent'
+                            }`}
+                          >
+                            <div className="w-7 h-7 rounded-lg bg-slate-800 border border-slate-700/60 flex items-center justify-center shrink-0 mt-0.5">
+                              {getNotificationIcon(notif.type)}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-1 mb-0.5">
+                                <h4 className={`text-xs font-semibold truncate ${!notif.isRead ? 'text-white' : 'text-slate-300'}`}>
+                                  {notif.title}
+                                </h4>
+                                {!notif.isRead && (
+                                  <span className="w-2 h-2 rounded-full bg-indigo-500 shrink-0" />
+                                )}
+                              </div>
+                              <p className="text-[11px] text-slate-400 line-clamp-2 leading-relaxed mb-1">
+                                {notif.message}
+                              </p>
+                              <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                                <span>{formatTimeAgo(notif.createdAt)}</span>
+                                {notif.relatedEntityType && (
+                                  <span className="px-1.5 py-0.2 rounded bg-slate-800 text-slate-400 text-[9px] uppercase font-semibold">
+                                    {notif.relatedEntityType}
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        ))
+                      )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className="px-4 py-2.5 bg-slate-900/90 border-t border-slate-800/80 text-center">
+                      <Link
+                        to="/notifications"
+                        onClick={() => setIsDropdownOpen(false)}
+                        className="inline-flex items-center gap-1.5 text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors no-underline"
+                      >
+                        <span>View all notifications</span>
+                        <ArrowRight className="w-3.5 h-3.5" />
+                      </Link>
+                    </div>
+                  </div>
+                )}
+              </div>
+
               {/* User Identity Pill */}
               <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-800/80 border border-slate-700/60">
                 <div className="w-6 h-6 rounded-lg bg-indigo-600/30 text-indigo-400 flex items-center justify-center text-xs font-bold">

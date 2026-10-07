@@ -16,7 +16,9 @@ import {
   X,
   ArrowRight,
   CheckSquare,
-  AlertTriangle
+  AlertTriangle,
+  Bell,
+  History
 } from 'lucide-react';
 
 export const DashboardOverview = () => {
@@ -53,6 +55,11 @@ export const DashboardOverview = () => {
     completed: 0,
     overdue: 0,
   });
+
+  // Phase 7: Notifications & Activity Dashboard Data
+  const [recentNotifications, setRecentNotifications] = useState([]);
+  const [unreadNotifCount, setUnreadNotifCount] = useState(0);
+  const [recentActivities, setRecentActivities] = useState([]);
 
   useEffect(() => {
     const fetchLeavesAndTasks = async () => {
@@ -100,6 +107,27 @@ export const DashboardOverview = () => {
           const taskRes = await api.get(taskEndpoint);
           if (taskRes.data?.data?.stats) {
             setTaskData(taskRes.data.data.stats);
+          }
+        } catch {
+          // ignore
+        }
+
+        // Fetch Phase 7: Notifications preview
+        try {
+          const notifRes = await api.get('/notifications?limit=3');
+          if (notifRes.data?.data) {
+            setRecentNotifications(notifRes.data.data.notifications || []);
+            setUnreadNotifCount(notifRes.data.data.unreadCount || 0);
+          }
+        } catch {
+          // ignore
+        }
+
+        // Fetch Phase 7: Activity stream preview
+        try {
+          const actRes = await api.get('/activity?limit=4');
+          if (actRes.data?.data) {
+            setRecentActivities(actRes.data.data.logs || []);
           }
         } catch {
           // ignore
@@ -361,6 +389,115 @@ export const DashboardOverview = () => {
               <span className="text-slate-400">Protection:</span>
               <span className="font-mono text-slate-300">RBAC Filtered</span>
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Phase 7: Notifications & Activity Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+        {/* Recent Alerts & Notifications Widget */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+                  <Bell className="w-4 h-4" />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Recent Alerts</span>
+              </div>
+              {unreadNotifCount > 0 ? (
+                <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
+                  {unreadNotifCount} unread
+                </span>
+              ) : (
+                <span className="text-[11px] text-slate-500">All caught up</span>
+              )}
+            </div>
+
+            <div className="mt-4 space-y-2.5">
+              {recentNotifications.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-4 text-center">No recent alerts for your account</p>
+              ) : (
+                recentNotifications.map((notif) => (
+                  <div
+                    key={notif._id}
+                    className={`p-3 rounded-xl border text-xs flex items-start justify-between gap-3 ${
+                      !notif.isRead
+                        ? 'bg-indigo-950/20 border-indigo-500/30'
+                        : 'bg-slate-950/40 border-slate-800/60'
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <p className="font-semibold text-white truncate m-0">{notif.title}</p>
+                      <p className="text-[11px] text-slate-400 truncate m-0 mt-0.5">{notif.message}</p>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                      {new Date(notif.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-slate-800/60">
+            <Link
+              to="/notifications"
+              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center justify-between no-underline"
+            >
+              <span>View All Notifications</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        {/* Recent HRMS Audit Activity Widget */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <div className="w-7 h-7 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+                  <History className="w-4 h-4" />
+                </div>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Activity Stream</span>
+              </div>
+              <span className="text-[11px] text-slate-500 font-mono">Live Audit</span>
+            </div>
+
+            <div className="mt-4 space-y-2.5">
+              {recentActivities.length === 0 ? (
+                <p className="text-xs text-slate-500 italic py-4 text-center">No recent organizational activities</p>
+              ) : (
+                recentActivities.map((act) => (
+                  <div
+                    key={act._id}
+                    className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/60 text-xs flex items-center justify-between gap-3"
+                  >
+                    <div className="min-w-0 flex items-center gap-2">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-slate-800 text-indigo-300 border border-slate-700/60 shrink-0">
+                        {act.entityType}
+                      </span>
+                      <p className="text-slate-300 truncate m-0 font-medium" title={act.description}>
+                        {act.description}
+                      </p>
+                    </div>
+                    <span className="text-[10px] font-mono text-slate-500 shrink-0">
+                      {new Date(act.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 pt-3 border-t border-slate-800/60">
+            <Link
+              to="/activity"
+              className="text-xs text-violet-400 hover:text-violet-300 font-medium flex items-center justify-between no-underline"
+            >
+              <span>Explore Full Activity Log</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>

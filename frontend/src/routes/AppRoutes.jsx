@@ -9,6 +9,8 @@ import Tasks from '../pages/Tasks';
 import Departments from '../pages/Departments';
 import Employees from '../pages/Employees';
 import EmployeeDetails from '../pages/EmployeeDetails';
+import Notifications from '../pages/Notifications';
+import Activity from '../pages/Activity';
 import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
 import ProtectedRoute from '../components/common/ProtectedRoute';
@@ -95,6 +97,24 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <EmployeeDetails />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/notifications"
+        element={
+          <ProtectedRoute>
+            <Notifications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/activity"
+        element={
+          <ProtectedRoute>
+            <Activity />
           </ProtectedRoute>
         }
       />
