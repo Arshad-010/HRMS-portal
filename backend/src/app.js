@@ -21,6 +21,28 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Development Logging Middleware
+if (process.env.NODE_ENV !== 'production') {
+  app.use((req, res, next) => {
+    const start = Date.now();
+    res.on('finish', () => {
+      const duration = Date.now() - start;
+      const status = res.statusCode;
+      const logMessage = `${req.method} ${req.originalUrl} ${status} - ${duration}ms`;
+      
+      // Simple color coding for development
+      if (status >= 500) {
+        console.error(`\x1b[31m${logMessage}\x1b[0m`); // Red
+      } else if (status >= 400) {
+        console.warn(`\x1b[33m${logMessage}\x1b[0m`); // Yellow
+      } else {
+        console.log(`\x1b[36m${logMessage}\x1b[0m`); // Cyan
+      }
+    });
+    next();
+  });
+}
+
 // Root health ping
 app.get('/', (req, res) => {
   res.json({

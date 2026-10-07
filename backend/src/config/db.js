@@ -1,5 +1,8 @@
 import mongoose from 'mongoose';
 import { logger } from '../utils/logger.js';
+import dns from 'dns';
+
+dns.setServers(["8.8.8.8", "8.8.4.4"]);
 
 let memoryServerInstance = null;
 
@@ -15,6 +18,7 @@ export const connectDB = async () => {
       serverSelectionTimeoutMS: 7500,
     });
     logger.info(`MongoDB Connected to host: ${conn.connection.host}`);
+    if (process.env.NODE_ENV !== 'production') console.log('MongoDB connected');
     return conn;
   } catch (error) {
     logger.warn(`Primary MongoDB connection failed (${error.message}).`);
@@ -30,6 +34,7 @@ export const connectDB = async () => {
         const memoryUri = memoryServerInstance.getUri();
         const conn = await mongoose.connect(memoryUri);
         logger.info(`Connected to In-Memory MongoDB: ${memoryUri}`);
+        if (process.env.NODE_ENV !== 'production') console.log('MongoDB connected');
         return conn;
       } catch (memError) {
         logger.error(`Failed to start In-Memory MongoDB: ${memError.message}`);
@@ -37,6 +42,7 @@ export const connectDB = async () => {
     }
 
     logger.warn('Server will continue running in offline database mode. Check MongoDB service status.');
+    if (process.env.NODE_ENV !== 'production') console.error('MongoDB connection failed');
   }
 
   // Connection event listeners

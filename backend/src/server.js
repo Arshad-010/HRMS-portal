@@ -15,8 +15,11 @@ startServer();
 
 // Start HTTP server
 const server = app.listen(PORT, () => {
-  logger.info(`Server is running in ${process.env.NODE_ENV || 'development'} mode on port ${PORT}`);
-  logger.info(`Health check available at http://localhost:${PORT}/api/health`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`Server running on port ${PORT}`);
+  } else {
+    logger.info(`Server is running in production mode on port ${PORT}`);
+  }
 });
 
 // Handle unhandled promise rejections
