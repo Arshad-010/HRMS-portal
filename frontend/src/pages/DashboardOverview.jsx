@@ -158,7 +158,7 @@ export const DashboardOverview = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Welcome Banner */}
-      <div className="bg-gradient-to-r from-indigo-950/60 via-slate-900 to-slate-900 border border-slate-800 rounded-3xl p-8 mb-8 backdrop-blur-md relative overflow-hidden">
+      <div className="bg-gradient-to-r from-indigo-50 dark:from-indigo-950 via-slate-50 dark:via-slate-900 to-slate-100 dark:to-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-8 mb-8 backdrop-blur-md relative overflow-hidden">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-gradient-to-l from-indigo-500/5 to-transparent pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div>
@@ -166,10 +166,10 @@ export const DashboardOverview = () => {
               <Sparkles className="w-3.5 h-3.5" />
               Authenticated Session Active
             </div>
-            <h2 className="text-3xl font-extrabold text-white tracking-tight">
+            <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Welcome back, {employee?.firstName ? `${employee.firstName} ${employee.lastName}` : user?.email}!
             </h2>
-            <p className="text-slate-400 text-sm mt-1 max-w-2xl">
+            <p className="text-slate-500 dark:text-slate-400 text-sm mt-1 max-w-2xl">
               This is your enterprise portal overview. Role-based permissions and secure authentication are verified.
             </p>
           </div>
@@ -184,21 +184,21 @@ export const DashboardOverview = () => {
             </Link>
             <Link
               to="/leaves"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer no-underline"
             >
               <Calendar className="w-4 h-4 text-indigo-400" />
               Time Off / Leaves
             </Link>
             <Link
               to="/tasks"
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer no-underline"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer no-underline"
             >
               <CheckSquare className="w-4 h-4 text-sky-400" />
               Task Board
             </Link>
             <button
               onClick={() => setShowPasswordModal(true)}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
             >
               <KeyRound className="w-4 h-4 text-indigo-400" />
               Change Password
@@ -208,69 +208,69 @@ export const DashboardOverview = () => {
       </div>
 
       {/* Profile & Operations Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
         {/* User Profile Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Profile Identity</span>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Profile Identity</span>
             <span className={`px-2.5 py-0.5 rounded-full text-xs font-semibold border ${roleBadgeColors[role] || roleBadgeColors.EMPLOYEE}`}>
               {role}
             </span>
           </div>
-          <div className="mt-4 space-y-3.5 text-xs text-slate-300">
+          <div className="mt-4 space-y-3.5 text-xs text-slate-700 dark:text-slate-300">
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 flex items-center gap-1.5">
+              <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <User className="w-3.5 h-3.5 text-slate-500" />
                 Employee Code:
               </span>
-              <span className="font-mono font-semibold text-white">{employee?.employeeCode || 'N/A'}</span>
+              <span className="font-mono font-semibold text-slate-900 dark:text-white">{employee?.employeeCode || 'N/A'}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 flex items-center gap-1.5">
+              <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Briefcase className="w-3.5 h-3.5 text-slate-500" />
                 Designation:
               </span>
-              <span className="font-medium text-slate-200">{employee?.designation || 'Staff'}</span>
+              <span className="font-medium text-slate-800 dark:text-slate-200">{employee?.designation || 'Staff'}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 flex items-center gap-1.5">
+              <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Building2 className="w-3.5 h-3.5 text-slate-500" />
                 Department:
               </span>
-              <span className="font-medium text-slate-200 truncate max-w-[120px]">
+              <span className="font-medium text-slate-800 dark:text-slate-200 truncate max-w-[120px]">
                 {employee?.departmentId?.name ? `${employee.departmentId.name}` : 'Unassigned'}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-slate-400 flex items-center gap-1.5">
+              <span className="text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <Shield className="w-3.5 h-3.5 text-slate-500" />
                 Account Email:
               </span>
-              <span className="font-mono text-slate-200 truncate max-w-[130px]">{user?.email}</span>
+              <span className="font-mono text-slate-800 dark:text-slate-200 truncate max-w-[130px]">{user?.email}</span>
             </div>
           </div>
         </div>
 
         {/* Annual Leave Balances Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Leave Balances</span>
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Leave Balances</span>
               <span className="text-xs text-slate-500">Year 2026</span>
             </div>
             <div className="grid grid-cols-3 gap-2 mt-4">
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Casual</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Casual</p>
                 <p className="text-lg font-bold text-indigo-400 mt-1">{leaveData.balances?.casual ?? 12}</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">days left</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Sick</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Sick</p>
                 <p className="text-lg font-bold text-rose-400 mt-1">{leaveData.balances?.sick ?? 10}</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">days left</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Earned</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Earned</p>
                 <p className="text-lg font-bold text-emerald-400 mt-1">
                   {leaveData.balances?.earned ?? leaveData.balances?.paid ?? 12}
                 </p>
@@ -292,7 +292,7 @@ export const DashboardOverview = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800/60">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
             <Link
               to="/leaves"
               className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center justify-between no-underline"
@@ -304,36 +304,36 @@ export const DashboardOverview = () => {
         </div>
 
         {/* Task & Workflow Tracking Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-              <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                 {role === 'EMPLOYEE' ? 'My Tasks' : 'Workforce Tasks'}
               </span>
               <span className="text-xs text-slate-500">Live Status</span>
             </div>
 
             <div className="grid grid-cols-3 gap-2 mt-4">
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Active</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Active</p>
                 <p className="text-lg font-bold text-sky-400 mt-1">{taskData.inProgress}</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">in progress</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Review</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Review</p>
                 <p className="text-lg font-bold text-purple-400 mt-1">{taskData.review}</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">pending</p>
               </div>
-              <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-2.5 text-center">
-                <p className="text-[10px] uppercase font-semibold text-slate-400">Done</p>
+              <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-2.5 text-center">
+                <p className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Done</p>
                 <p className="text-lg font-bold text-emerald-400 mt-1">{taskData.completed}</p>
                 <p className="text-[9px] text-slate-500 mt-0.5">completed</p>
               </div>
             </div>
 
             <div className="mt-4 flex flex-wrap items-center justify-between gap-1 text-[11px]">
-              <span className="text-slate-400 font-medium">
-                Total: <span className="text-white font-bold">{taskData.total}</span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">
+                Total: <span className="text-slate-900 dark:text-white font-bold">{taskData.total}</span>
               </span>
               {taskData.overdue > 0 ? (
                 <span className="px-2 py-0.5 rounded-full bg-rose-500/10 text-rose-400 border border-rose-500/20 font-medium flex items-center gap-1">
@@ -348,7 +348,7 @@ export const DashboardOverview = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800/60">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
             <Link
               to="/tasks"
               className="text-xs text-sky-400 hover:text-sky-300 font-medium flex items-center justify-between no-underline"
@@ -359,51 +359,20 @@ export const DashboardOverview = () => {
           </div>
         </div>
 
-        {/* Authentication & Security Card */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-800">
-            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">Security Info</span>
-            <span className="inline-flex items-center gap-1 text-[11px] text-emerald-400 font-medium">
-              <CheckCircle2 className="w-3.5 h-3.5" />
-              JWT Valid
-            </span>
-          </div>
-          <div className="mt-4 space-y-3.5 text-xs text-slate-300">
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Auth Token:</span>
-              <span className="font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded text-[11px]">
-                Bearer JWT
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Hashing:</span>
-              <span className="font-mono text-slate-300">bcrypt (10 rounds)</span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Session:</span>
-              <span className="font-mono text-slate-300">
-                {user?.lastLogin ? new Date(user.lastLogin).toLocaleTimeString() : 'Active'}
-              </span>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-slate-400">Protection:</span>
-              <span className="font-mono text-slate-300">RBAC Filtered</span>
-            </div>
-          </div>
-        </div>
+
       </div>
 
       {/* Phase 7: Notifications & Activity Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Recent Alerts & Notifications Widget */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
                   <Bell className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Recent Alerts</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Recent Alerts</span>
               </div>
               {unreadNotifCount > 0 ? (
                 <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-300 border border-rose-500/30">
@@ -424,12 +393,12 @@ export const DashboardOverview = () => {
                     className={`p-3 rounded-xl border text-xs flex items-start justify-between gap-3 ${
                       !notif.isRead
                         ? 'bg-indigo-950/20 border-indigo-500/30'
-                        : 'bg-slate-950/40 border-slate-800/60'
+                        : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800'
                     }`}
                   >
                     <div className="min-w-0">
-                      <p className="font-semibold text-white truncate m-0">{notif.title}</p>
-                      <p className="text-[11px] text-slate-400 truncate m-0 mt-0.5">{notif.message}</p>
+                      <p className="font-semibold text-slate-900 dark:text-white truncate m-0">{notif.title}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 truncate m-0 mt-0.5">{notif.message}</p>
                     </div>
                     <span className="text-[10px] font-mono text-slate-500 shrink-0">
                       {new Date(notif.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })}
@@ -440,7 +409,7 @@ export const DashboardOverview = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800/60">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
             <Link
               to="/notifications"
               className="text-xs text-indigo-400 hover:text-indigo-300 font-medium flex items-center justify-between no-underline"
@@ -452,14 +421,14 @@ export const DashboardOverview = () => {
         </div>
 
         {/* Recent HRMS Audit Activity Widget */}
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div>
-            <div className="flex items-center justify-between pb-4 border-b border-slate-800">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-2">
                 <div className="w-7 h-7 rounded-lg bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
                   <History className="w-4 h-4" />
                 </div>
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-300">Activity Stream</span>
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">Activity Stream</span>
               </div>
               <span className="text-[11px] text-slate-500 font-mono">Live Audit</span>
             </div>
@@ -471,13 +440,13 @@ export const DashboardOverview = () => {
                 recentActivities.map((act) => (
                   <div
                     key={act._id}
-                    className="p-3 rounded-xl bg-slate-950/40 border border-slate-800/60 text-xs flex items-center justify-between gap-3"
+                    className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-xs flex items-center justify-between gap-3"
                   >
                     <div className="min-w-0 flex items-center gap-2">
-                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-slate-800 text-indigo-300 border border-slate-700/60 shrink-0">
+                      <span className="px-1.5 py-0.5 rounded text-[9px] font-mono font-semibold bg-slate-100 dark:bg-slate-800 text-indigo-300 border border-slate-300 dark:border-slate-700 shrink-0">
                         {act.entityType}
                       </span>
-                      <p className="text-slate-300 truncate m-0 font-medium" title={act.description}>
+                      <p className="text-slate-700 dark:text-slate-300 truncate m-0 font-medium" title={act.description}>
                         {act.description}
                       </p>
                     </div>
@@ -490,7 +459,7 @@ export const DashboardOverview = () => {
             </div>
           </div>
 
-          <div className="mt-4 pt-3 border-t border-slate-800/60">
+          <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
             <Link
               to="/activity"
               className="text-xs text-violet-400 hover:text-violet-300 font-medium flex items-center justify-between no-underline"
@@ -503,9 +472,9 @@ export const DashboardOverview = () => {
       </div>
 
       {/* Architecture Readiness Card */}
-      <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 text-xs text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 text-xs text-slate-500 dark:text-slate-400 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h4 className="text-sm font-semibold text-white mb-1 flex items-center gap-2">
+          <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
             <CheckSquare className="w-4 h-4 text-indigo-400" />
             Phase 6 Task Management &amp; Tracking Live
           </h4>
@@ -527,18 +496,18 @@ export const DashboardOverview = () => {
       {/* Change Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 max-w-md w-full shadow-2xl relative">
             <button
               onClick={() => setShowPasswordModal(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
-            <h3 className="text-lg font-bold text-white mb-1 flex items-center gap-2">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
               <Lock className="w-5 h-5 text-indigo-400" />
               Change Account Password
             </h3>
-            <p className="text-xs text-slate-400 mb-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
               Enter your current password and choose a secure replacement.
             </p>
 
@@ -555,31 +524,31 @@ export const DashboardOverview = () => {
 
             <form onSubmit={handlePasswordSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">Current Password</label>
+                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Current Password</label>
                 <input
                   type="password"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-100 outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none"
                 />
               </div>
               <div>
-                <label className="block text-xs font-medium text-slate-300 mb-1">New Password (min 8 chars)</label>
+                <label className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">New Password (min 8 chars)</label>
                 <input
                   type="password"
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   minLength={8}
-                  className="w-full px-3.5 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-100 outline-none"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none"
                 />
               </div>
               <div className="flex justify-end gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => setShowPasswordModal(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-medium hover:bg-slate-700 cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 text-xs font-medium hover:bg-slate-700 cursor-pointer"
                 >
                   Cancel
                 </button>

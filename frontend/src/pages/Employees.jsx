@@ -197,19 +197,19 @@ export const Employees = () => {
     ON_LEAVE: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
     PROBATION: 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
     TERMINATED: 'bg-rose-500/10 text-rose-400 border-rose-500/20',
-    RESIGNED: 'bg-slate-500/10 text-slate-400 border-slate-500/20',
+    RESIGNED: 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20',
   };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <Users className="w-6 h-6 text-indigo-400" />
             Employees Directory
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Manage company personnel, designations, reporting lines, and profiles
           </p>
         </div>
@@ -226,7 +226,7 @@ export const Employees = () => {
       </div>
 
       {/* Search and Filters Bar */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 my-6">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 my-6">
         <form onSubmit={handleSearchSubmit} className="flex flex-col md:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
@@ -235,7 +235,7 @@ export const Employees = () => {
               placeholder="Search by name, code (EMP-1001), designation..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-500 outline-none"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
             />
           </div>
 
@@ -246,7 +246,7 @@ export const Employees = () => {
                 setSelectedDept(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-300 outline-none cursor-pointer"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-700 dark:text-slate-300 outline-none cursor-pointer"
             >
               <option value="">All Departments</option>
               {departments.map((d) => (
@@ -262,7 +262,7 @@ export const Employees = () => {
                 setSelectedStatus(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-300 outline-none cursor-pointer"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-700 dark:text-slate-300 outline-none cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="ACTIVE">Active</option>
@@ -277,7 +277,7 @@ export const Employees = () => {
                 setSelectedType(e.target.value);
                 setPage(1);
               }}
-              className="px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-300 outline-none cursor-pointer"
+              className="px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-700 dark:text-slate-300 outline-none cursor-pointer"
             >
               <option value="">All Types</option>
               <option value="FULL_TIME">Full Time</option>
@@ -288,7 +288,7 @@ export const Employees = () => {
 
             <button
               type="submit"
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl text-xs font-medium cursor-pointer"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 rounded-xl text-xs font-medium cursor-pointer"
             >
               Filter
             </button>
@@ -300,7 +300,7 @@ export const Employees = () => {
       {loading ? (
         <div className="min-h-[40vh] flex flex-col items-center justify-center gap-3">
           <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-          <p className="text-xs text-slate-400">Loading employees directory...</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Loading employees directory...</p>
         </div>
       ) : error ? (
         <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-3">
@@ -308,16 +308,16 @@ export const Employees = () => {
           <span>{error}</span>
         </div>
       ) : employees.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 border border-slate-800 rounded-2xl p-8">
+        <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8">
           <Users className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-slate-300">No employees found</h3>
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No employees found</h3>
           <p className="text-xs text-slate-500 mt-1">Try resetting your filters or add a new employee.</p>
         </div>
       ) : (
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden backdrop-blur-sm">
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs text-slate-300">
-              <thead className="bg-slate-950/70 border-b border-slate-800 text-[11px] uppercase tracking-wider text-slate-400 font-semibold">
+            <table className="w-full text-left text-xs text-slate-700 dark:text-slate-300">
+              <thead className="bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 font-semibold">
                 <tr>
                   <th className="py-3.5 px-4">Employee</th>
                   <th className="py-3.5 px-4">Code</th>
@@ -330,7 +330,7 @@ export const Employees = () => {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {employees.map((emp) => (
-                  <tr key={emp._id} className="hover:bg-slate-800/30 transition-colors">
+                  <tr key={emp._id} className="hover:bg-slate-100 dark:bg-slate-800 transition-colors">
                     {/* Name & Avatar */}
                     <td className="py-3.5 px-4">
                       <div className="flex items-center gap-3">
@@ -338,10 +338,10 @@ export const Employees = () => {
                           {emp.firstName?.[0] || 'E'}
                         </div>
                         <div>
-                          <p className="font-semibold text-white leading-tight">
+                          <p className="font-semibold text-slate-900 dark:text-white leading-tight">
                             {emp.firstName} {emp.lastName}
                           </p>
-                          <p className="text-[11px] text-slate-400">{emp.userId?.email || 'N/A'}</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400">{emp.userId?.email || 'N/A'}</p>
                         </div>
                       </div>
                     </td>
@@ -353,14 +353,14 @@ export const Employees = () => {
 
                     {/* Department */}
                     <td className="py-3.5 px-4">
-                      <span className="inline-flex items-center gap-1.5 font-medium text-slate-200">
+                      <span className="inline-flex items-center gap-1.5 font-medium text-slate-800 dark:text-slate-200">
                         <Building2 className="w-3.5 h-3.5 text-slate-500" />
                         {emp.departmentId?.name || 'Unassigned'}
                       </span>
                     </td>
 
                     {/* Designation */}
-                    <td className="py-3.5 px-4 text-slate-300">
+                    <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
                       {emp.designation}
                     </td>
 
@@ -391,7 +391,7 @@ export const Employees = () => {
                       <div className="flex items-center justify-end gap-1.5">
                         <Link
                           to={`/employees/${emp._id}`}
-                          className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                          className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white hover:bg-slate-100 dark:bg-slate-800 transition-colors"
                           title="View Details"
                         >
                           <Eye className="w-3.5 h-3.5" />
@@ -400,7 +400,7 @@ export const Employees = () => {
                         {isPrivileged && (
                           <button
                             onClick={() => openEditModal(emp)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
                             title="Edit Employee"
                           >
                             <Edit2 className="w-3.5 h-3.5" />
@@ -410,7 +410,7 @@ export const Employees = () => {
                         {isAdmin && emp.status !== 'TERMINATED' && (
                           <button
                             onClick={() => handleDeactivate(emp._id, `${emp.firstName} ${emp.lastName}`, emp.employeeCode)}
-                            className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                             title="Deactivate Employee"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -425,27 +425,27 @@ export const Employees = () => {
           </div>
 
           {/* Pagination Controls */}
-          <div className="px-4 py-3 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+          <div className="px-4 py-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
             <span>
-              Showing <span className="text-white font-medium">{employees.length}</span> of{' '}
-              <span className="text-white font-medium">{total}</span> employees
+              Showing <span className="text-slate-900 dark:text-white font-medium">{employees.length}</span> of{' '}
+              <span className="text-slate-900 dark:text-white font-medium">{total}</span> employees
             </span>
 
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page <= 1}
-                className="p-1.5 rounded-lg border border-slate-800 text-slate-300 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="px-2 font-medium text-slate-200">
+              <span className="px-2 font-medium text-slate-800 dark:text-slate-200">
                 Page {page} of {pages}
               </span>
               <button
                 onClick={() => setPage((p) => Math.min(pages, p + 1))}
                 disabled={page >= pages}
-                className="p-1.5 rounded-lg border border-slate-800 text-slate-300 hover:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:bg-slate-800 disabled:opacity-40 disabled:pointer-events-none cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -457,18 +457,18 @@ export const Employees = () => {
       {/* Add / Edit Employee Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-2xl w-full shadow-2xl relative my-8">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-2xl w-full shadow-2xl relative my-8">
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
               {editingEmp ? 'Edit Employee Details' : 'Onboard New Employee'}
             </h3>
-            <p className="text-xs text-slate-400 mb-5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
               {editingEmp
                 ? 'Update personnel record and role credentials'
                 : 'Create personnel record and auto-provision User login credentials'}
@@ -489,23 +489,23 @@ export const Employees = () => {
               {/* Row 1: Names */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">First Name *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">First Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Last Name *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Last Name *</label>
                   <input
                     type="text"
                     required
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
               </div>
@@ -513,7 +513,7 @@ export const Employees = () => {
               {/* Row 2: Email & Password */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Work Email *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Work Email *</label>
                   <input
                     type="email"
                     required
@@ -521,18 +521,18 @@ export const Employees = () => {
                     placeholder="alex@company.com"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none disabled:opacity-50"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-50"
                   />
                 </div>
                 {!editingEmp && (
                   <div>
-                    <label className="block font-medium text-slate-300 mb-1">Initial Password</label>
+                    <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Initial Password</label>
                     <input
                       type="password"
                       placeholder="Defaults to Welcome@2026!"
                       value={formData.password}
                       onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                     />
                   </div>
                 )}
@@ -541,12 +541,12 @@ export const Employees = () => {
               {/* Row 3: Department & Designation */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Department *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Department *</label>
                   <select
                     required
                     value={formData.departmentId}
                     onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="">Select Department</option>
                     {departments.map((d) => (
@@ -557,14 +557,14 @@ export const Employees = () => {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Designation *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Designation *</label>
                   <input
                     type="text"
                     required
                     placeholder="e.g. Software Engineer"
                     value={formData.designation}
                     onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
               </div>
@@ -572,12 +572,12 @@ export const Employees = () => {
               {/* Row 4: Role & Employment Type */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">System Role</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">System Role</label>
                   <select
                     disabled={!isAdmin}
                     value={formData.role}
                     onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none disabled:opacity-50"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-50"
                   >
                     <option value="EMPLOYEE">EMPLOYEE</option>
                     <option value="MANAGER">MANAGER</option>
@@ -587,11 +587,11 @@ export const Employees = () => {
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Employment Type</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Employment Type</label>
                   <select
                     value={formData.employmentType}
                     onChange={(e) => setFormData({ ...formData, employmentType: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="FULL_TIME">Full Time</option>
                     <option value="PART_TIME">Part Time</option>
@@ -601,11 +601,11 @@ export const Employees = () => {
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Status</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
                   <select
                     value={formData.status}
                     onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="ACTIVE">Active</option>
                     <option value="ON_LEAVE">On Leave</option>
@@ -619,22 +619,22 @@ export const Employees = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {isPrivileged && (
                   <div>
-                    <label className="block font-medium text-slate-300 mb-1">Annual Salary ($)</label>
+                    <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Annual Salary ($)</label>
                     <input
                       type="number"
                       min={0}
                       value={formData.salary}
                       onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
-                      className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                      className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                     />
                   </div>
                 )}
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Reporting Manager</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Reporting Manager</label>
                   <select
                     value={formData.reportingManagerId}
                     onChange={(e) => setFormData({ ...formData, reportingManagerId: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="">None / Self-Managing</option>
                     {employees
@@ -651,21 +651,21 @@ export const Employees = () => {
               {/* Row 6: Phone & Gender */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Contact Phone</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Contact Phone</label>
                   <input
                     type="text"
                     placeholder="+1 (555) 000-0000"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Gender</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Gender</label>
                   <select
                     value={formData.gender}
                     onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="PREFER_NOT_TO_SAY">Prefer not to say</option>
                     <option value="MALE">Male</option>
@@ -679,7 +679,7 @@ export const Employees = () => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>

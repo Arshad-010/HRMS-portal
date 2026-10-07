@@ -436,7 +436,7 @@ export const Tasks = () => {
         return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
       case 'LOW':
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/30';
+        return 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/30';
     }
   };
 
@@ -444,7 +444,7 @@ export const Tasks = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case 'TODO':
-        return 'bg-slate-800 text-slate-300 border-slate-700';
+        return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
       case 'IN_PROGRESS':
         return 'bg-sky-500/10 text-sky-400 border-sky-500/30';
       case 'REVIEW':
@@ -454,20 +454,20 @@ export const Tasks = () => {
       case 'CANCELLED':
         return 'bg-rose-500/10 text-rose-400 border-rose-500/30';
       default:
-        return 'bg-slate-800 text-slate-400 border-slate-700';
+        return 'bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-slate-300 dark:border-slate-700';
     }
   };
 
   return (
     <div className="space-y-8 animate-fadeIn max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       {/* Header Section */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+          <h1 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <CheckSquare className="w-6 h-6 text-indigo-400" />
             Task Management &amp; Tracking
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Organize assignments, prioritize milestones, and monitor workflow lifecycles across teams
           </p>
         </div>
@@ -476,7 +476,7 @@ export const Tasks = () => {
           <button
             onClick={fetchTasks}
             disabled={loading}
-            className="p-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
+            className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 text-xs font-medium flex items-center gap-1.5 transition-colors cursor-pointer"
             title="Refresh Tasks"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
@@ -500,37 +500,37 @@ export const Tasks = () => {
 
       {/* Metrics Overview Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Total Tasks</span>
-          <p className="text-2xl font-bold text-white mt-1.5">{stats.total}</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Tasks</span>
+          <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{stats.total}</p>
           <span className="text-[10px] text-slate-500">In current scope</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
-          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-400">To Do</span>
-          <p className="text-2xl font-bold text-slate-300 mt-1.5">{stats.todo}</p>
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
+          <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">To Do</span>
+          <p className="text-2xl font-bold text-slate-700 dark:text-slate-300 mt-1.5">{stats.todo}</p>
           <span className="text-[10px] text-slate-500">Awaiting start</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-400">In Progress</span>
           <p className="text-2xl font-bold text-sky-400 mt-1.5">{stats.inProgress}</p>
           <span className="text-[10px] text-slate-500">Active execution</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-purple-400">In Review</span>
           <p className="text-2xl font-bold text-purple-400 mt-1.5">{stats.review}</p>
           <span className="text-[10px] text-slate-500">Pending review</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Completed</span>
           <p className="text-2xl font-bold text-emerald-400 mt-1.5">{stats.completed}</p>
           <span className="text-[10px] text-slate-500">Successfully closed</span>
         </div>
 
-        <div className="bg-slate-900/60 border border-rose-500/20 bg-rose-500/5 rounded-2xl p-4 backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-900 border border-rose-500/20 bg-rose-500/5 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-rose-400 flex items-center gap-1">
             <AlertTriangle className="w-3.5 h-3.5" /> Overdue
           </span>
@@ -540,10 +540,10 @@ export const Tasks = () => {
       </div>
 
       {/* Main Container */}
-      <div className="bg-slate-900/60 border border-slate-800 rounded-2xl backdrop-blur-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl backdrop-blur-sm overflow-hidden">
         {/* Navigation Tabs (if privileged user) */}
         {isManagerOrAbove && (
-          <div className="flex border-b border-slate-800 px-6 pt-2 bg-slate-950/40">
+          <div className="flex border-b border-slate-200 dark:border-slate-800 px-6 pt-2 bg-slate-50 dark:bg-slate-950">
             <button
               onClick={() => {
                 setActiveTab('all');
@@ -552,12 +552,12 @@ export const Tasks = () => {
               className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors cursor-pointer ${
                 activeTab === 'all'
                   ? 'border-indigo-500 text-indigo-400'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               <Building2 className="w-4 h-4" />
               <span>Team &amp; Workforce Tasks</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-300">
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {activeTab === 'all' ? total : ''}
               </span>
             </button>
@@ -570,12 +570,12 @@ export const Tasks = () => {
               className={`px-4 py-3 text-xs font-semibold border-b-2 flex items-center gap-2 transition-colors cursor-pointer ${
                 activeTab === 'my'
                   ? 'border-indigo-500 text-indigo-400'
-                  : 'border-transparent text-slate-400 hover:text-slate-200'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               <User className="w-4 h-4" />
               <span>My Assigned Tasks</span>
-              <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-800 text-slate-300">
+              <span className="px-2 py-0.5 rounded-full text-[10px] bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300">
                 {activeTab === 'my' ? total : ''}
               </span>
             </button>
@@ -583,7 +583,7 @@ export const Tasks = () => {
         )}
 
         {/* Filters Toolbar */}
-        <div className="p-4 sm:p-6 border-b border-slate-800/80 space-y-4">
+        <div className="p-4 sm:p-6 border-b border-slate-200 dark:border-slate-800 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {/* Search */}
             <div className="relative">
@@ -594,7 +594,7 @@ export const Tasks = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && fetchTasks()}
-                className="w-full bg-slate-950/60 border border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl pl-9 pr-3 py-2 text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500 transition-colors"
               />
             </div>
 
@@ -605,7 +605,7 @@ export const Tasks = () => {
                 setFilterStatus(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
             >
               <option value="">All Statuses</option>
               <option value="TODO">To Do</option>
@@ -622,7 +622,7 @@ export const Tasks = () => {
                 setFilterPriority(e.target.value);
                 setPage(1);
               }}
-              className="bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
             >
               <option value="">All Priorities</option>
               <option value="URGENT">Urgent</option>
@@ -639,7 +639,7 @@ export const Tasks = () => {
                   setFilterDept(e.target.value);
                   setPage(1);
                 }}
-                className="bg-slate-950/60 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
+                className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 transition-colors cursor-pointer"
               >
                 <option value="">All Departments</option>
                 {departments.map((d) => (
@@ -659,7 +659,7 @@ export const Tasks = () => {
               className={`px-3 py-2 rounded-xl text-xs font-medium border flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
                 filterOverdue
                   ? 'bg-rose-500/15 text-rose-300 border-rose-500/40'
-                  : 'bg-slate-950/60 text-slate-400 border-slate-800 hover:text-slate-200'
+                  : 'bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:text-slate-800 dark:text-slate-200'
               }`}
             >
               <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
@@ -671,7 +671,7 @@ export const Tasks = () => {
         {/* Task List / Table */}
         <div className="overflow-x-auto">
           {loading ? (
-            <div className="flex flex-col items-center justify-center py-16 text-slate-400">
+            <div className="flex flex-col items-center justify-center py-16 text-slate-500 dark:text-slate-400">
               <Loader2 className="w-8 h-8 text-indigo-400 animate-spin mb-3" />
               <p className="text-xs">Loading tasks and metrics...</p>
             </div>
@@ -680,7 +680,7 @@ export const Tasks = () => {
               <p>{error}</p>
               <button
                 onClick={fetchTasks}
-                className="mt-3 px-3 py-1.5 bg-slate-800 text-slate-200 rounded-lg hover:bg-slate-700 cursor-pointer"
+                className="mt-3 px-3 py-1.5 bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 rounded-lg hover:bg-slate-700 cursor-pointer"
               >
                 Try Again
               </button>
@@ -688,7 +688,7 @@ export const Tasks = () => {
           ) : tasks.length === 0 ? (
             <div className="p-16 text-center text-slate-500 text-xs">
               <CheckSquare className="w-10 h-10 mx-auto text-slate-600 mb-2 opacity-50" />
-              <p className="font-semibold text-slate-400">No tasks found</p>
+              <p className="font-semibold text-slate-500 dark:text-slate-400">No tasks found</p>
               <p className="mt-1 text-slate-500">
                 {search || filterStatus || filterPriority || filterDept || filterOverdue
                   ? 'No tasks match your selected filter criteria'
@@ -698,7 +698,7 @@ export const Tasks = () => {
           ) : (
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="border-b border-slate-800/80 bg-slate-950/30 text-[11px] font-semibold uppercase tracking-wider text-slate-400">
+                <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
                   <th className="py-3 px-4">Task Details</th>
                   <th className="py-3 px-4">Assignee</th>
                   <th className="py-3 px-4">Priority</th>
@@ -707,7 +707,7 @@ export const Tasks = () => {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 text-slate-300">
+              <tbody className="divide-y divide-slate-800/60 text-slate-700 dark:text-slate-300">
                 {tasks.map((task) => {
                   const isAssignedToMe = task.assignedTo?._id?.toString() === user?.employee?._id?.toString();
                   const canEdit = isManagerOrAbove;
@@ -715,7 +715,7 @@ export const Tasks = () => {
                   return (
                     <tr
                       key={task._id}
-                      className="hover:bg-slate-800/25 transition-colors group"
+                      className="hover:bg-slate-100 dark:bg-slate-800 transition-colors group"
                     >
                       {/* Title & Department */}
                       <td className="py-3.5 px-4">
@@ -725,7 +725,7 @@ export const Tasks = () => {
                               setSelectedTask(task);
                               setDetailsModalOpen(true);
                             }}
-                            className="font-semibold text-white hover:text-indigo-400 text-left line-clamp-1 cursor-pointer transition-colors"
+                            className="font-semibold text-slate-900 dark:text-white hover:text-indigo-400 text-left line-clamp-1 cursor-pointer transition-colors"
                           >
                             {task.title}
                           </button>
@@ -736,7 +736,7 @@ export const Tasks = () => {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-400">
+                        <div className="flex items-center gap-2 mt-1 text-[11px] text-slate-500 dark:text-slate-400">
                           <span>{task.department?.name || 'Department'}</span>
                           {task.estimatedHours > 0 && (
                             <>
@@ -757,7 +757,7 @@ export const Tasks = () => {
                             {task.assignedTo?.firstName ? task.assignedTo.firstName[0] : 'U'}
                           </div>
                           <div>
-                            <p className="font-medium text-slate-200 m-0">
+                            <p className="font-medium text-slate-800 dark:text-slate-200 m-0">
                               {task.assignedTo
                                 ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}`
                                 : 'Unassigned'}
@@ -784,7 +784,7 @@ export const Tasks = () => {
                       <td className="py-3.5 px-4">
                         <span
                           className={`text-xs ${
-                            task.isOverdue ? 'text-rose-400 font-semibold' : 'text-slate-300'
+                            task.isOverdue ? 'text-rose-400 font-semibold' : 'text-slate-700 dark:text-slate-300'
                           }`}
                         >
                           {formatDateStr(task.dueDate)}
@@ -807,7 +807,7 @@ export const Tasks = () => {
                             <select
                               value={task.status}
                               onChange={(e) => handleStatusChange(task._id, e.target.value)}
-                              className="bg-slate-950 border border-slate-800 rounded-lg px-2 py-0.5 text-[10px] text-slate-400 hover:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                              className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2 py-0.5 text-[10px] text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 cursor-pointer"
                               title="Update status"
                             >
                               <option value="TODO">To Do</option>
@@ -828,7 +828,7 @@ export const Tasks = () => {
                               setSelectedTask(task);
                               setDetailsModalOpen(true);
                             }}
-                            className="p-1.5 text-slate-400 hover:text-indigo-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                            className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                             title="View Details"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -838,7 +838,7 @@ export const Tasks = () => {
                             <>
                               <button
                                 onClick={() => openEditModal(task)}
-                                className="p-1.5 text-slate-400 hover:text-sky-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-sky-400 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                                 title="Edit Task"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
@@ -846,7 +846,7 @@ export const Tasks = () => {
 
                               <button
                                 onClick={() => openAssignModal(task)}
-                                className="p-1.5 text-slate-400 hover:text-purple-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-purple-400 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                                 title="Reassign Task"
                               >
                                 <UserCheck className="w-3.5 h-3.5" />
@@ -854,7 +854,7 @@ export const Tasks = () => {
 
                               <button
                                 onClick={() => handleDeleteTask(task._id, task.title)}
-                                className="p-1.5 text-slate-400 hover:text-rose-400 hover:bg-slate-800 rounded-lg transition-colors cursor-pointer"
+                                className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-slate-100 dark:bg-slate-800 rounded-lg transition-colors cursor-pointer"
                                 title="Delete Task"
                               >
                                 <Trash2 className="w-3.5 h-3.5" />
@@ -873,7 +873,7 @@ export const Tasks = () => {
 
         {/* Pagination Bar */}
         {pages > 1 && (
-          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-800/80 bg-slate-950/20 text-xs text-slate-400">
+          <div className="flex items-center justify-between px-6 py-4 border-t border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-xs text-slate-500 dark:text-slate-400">
             <span>
               Showing {tasks.length} of {total} tasks (Page {page} of {pages})
             </span>
@@ -881,15 +881,15 @@ export const Tasks = () => {
               <button
                 onClick={() => setPage((p) => Math.max(p - 1, 1))}
                 disabled={page <= 1}
-                className="p-1.5 rounded-lg border border-slate-800 bg-slate-900 disabled:opacity-40 hover:bg-slate-800 text-slate-300 cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 disabled:opacity-40 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="font-mono text-slate-300 px-2">{page}</span>
+              <span className="font-mono text-slate-700 dark:text-slate-300 px-2">{page}</span>
               <button
                 onClick={() => setPage((p) => Math.min(p + 1, pages))}
                 disabled={page >= pages}
-                className="p-1.5 rounded-lg border border-slate-800 bg-slate-900 disabled:opacity-40 hover:bg-slate-800 text-slate-300 cursor-pointer"
+                className="p-1.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 disabled:opacity-40 hover:bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -900,20 +900,20 @@ export const Tasks = () => {
 
       {/* CREATE TASK MODAL */}
       {createModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
             <button
               onClick={() => setCreateModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"
+              className="absolute top-5 right-5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Plus className="w-5 h-5 text-indigo-400" />
               Create New Task
             </h2>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Assign action items, set target due dates, and track completion progress
             </p>
 
@@ -930,7 +930,7 @@ export const Tasks = () => {
 
             <form onSubmit={handleCreateSubmit} className="mt-5 space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                   Task Title <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -939,31 +939,31 @@ export const Tasks = () => {
                   placeholder="e.g. Implement OAuth2 Refresh Token Flow"
                   value={createForm.title}
                   onChange={(e) => setCreateForm({ ...createForm, title: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Description</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Description</label>
                 <textarea
                   rows={3}
                   placeholder="Provide context, acceptance criteria, or links..."
                   value={createForm.description}
                   onChange={(e) => setCreateForm({ ...createForm, description: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 placeholder-slate-500 focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                     Department <span className="text-rose-400">*</span>
                   </label>
                   <select
                     required
                     value={createForm.department}
                     onChange={(e) => handleCreateDeptChange(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Select Department</option>
                     {departments.map((d) => (
@@ -975,7 +975,7 @@ export const Tasks = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                     Assignee <span className="text-rose-400">*</span>
                   </label>
                   <select
@@ -983,7 +983,7 @@ export const Tasks = () => {
                     disabled={!createForm.department}
                     value={createForm.assignedTo}
                     onChange={(e) => setCreateForm({ ...createForm, assignedTo: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                   >
                     <option value="">
                       {!createForm.department ? 'Select Dept first' : 'Select Employee'}
@@ -999,11 +999,11 @@ export const Tasks = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Priority</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Priority</label>
                   <select
                     value={createForm.priority}
                     onChange={(e) => setCreateForm({ ...createForm, priority: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -1013,7 +1013,7 @@ export const Tasks = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                     Due Date <span className="text-rose-400">*</span>
                   </label>
                   <input
@@ -1021,28 +1021,28 @@ export const Tasks = () => {
                     required
                     value={createForm.dueDate}
                     onChange={(e) => setCreateForm({ ...createForm, dueDate: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Est. Hours</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Est. Hours</label>
                   <input
                     type="number"
                     min="0"
                     step="0.5"
                     value={createForm.estimatedHours}
                     onChange={(e) => setCreateForm({ ...createForm, estimatedHours: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setCreateModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1068,16 +1068,16 @@ export const Tasks = () => {
 
       {/* EDIT TASK MODAL */}
       {editModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
             <button
               onClick={() => setEditModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"
+              className="absolute top-5 right-5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <Edit2 className="w-5 h-5 text-sky-400" />
               Edit Task Details
             </h2>
@@ -1095,7 +1095,7 @@ export const Tasks = () => {
 
             <form onSubmit={handleEditSubmit} className="mt-5 space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                   Task Title <span className="text-rose-400">*</span>
                 </label>
                 <input
@@ -1103,27 +1103,27 @@ export const Tasks = () => {
                   required
                   value={editForm.title}
                   onChange={(e) => setEditForm({ ...editForm, title: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Description</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Description</label>
                 <textarea
                   rows={3}
                   value={editForm.description}
                   onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Department</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Department</label>
                   <select
                     value={editForm.department}
                     onChange={(e) => handleEditDeptChange(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Select Department</option>
                     {departments.map((d) => (
@@ -1135,11 +1135,11 @@ export const Tasks = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Assignee</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Assignee</label>
                   <select
                     value={editForm.assignedTo}
                     onChange={(e) => setEditForm({ ...editForm, assignedTo: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="">Select Employee</option>
                     {deptEmployees.map((emp) => (
@@ -1153,11 +1153,11 @@ export const Tasks = () => {
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Priority</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Priority</label>
                   <select
                     value={editForm.priority}
                     onChange={(e) => setEditForm({ ...editForm, priority: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   >
                     <option value="LOW">Low</option>
                     <option value="MEDIUM">Medium</option>
@@ -1167,34 +1167,34 @@ export const Tasks = () => {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Due Date</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Due Date</label>
                   <input
                     type="date"
                     required
                     value={editForm.dueDate}
                     onChange={(e) => setEditForm({ ...editForm, dueDate: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-medium mb-1">Est. Hours</label>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Est. Hours</label>
                   <input
                     type="number"
                     min="0"
                     step="0.5"
                     value={editForm.estimatedHours}
                     onChange={(e) => setEditForm({ ...editForm, estimatedHours: e.target.value })}
-                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setEditModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1220,20 +1220,20 @@ export const Tasks = () => {
 
       {/* REASSIGN TASK MODAL */}
       {assignModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-md p-6 shadow-2xl relative">
             <button
               onClick={() => setAssignModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"
+              className="absolute top-5 right-5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h2 className="text-lg font-bold text-white flex items-center gap-2">
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
               <UserCheck className="w-5 h-5 text-purple-400" />
               Reassign Task
             </h2>
-            <p className="text-xs text-slate-400 mt-1">Transfer ownership of this task to another team member</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Transfer ownership of this task to another team member</p>
 
             {assignFeedback.error && (
               <div className="mt-4 p-3 bg-rose-500/10 border border-rose-500/20 text-rose-400 rounded-xl text-xs">
@@ -1248,11 +1248,11 @@ export const Tasks = () => {
 
             <form onSubmit={handleAssignSubmit} className="mt-5 space-y-4 text-xs">
               <div>
-                <label className="block text-slate-300 font-medium mb-1">Department</label>
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">Department</label>
                 <select
                   value={assignForm.department}
                   onChange={(e) => handleAssignDeptChange(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                 >
                   <option value="">Select Department</option>
                   {departments.map((d) => (
@@ -1264,14 +1264,14 @@ export const Tasks = () => {
               </div>
 
               <div>
-                <label className="block text-slate-300 font-medium mb-1">
+                <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                   New Assignee <span className="text-rose-400">*</span>
                 </label>
                 <select
                   required
                   value={assignForm.assignedTo}
                   onChange={(e) => setAssignForm({ ...assignForm, assignedTo: e.target.value })}
-                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-slate-200 focus:outline-none focus:border-indigo-500"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
                 >
                   <option value="">Select Employee</option>
                   {deptEmployees.map((emp) => (
@@ -1282,11 +1282,11 @@ export const Tasks = () => {
                 </select>
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setAssignModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -1312,11 +1312,11 @@ export const Tasks = () => {
 
       {/* TASK DETAILS MODAL */}
       {detailsModalOpen && selectedTask && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fadeIn">
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-fadeIn">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl w-full max-w-lg p-6 shadow-2xl relative">
             <button
               onClick={() => setDetailsModalOpen(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-white cursor-pointer"
+              className="absolute top-5 right-5 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -1344,58 +1344,58 @@ export const Tasks = () => {
               )}
             </div>
 
-            <h2 className="text-lg font-bold text-white mb-2">{selectedTask.title}</h2>
+            <h2 className="text-lg font-bold text-slate-900 dark:text-white mb-2">{selectedTask.title}</h2>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3 text-xs text-slate-300 whitespace-pre-wrap max-h-36 overflow-y-auto mb-4">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-xs text-slate-700 dark:text-slate-300 whitespace-pre-wrap max-h-36 overflow-y-auto mb-4">
               {selectedTask.description || 'No description provided.'}
             </div>
 
             <div className="grid grid-cols-2 gap-3 text-xs mb-4">
-              <div className="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+              <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] uppercase font-semibold text-slate-500">Assignee</span>
-                <p className="font-semibold text-slate-200 mt-0.5">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.assignedTo?.firstName
                     ? `${selectedTask.assignedTo.firstName} ${selectedTask.assignedTo.lastName}`
                     : 'N/A'}
                 </p>
-                <p className="text-[10px] text-slate-400 font-mono">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                   {selectedTask.assignedTo?.employeeCode || ''}
                 </p>
               </div>
 
-              <div className="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+              <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] uppercase font-semibold text-slate-500">Department</span>
-                <p className="font-semibold text-slate-200 mt-0.5">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.department?.name || 'N/A'}
                 </p>
-                <p className="text-[10px] text-slate-400 font-mono">
+                <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                   {selectedTask.department?.code || ''}
                 </p>
               </div>
 
-              <div className="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+              <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] uppercase font-semibold text-slate-500">Due Date</span>
                 <p
                   className={`font-semibold mt-0.5 ${
-                    selectedTask.isOverdue ? 'text-rose-400' : 'text-slate-200'
+                    selectedTask.isOverdue ? 'text-rose-400' : 'text-slate-800 dark:text-slate-200'
                   }`}
                 >
                   {formatDateStr(selectedTask.dueDate)}
                 </p>
               </div>
 
-              <div className="bg-slate-950/40 p-2.5 rounded-xl border border-slate-800/60">
+              <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
                 <span className="text-[10px] uppercase font-semibold text-slate-500">Estimated Effort</span>
-                <p className="font-semibold text-slate-200 mt-0.5">
+                <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.estimatedHours || 0} hours
                 </p>
               </div>
             </div>
 
-            <div className="border-t border-slate-800/80 pt-3 text-[11px] text-slate-400 space-y-1 mb-5">
+            <div className="border-t border-slate-200 dark:border-slate-800 pt-3 text-[11px] text-slate-500 dark:text-slate-400 space-y-1 mb-5">
               <div className="flex justify-between">
                 <span>Created Date:</span>
-                <span className="font-mono text-slate-300">{formatDateStr(selectedTask.createdAt)}</span>
+                <span className="font-mono text-slate-700 dark:text-slate-300">{formatDateStr(selectedTask.createdAt)}</span>
               </div>
               {selectedTask.completedAt && (
                 <div className="flex justify-between text-emerald-400">
@@ -1406,7 +1406,7 @@ export const Tasks = () => {
               {selectedTask.assignedBy && (
                 <div className="flex justify-between">
                   <span>Created By:</span>
-                  <span className="text-slate-300">
+                  <span className="text-slate-700 dark:text-slate-300">
                     {selectedTask.assignedBy.email} ({selectedTask.assignedBy.role})
                   </span>
                 </div>
@@ -1414,13 +1414,13 @@ export const Tasks = () => {
             </div>
 
             {/* Quick Status Action Controls */}
-            <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-800">
+            <div className="flex items-center justify-between gap-2 pt-3 border-t border-slate-200 dark:border-slate-800">
               <div className="flex items-center gap-1.5">
-                <span className="text-[11px] text-slate-400">Move status:</span>
+                <span className="text-[11px] text-slate-500 dark:text-slate-400">Move status:</span>
                 <select
                   value={selectedTask.status}
                   onChange={(e) => handleStatusChange(selectedTask._id, e.target.value)}
-                  className="bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
+                  className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg px-2.5 py-1 text-xs text-slate-700 dark:text-slate-300 focus:outline-none focus:border-indigo-500 cursor-pointer"
                 >
                   <option value="TODO">To Do</option>
                   <option value="IN_PROGRESS">In Progress</option>
@@ -1432,7 +1432,7 @@ export const Tasks = () => {
 
               <button
                 onClick={() => setDetailsModalOpen(false)}
-                className="px-4 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium cursor-pointer"
+                className="px-4 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 text-xs font-medium cursor-pointer"
               >
                 Close
               </button>

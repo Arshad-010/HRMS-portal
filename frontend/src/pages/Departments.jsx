@@ -149,13 +149,13 @@ export const Departments = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <Building2 className="w-6 h-6 text-indigo-400" />
             Departments
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Organizational structure, business units, and department heads
           </p>
         </div>
@@ -180,7 +180,7 @@ export const Departments = () => {
             placeholder="Search by department name or code..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-500 outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none transition-colors"
           />
         </div>
 
@@ -189,7 +189,7 @@ export const Departments = () => {
           <select
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value)}
-            className="px-3 py-2 bg-slate-900 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 outline-none cursor-pointer"
+            className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none cursor-pointer"
           >
             <option value="all">All Status</option>
             <option value="active">Active Only</option>
@@ -202,7 +202,7 @@ export const Departments = () => {
       {loading ? (
         <div className="min-h-[40vh] flex flex-col items-center justify-center gap-3">
           <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
-          <p className="text-xs text-slate-400">Loading departments...</p>
+          <p className="text-xs text-slate-500 dark:text-slate-400">Loading departments...</p>
         </div>
       ) : error ? (
         <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-3">
@@ -210,9 +210,9 @@ export const Departments = () => {
           <span>{error}</span>
         </div>
       ) : filteredDepartments.length === 0 ? (
-        <div className="text-center py-16 bg-slate-900/40 border border-slate-800 rounded-2xl p-8">
+        <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8">
           <Building2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
-          <h3 className="text-sm font-semibold text-slate-300">No departments found</h3>
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No departments found</h3>
           <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
             {search ? 'Try adjusting your search criteria' : 'Create your first department to get started.'}
           </p>
@@ -222,8 +222,8 @@ export const Departments = () => {
           {filteredDepartments.map((dept) => (
             <div
               key={dept._id}
-              className={`rounded-2xl border p-5 bg-slate-900/60 backdrop-blur-sm transition-all hover:border-slate-700/80 ${
-                dept.isActive ? 'border-slate-800' : 'border-rose-950/40 opacity-70'
+              className={`rounded-2xl border p-5 bg-white dark:bg-slate-900 backdrop-blur-sm transition-all hover:border-slate-300 dark:border-slate-700 ${
+                dept.isActive ? 'border-slate-200 dark:border-slate-800' : 'border-rose-950/40 opacity-70'
               }`}
             >
               <div className="flex items-start justify-between gap-3 mb-3">
@@ -231,7 +231,7 @@ export const Departments = () => {
                   <span className="font-mono text-xs font-bold px-2 py-0.5 rounded-md bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
                     {dept.code}
                   </span>
-                  <h3 className="text-base font-bold text-white mt-2 mb-1">{dept.name}</h3>
+                  <h3 className="text-base font-bold text-slate-900 dark:text-white mt-2 mb-1">{dept.name}</h3>
                 </div>
 
                 <span
@@ -246,24 +246,24 @@ export const Departments = () => {
                 </span>
               </div>
 
-              <p className="text-xs text-slate-400 line-clamp-2 min-h-[32px] mb-4">
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 min-h-[32px] mb-4">
                 {dept.description || 'No description provided.'}
               </p>
 
-              <div className="pt-3 border-t border-slate-800/80 space-y-2 text-xs">
-                <div className="flex items-center justify-between text-slate-400">
+              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+                <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-slate-500" />
                     Team Members:
                   </span>
-                  <span className="font-semibold text-slate-200">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200">
                     {dept.employeeCount || 0} employees
                   </span>
                 </div>
 
-                <div className="flex items-center justify-between text-slate-400">
+                <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                   <span>Department Head:</span>
-                  <span className="font-medium text-slate-300 truncate max-w-[150px]">
+                  <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[150px]">
                     {dept.managerId
                       ? `${dept.managerId.firstName} ${dept.managerId.lastName}`
                       : 'Unassigned'}
@@ -272,10 +272,10 @@ export const Departments = () => {
               </div>
 
               {isPrivileged && (
-                <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-end gap-2">
+                <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800 flex items-center justify-end gap-2">
                   <button
                     onClick={() => openEditModal(dept)}
-                    className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
                     title="Edit Department"
                   >
                     <Edit2 className="w-3.5 h-3.5" />
@@ -284,7 +284,7 @@ export const Departments = () => {
                   {isAdmin && dept.isActive && (
                     <button
                       onClick={() => handleDeactivate(dept._id, dept.name)}
-                      className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                       title="Deactivate Department"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -300,18 +300,18 @@ export const Departments = () => {
       {/* Create / Edit Modal */}
       {modalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl relative">
             <button
               onClick={() => setModalOpen(false)}
-              className="absolute top-4 right-4 text-slate-400 hover:text-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
-            <h3 className="text-lg font-bold text-white mb-1">
+            <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">
               {editingDept ? 'Edit Department' : 'Create New Department'}
             </h3>
-            <p className="text-xs text-slate-400 mb-5">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-5">
               {editingDept ? 'Update department specifications' : 'Define new organizational unit'}
             </p>
 
@@ -328,19 +328,19 @@ export const Departments = () => {
 
             <form onSubmit={handleFormSubmit} className="space-y-4 text-xs">
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Department Name *</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Department Name *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. Product Engineering"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Department Code *</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Department Code *</label>
                 <input
                   type="text"
                   required
@@ -348,27 +348,27 @@ export const Departments = () => {
                   placeholder="e.g. ENG"
                   value={formData.code}
                   onChange={(e) => setFormData({ ...formData, code: e.target.value.toUpperCase() })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 uppercase font-mono outline-none disabled:opacity-50"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 uppercase font-mono outline-none disabled:opacity-50"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Description</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Description</label>
                 <textarea
                   rows={3}
                   placeholder="Brief description of the department's role..."
                   value={formData.description}
                   onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none resize-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
                 />
               </div>
 
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Department Head (Manager)</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Department Head (Manager)</label>
                 <select
                   value={formData.managerId}
                   onChange={(e) => setFormData({ ...formData, managerId: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">None / Unassigned</option>
                   {employees.map((emp) => (
@@ -386,9 +386,9 @@ export const Departments = () => {
                     id="isActive"
                     checked={formData.isActive}
                     onChange={(e) => setFormData({ ...formData, isActive: e.target.checked })}
-                    className="w-4 h-4 rounded text-indigo-600 bg-slate-950 border-slate-800"
+                    className="w-4 h-4 rounded text-indigo-600 bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800"
                   />
-                  <label htmlFor="isActive" className="text-slate-300 cursor-pointer">
+                  <label htmlFor="isActive" className="text-slate-700 dark:text-slate-300 cursor-pointer">
                     Department is active
                   </label>
                 </div>
@@ -398,7 +398,7 @@ export const Departments = () => {
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-medium cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium cursor-pointer"
                 >
                   Cancel
                 </button>

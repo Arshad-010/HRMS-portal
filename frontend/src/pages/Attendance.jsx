@@ -132,11 +132,11 @@ export const Attendance = () => {
       case 'ABSENT':
         return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
       case 'WEEKEND':
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20';
       case 'HOLIDAY':
         return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
       default:
-        return 'bg-slate-500/10 text-slate-400 border-slate-500/20';
+        return 'bg-slate-500/10 text-slate-500 dark:text-slate-400 border-slate-500/20';
     }
   };
 
@@ -411,13 +411,13 @@ export const Attendance = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-800">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-white flex items-center gap-2.5">
+          <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <Clock className="w-6 h-6 text-indigo-400" />
             Attendance Management
           </h2>
-          <p className="text-xs text-slate-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Real-time digital punch-clock, daily work-hour tracking, and enterprise workforce logs
           </p>
         </div>
@@ -429,7 +429,7 @@ export const Attendance = () => {
               fetchSummary();
               if (activeTab === 'team') fetchTeamAttendance();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-medium border border-slate-700 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -450,23 +450,23 @@ export const Attendance = () => {
       {/* Hero Grid: Real-time Punch Card + Organization Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 my-6">
         {/* Real-time Punch Card (5 cols on lg) */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-slate-900 via-slate-900/90 to-indigo-950/40 border border-slate-800 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-xl">
+        <div className="lg:col-span-5 bg-gradient-to-br from-white dark:from-slate-900 via-slate-50 dark:via-slate-900 to-indigo-100 dark:to-indigo-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-xl">
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div>
-            <div className="flex items-center justify-between pb-3 border-b border-slate-800/80">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
                 <Timer className="w-4 h-4 text-indigo-400" />
                 Live Punch Clock
               </span>
-              <span className="text-[11px] font-medium text-slate-400">
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
                 {currentTime.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}
               </span>
             </div>
 
             {/* Big Live Digital Clock */}
             <div className="my-5 text-center">
-              <div className="text-4xl sm:text-5xl font-mono font-extrabold text-white tracking-wider">
+              <div className="text-4xl sm:text-5xl font-mono font-extrabold text-slate-900 dark:text-white tracking-wider">
                 {currentTime.toLocaleTimeString()}
               </div>
               <div className="mt-2 flex items-center justify-center gap-2">
@@ -481,7 +481,7 @@ export const Attendance = () => {
                     Shift Completed • {todayRecord?.workHours || 0} hrs logged
                   </span>
                 ) : (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-800 text-slate-400 border border-slate-700">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
                     <span className="w-2 h-2 rounded-full bg-slate-500" />
                     Not Checked In Today
                   </span>
@@ -497,7 +497,7 @@ export const Attendance = () => {
                 value={punchRemarks}
                 onChange={(e) => setPunchRemarks(e.target.value)}
                 disabled={isCheckedIn && isCheckedOut}
-                className="w-full px-3 py-2 bg-slate-950/80 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50 transition-colors"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50 transition-colors"
               />
             </div>
           </div>
@@ -510,7 +510,7 @@ export const Attendance = () => {
                 disabled={isCheckedIn || punchLoading || !user?.employee}
                 className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
                   isCheckedIn
-                    ? 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed'
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
                     : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20 active:scale-95 cursor-pointer'
                 }`}
               >
@@ -523,7 +523,7 @@ export const Attendance = () => {
                 disabled={!isCheckedIn || isCheckedOut || punchLoading || !user?.employee}
                 className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
                   !isCheckedIn || isCheckedOut
-                    ? 'bg-slate-800 text-slate-500 border border-slate-700/60 cursor-not-allowed'
+                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
                     : 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/20 active:scale-95 cursor-pointer'
                 }`}
               >
@@ -554,76 +554,76 @@ export const Attendance = () => {
         </div>
 
         {/* Organization / Today's Metrics (7 cols on lg) */}
-        <div className="lg:col-span-7 bg-slate-900/60 border border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-800">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-2">
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-indigo-400" />
               Workforce Today Overview
             </span>
-            <span className="text-xs text-slate-400">
-              Active Headcount: <strong className="text-white">{summaryMetrics.totalEmployees || 0}</strong>
+            <span className="text-xs text-slate-500 dark:text-slate-400">
+              Active Headcount: <strong className="text-slate-900 dark:text-white">{summaryMetrics.totalEmployees || 0}</strong>
             </span>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-emerald-400" />
                 Present Today
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">{summaryMetrics.present || 0}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.present || 0}</div>
               <p className="text-[10px] text-slate-500 mt-0.5">Checked-in & Active</p>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-amber-400" />
                 Half Day
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">{summaryMetrics.halfDay || 0}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.halfDay || 0}</div>
               <p className="text-[10px] text-slate-500 mt-0.5">&lt; 4.5 working hours</p>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-blue-400" />
                 On Leave
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">{summaryMetrics.onLeave || 0}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.onLeave || 0}</div>
               <p className="text-[10px] text-slate-500 mt-0.5">Approved day-offs</p>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-rose-400" />
                 Absent
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">{summaryMetrics.absent || 0}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.absent || 0}</div>
               <p className="text-[10px] text-slate-500 mt-0.5">Unrecorded / missing</p>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-indigo-400" />
                 Pending Punch
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">{summaryMetrics.pendingCheckIn || 0}</div>
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.pendingCheckIn || 0}</div>
               <p className="text-[10px] text-slate-500 mt-0.5">Awaiting check-in</p>
             </div>
 
-            <div className="bg-slate-950/60 border border-slate-800/80 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-400 flex items-center gap-1.5">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
+              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <span className="w-2 h-2 rounded-full bg-violet-400" />
                 Avg Work Hours
               </div>
-              <div className="text-2xl font-bold text-white mt-1.5">
+              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">
                 {summaryMetrics.avgWorkHours ? `${summaryMetrics.avgWorkHours}h` : '0h'}
               </div>
               <p className="text-[10px] text-slate-500 mt-0.5">Organization average</p>
             </div>
           </div>
 
-          <div className="text-[11px] text-slate-400 pt-2 border-t border-slate-800/60 flex items-center justify-between">
+          <div className="text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <span>Server Time: {currentTime.toISOString().slice(0, 10)} UTC</span>
             <span className="text-indigo-400 font-medium">Automatic work hours validation enabled</span>
           </div>
@@ -631,13 +631,13 @@ export const Attendance = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-800 mb-6">
+      <div className="flex items-center gap-2 border-b border-slate-200 dark:border-slate-800 mb-6">
         <button
           onClick={() => setActiveTab('my')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
             activeTab === 'my'
               ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
-              : 'border-transparent text-slate-400 hover:text-slate-200'
+              : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
           }`}
         >
           <CalendarDays className="w-4 h-4" />
@@ -650,7 +650,7 @@ export const Attendance = () => {
             className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
               activeTab === 'team'
                 ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
-                : 'border-transparent text-slate-400 hover:text-slate-200'
+                : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
             }`}
           >
             <Users className="w-4 h-4" />
@@ -664,57 +664,57 @@ export const Attendance = () => {
         <div className="space-y-6">
           {/* Personal Summary Pills */}
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">Present Days</span>
               <p className="text-xl font-bold text-emerald-400 mt-1">{myStats.presentDays || 0}</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">Half Days</span>
               <p className="text-xl font-bold text-amber-400 mt-1">{myStats.halfDays || 0}</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">On Leave</span>
               <p className="text-xl font-bold text-blue-400 mt-1">{myStats.onLeaveDays || 0}</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">Absences</span>
               <p className="text-xl font-bold text-rose-400 mt-1">{myStats.absentDays || 0}</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">Total Hours</span>
               <p className="text-xl font-bold text-indigo-400 mt-1">{myStats.totalWorkHours || 0}h</p>
             </div>
-            <div className="bg-slate-900/60 border border-slate-800 rounded-xl p-3 text-center">
+            <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500">Avg Daily Hours</span>
               <p className="text-xl font-bold text-violet-400 mt-1">{myStats.avgWorkHours || 0}h</p>
             </div>
           </div>
 
           {/* Table Container */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
-            <div className="p-4 border-b border-slate-800 flex items-center justify-between">
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+            <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-700 dark:text-slate-300">
                 Personal Attendance Log (Last 60 Days)
               </h3>
               <span className="text-xs text-slate-500">{myRecords.length} records logged</span>
             </div>
 
             {myLoading ? (
-              <div className="py-16 text-center text-slate-400 flex flex-col items-center justify-center gap-3">
+              <div className="py-16 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
                 <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
                 <span className="text-xs">Loading personal logs...</span>
               </div>
             ) : myRecords.length === 0 ? (
-              <div className="py-16 text-center text-slate-400">
+              <div className="py-16 text-center text-slate-500 dark:text-slate-400">
                 <Clock className="w-8 h-8 mx-auto text-slate-600 mb-2" />
-                <p className="text-sm font-medium text-slate-300">No attendance records found</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">No attendance records found</p>
                 <p className="text-xs text-slate-500 mt-1">Use the Check-In button above to log today's attendance.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-800 bg-slate-950/40 text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Date</th>
                       <th className="py-3.5 px-4">Status</th>
                       <th className="py-3.5 px-4">Check-In</th>
@@ -723,10 +723,10 @@ export const Attendance = () => {
                       <th className="py-3.5 px-4">Remarks</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tbody className="divide-y divide-slate-800/60 text-slate-700 dark:text-slate-300">
                     {myRecords.map((rec) => (
-                      <tr key={rec._id} className="hover:bg-slate-800/30 transition-colors">
-                        <td className="py-3 px-4 font-medium text-white">{formatDateStr(rec.date)}</td>
+                      <tr key={rec._id} className="hover:bg-slate-100 dark:bg-slate-800 transition-colors">
+                        <td className="py-3 px-4 font-medium text-slate-900 dark:text-white">{formatDateStr(rec.date)}</td>
                         <td className="py-3 px-4">
                           <span
                             className={`px-2.5 py-1 rounded-full text-[10px] font-bold border ${getStatusBadge(
@@ -736,8 +736,8 @@ export const Attendance = () => {
                             {rec.status}
                           </span>
                         </td>
-                        <td className="py-3 px-4 font-mono text-slate-300">{formatTimeStr(rec.checkIn)}</td>
-                        <td className="py-3 px-4 font-mono text-slate-300">{formatTimeStr(rec.checkOut)}</td>
+                        <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkIn)}</td>
+                        <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkOut)}</td>
                         <td className="py-3 px-4">
                           {rec.workHours !== undefined && rec.workHours !== null ? (
                             <span className="font-mono font-semibold text-indigo-300 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
@@ -747,7 +747,7 @@ export const Attendance = () => {
                             <span className="text-slate-500">--</span>
                           )}
                         </td>
-                        <td className="py-3 px-4 text-slate-400 max-w-xs truncate">{rec.remarks || '--'}</td>
+                        <td className="py-3 px-4 text-slate-500 dark:text-slate-400 max-w-xs truncate">{rec.remarks || '--'}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -762,7 +762,7 @@ export const Attendance = () => {
       {activeTab === 'team' && isManagerOrAbove && (
         <div className="space-y-4">
           {/* Filter Bar */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-4">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4">
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* Search Employee */}
               <div className="relative">
@@ -772,7 +772,7 @@ export const Attendance = () => {
                   placeholder="Search name, code..."
                   value={filterSearch}
                   onChange={(e) => setFilterSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 placeholder-slate-500 outline-none"
+                  className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
                 />
               </div>
 
@@ -787,7 +787,7 @@ export const Attendance = () => {
                     setFilterEndDate('');
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
 
@@ -799,7 +799,7 @@ export const Attendance = () => {
                     setFilterDept(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Departments</option>
                   {departments.map((dept) => (
@@ -818,7 +818,7 @@ export const Attendance = () => {
                     setFilterStatus(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Statuses</option>
                   <option value="PRESENT">PRESENT</option>
@@ -842,7 +842,7 @@ export const Attendance = () => {
                     setFilterSearch('');
                     setTeamPage(1);
                   }}
-                  className="w-full py-2 px-3 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium border border-slate-700 transition-colors cursor-pointer text-center"
+                  className="w-full py-2 px-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer text-center"
                 >
                   Clear Filters
                 </button>
@@ -850,8 +850,8 @@ export const Attendance = () => {
             </div>
 
             {/* Optional Date Range secondary row */}
-            <div className="mt-3 pt-3 border-t border-slate-800/60 flex flex-wrap items-center gap-3 text-xs text-slate-400">
-              <span className="font-medium flex items-center gap-1 text-slate-400">
+            <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
+              <span className="font-medium flex items-center gap-1 text-slate-500 dark:text-slate-400">
                 <Filter className="w-3.5 h-3.5" /> Date Range Filter:
               </span>
               <div className="flex items-center gap-2">
@@ -864,7 +864,7 @@ export const Attendance = () => {
                     setFilterDate('');
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
                 <span className="text-slate-500">to</span>
                 <input
@@ -876,30 +876,30 @@ export const Attendance = () => {
                     setFilterDate('');
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-950 border border-slate-800 rounded-lg text-xs text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
             </div>
           </div>
 
           {/* Table Container */}
-          <div className="bg-slate-900/60 border border-slate-800 rounded-2xl overflow-hidden shadow-sm">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
             {teamLoading ? (
-              <div className="py-20 text-center text-slate-400 flex flex-col items-center justify-center gap-3">
+              <div className="py-20 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
                 <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
                 <span className="text-xs">Loading workforce attendance records...</span>
               </div>
             ) : teamRecords.length === 0 ? (
-              <div className="py-16 text-center text-slate-400">
+              <div className="py-16 text-center text-slate-500 dark:text-slate-400">
                 <Users className="w-8 h-8 mx-auto text-slate-600 mb-2" />
-                <p className="text-sm font-medium text-slate-300">No attendance entries found</p>
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">No attendance entries found</p>
                 <p className="text-xs text-slate-500 mt-1">Try adjusting your filters or log a record manually.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-800 bg-slate-950/40 text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Employee</th>
                       <th className="py-3.5 px-4">Department</th>
                       <th className="py-3.5 px-4">Date</th>
@@ -911,13 +911,13 @@ export const Attendance = () => {
                       <th className="py-3.5 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-800/60 text-slate-300">
+                  <tbody className="divide-y divide-slate-800/60 text-slate-700 dark:text-slate-300">
                     {teamRecords.map((rec) => {
                       const emp = rec.employee || {};
                       const fullName = emp.firstName ? `${emp.firstName} ${emp.lastName}` : 'Unknown';
 
                       return (
-                        <tr key={rec._id} className="hover:bg-slate-800/30 transition-colors">
+                        <tr key={rec._id} className="hover:bg-slate-100 dark:bg-slate-800 transition-colors">
                           {/* Employee Info */}
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2.5">
@@ -925,8 +925,8 @@ export const Attendance = () => {
                                 {emp.firstName ? emp.firstName[0] : 'E'}
                               </div>
                               <div>
-                                <span className="font-semibold text-white block">{fullName}</span>
-                                <span className="text-[10px] text-slate-400 font-mono">
+                                <span className="font-semibold text-slate-900 dark:text-white block">{fullName}</span>
+                                <span className="text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                                   {emp.employeeCode || 'N/A'} • {emp.designation || 'Staff'}
                                 </span>
                               </div>
@@ -935,13 +935,13 @@ export const Attendance = () => {
 
                           {/* Department */}
                           <td className="py-3 px-4">
-                            <span className="text-slate-300">
+                            <span className="text-slate-700 dark:text-slate-300">
                               {emp.departmentId?.name ? emp.departmentId.name : 'Unassigned'}
                             </span>
                           </td>
 
                           {/* Date */}
-                          <td className="py-3 px-4 font-medium text-slate-200">{formatDateStr(rec.date)}</td>
+                          <td className="py-3 px-4 font-medium text-slate-800 dark:text-slate-200">{formatDateStr(rec.date)}</td>
 
                           {/* Status */}
                           <td className="py-3 px-4">
@@ -955,10 +955,10 @@ export const Attendance = () => {
                           </td>
 
                           {/* Check-In */}
-                          <td className="py-3 px-4 font-mono text-slate-300">{formatTimeStr(rec.checkIn)}</td>
+                          <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkIn)}</td>
 
                           {/* Check-Out */}
-                          <td className="py-3 px-4 font-mono text-slate-300">{formatTimeStr(rec.checkOut)}</td>
+                          <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkOut)}</td>
 
                           {/* Work Hours */}
                           <td className="py-3 px-4 font-mono font-semibold text-indigo-300">
@@ -966,7 +966,7 @@ export const Attendance = () => {
                           </td>
 
                           {/* Remarks */}
-                          <td className="py-3 px-4 text-slate-400 max-w-xs truncate">{rec.remarks || '--'}</td>
+                          <td className="py-3 px-4 text-slate-500 dark:text-slate-400 max-w-xs truncate">{rec.remarks || '--'}</td>
 
                           {/* Actions */}
                           <td className="py-3 px-4 text-right">
@@ -974,7 +974,7 @@ export const Attendance = () => {
                               <button
                                 onClick={() => openEditModal(rec)}
                                 title="Edit Record"
-                                className="p-1.5 rounded-lg text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
@@ -983,7 +983,7 @@ export const Attendance = () => {
                                 <button
                                   onClick={() => handleDeleteRecord(rec._id, fullName, rec.date)}
                                   title="Delete Record"
-                                  className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
+                                  className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors cursor-pointer"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
                                 </button>
@@ -1000,23 +1000,23 @@ export const Attendance = () => {
 
             {/* Pagination Controls */}
             {teamPages > 1 && (
-              <div className="p-4 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+              <div className="p-4 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
                 <span>
-                  Showing page <strong className="text-white">{teamPage}</strong> of{' '}
-                  <strong className="text-white">{teamPages}</strong> ({teamTotal} total records)
+                  Showing page <strong className="text-slate-900 dark:text-white">{teamPage}</strong> of{' '}
+                  <strong className="text-slate-900 dark:text-white">{teamPages}</strong> ({teamTotal} total records)
                 </span>
                 <div className="flex items-center gap-2">
                   <button
                     disabled={teamPage <= 1}
                     onClick={() => setTeamPage((p) => Math.max(1, p - 1))}
-                    className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronLeft className="w-4 h-4" />
                   </button>
                   <button
                     disabled={teamPage >= teamPages}
                     onClick={() => setTeamPage((p) => Math.min(teamPages, p + 1))}
-                    className="p-1.5 rounded-lg bg-slate-800 text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="p-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                   >
                     <ChevronRight className="w-4 h-4" />
                   </button>
@@ -1029,16 +1029,16 @@ export const Attendance = () => {
 
       {/* MANUAL RECORD MODAL (Create & Edit) */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
-            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-800">
-              <h3 className="text-sm font-bold text-white flex items-center gap-2">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
+            <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
                 <Clock className="w-4 h-4 text-indigo-400" />
                 {editingRecord ? 'Modify Attendance Record' : 'Log Manual Attendance Record'}
               </h3>
               <button
                 onClick={() => setModalOpen(false)}
-                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors cursor-pointer"
+                className="text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white p-1 rounded-lg hover:bg-slate-100 dark:bg-slate-800 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1047,13 +1047,13 @@ export const Attendance = () => {
             <form onSubmit={handleModalSubmit} className="p-6 space-y-4 text-xs">
               {/* Employee Selection */}
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Target Employee *</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Target Employee *</label>
                 <select
                   required
                   disabled={Boolean(editingRecord)}
                   value={modalForm.employeeId}
                   onChange={(e) => setModalForm({ ...modalForm, employeeId: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none disabled:opacity-60"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
                 >
                   <option value="">Select Employee</option>
                   {employeeOptions.map((e) => (
@@ -1067,24 +1067,24 @@ export const Attendance = () => {
               {/* Date & Status */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Attendance Date *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Attendance Date *</label>
                   <input
                     type="date"
                     required
                     disabled={Boolean(editingRecord)}
                     value={modalForm.date}
                     onChange={(e) => setModalForm({ ...modalForm, date: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none disabled:opacity-60"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Status *</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Status *</label>
                   <select
                     required
                     value={modalForm.status}
                     onChange={(e) => setModalForm({ ...modalForm, status: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="PRESENT">PRESENT</option>
                     <option value="HALF_DAY">HALF_DAY</option>
@@ -1099,35 +1099,35 @@ export const Attendance = () => {
               {/* Check-In & Check-Out Times */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Check-In Time</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Check-In Time</label>
                   <input
                     type="time"
                     value={modalForm.checkInTime}
                     onChange={(e) => setModalForm({ ...modalForm, checkInTime: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
 
                 <div>
-                  <label className="block font-medium text-slate-300 mb-1">Check-Out Time</label>
+                  <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Check-Out Time</label>
                   <input
                     type="time"
                     value={modalForm.checkOutTime}
                     onChange={(e) => setModalForm({ ...modalForm, checkOutTime: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
               </div>
 
               {/* Remarks */}
               <div>
-                <label className="block font-medium text-slate-300 mb-1">Remarks / Note</label>
+                <label className="block font-medium text-slate-700 dark:text-slate-300 mb-1">Remarks / Note</label>
                 <textarea
                   rows={2}
                   placeholder="e.g. Regular punch adjusted by Manager, Field duty, Approved overtime..."
                   value={modalForm.remarks}
                   onChange={(e) => setModalForm({ ...modalForm, remarks: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-950 border border-slate-800 focus:border-indigo-500 rounded-xl text-slate-200 outline-none resize-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
                 />
               </div>
 
@@ -1151,11 +1151,11 @@ export const Attendance = () => {
               )}
 
               {/* Modal Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
                 <button
                   type="button"
                   onClick={() => setModalOpen(false)}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
+                  className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
