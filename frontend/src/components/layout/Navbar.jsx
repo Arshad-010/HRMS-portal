@@ -173,7 +173,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
 
   return (
     <header className="border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-50 transition-colors">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+      <div className="w-full px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
         {/* Brand & Left Hamburger */}
         <div className="flex items-center gap-3 shrink-0">
           {isAuthenticated ? (
@@ -269,6 +269,20 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2.5">
+              {/* Theme Toggle for Authenticated User */}
+              <button
+                type="button"
+                onClick={() => setThemeMode(themeMode === 'dark' ? 'light' : 'dark')}
+                className="flex items-center justify-center w-9 h-9 rounded-xl border border-slate-200 dark:border-slate-700 bg-white/90 dark:bg-slate-800/90 text-slate-700 dark:text-slate-200 hover:border-amber-400 dark:hover:border-indigo-400 hover:bg-amber-50/40 dark:hover:bg-slate-700 hover:shadow-md transition-all duration-200 cursor-pointer"
+                title={`Switch to ${themeMode === 'dark' ? 'Light' : 'Dark'} mode`}
+              >
+                {themeMode === 'dark' ? (
+                  <Sun className="w-4 h-4 text-amber-400 transition-transform duration-300 hover:rotate-90" />
+                ) : (
+                  <Moon className="w-4 h-4 text-indigo-600 transition-transform duration-300 hover:-rotate-12" />
+                )}
+              </button>
+
               {/* Notification Bell with Dropdown */}
               <div className="relative" ref={dropdownRef}>
                 <button
@@ -333,8 +347,8 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
                           <div
                             key={notif._id}
                             onClick={() => handleNotificationItemClick(notif)}
-                            className={`p-3.5 flex items-start gap-3 transition-colors cursor-pointer hover:bg-slate-100 dark:bg-slate-800 ${
-                              !notif.isRead ? 'bg-indigo-950/20' : 'bg-transparent'
+                            className={`p-3.5 flex items-start gap-3 transition-colors cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-800 ${
+                              !notif.isRead ? 'bg-indigo-50 dark:bg-indigo-950/20' : 'bg-transparent'
                             }`}
                           >
                             <div className="w-7 h-7 rounded-lg bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 flex items-center justify-center shrink-0 mt-0.5">
@@ -342,7 +356,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center justify-between gap-1 mb-0.5">
-                                <h4 className={`text-xs font-semibold truncate ${!notif.isRead ? 'text-white' : 'text-slate-700 dark:text-slate-300'}`}>
+                                <h4 className={`text-xs font-semibold truncate ${!notif.isRead ? 'text-indigo-900 dark:text-white' : 'text-slate-700 dark:text-slate-300'}`}>
                                   {notif.title}
                                 </h4>
                                 {!notif.isRead && (

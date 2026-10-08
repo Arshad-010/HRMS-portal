@@ -270,8 +270,8 @@ export const Notifications = () => {
               onClick={() => handleNavigateToEntity(notif)}
               className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                 !notif.isRead
-                  ? 'bg-indigo-950/20 hover:bg-indigo-950/30 border-indigo-500/30 shadow-sm shadow-indigo-950/20'
-                  : 'bg-white dark:bg-slate-900 hover:bg-slate-850/60 border-slate-200 dark:border-slate-800'
+                  ? 'bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-950/30 border-indigo-200 dark:border-indigo-500/30 shadow-sm'
+                  : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800'
               }`}
             >
               <div className="flex items-start gap-3.5 flex-1 min-w-0">
@@ -321,7 +321,7 @@ export const Notifications = () => {
                       e.stopPropagation();
                       handleNavigateToEntity(notif);
                     }}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 border border-indigo-500/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-100 dark:bg-indigo-600/20 hover:bg-indigo-200 dark:hover:bg-indigo-600/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition-colors cursor-pointer"
                   >
                     <span>View</span>
                     <ArrowRight className="w-3 h-3" />

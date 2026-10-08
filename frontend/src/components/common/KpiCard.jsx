@@ -94,7 +94,7 @@ export const KpiCard = ({
   }
 
   return (
-    <div className={`group relative p-5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${scheme.bgGlow}`}>
+    <div className={`group relative p-5 rounded-2xl overflow-hidden bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 ${scheme.bgGlow}`}>
       {/* Top Header */}
       <div className="flex items-start justify-between gap-3 mb-2">
         <div className="flex-1 min-w-0">
@@ -120,9 +120,36 @@ export const KpiCard = ({
         )}
       </div>
 
-      {/* Bottom Sparkline and Trend */}
-      <div className="flex items-end justify-between gap-2 pt-2 border-t border-slate-100 dark:border-slate-800/80">
-        <div className="shrink-0">
+      {/* Middle Sparkline Area */}
+      <div className="flex justify-center items-center py-2">
+        <div className="w-24 sm:w-32 h-10 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity relative">
+          <div className="absolute inset-0">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={formattedSparkline} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
+                <defs>
+                  <linearGradient id={`grad-${title.replace(/\s+/g, '')}`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor={scheme.sparkline} stopOpacity={0.4} />
+                    <stop offset="100%" stopColor={scheme.sparkline} stopOpacity={0.0} />
+                  </linearGradient>
+                </defs>
+                <Area
+                  type="monotone"
+                  dataKey="val"
+                  stroke={scheme.sparkline}
+                  strokeWidth={2}
+                  fill={`url(#grad-${title.replace(/\s+/g, '')})`}
+                  dot={false}
+                  isAnimationActive={false}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom Trend */}
+      <div className="flex items-center gap-2 pt-3 mt-auto border-t border-slate-100 dark:border-slate-800/80">
+        <div className="shrink-0 w-full flex items-center justify-between">
           {trend !== undefined ? (
             <StatTrend 
               value={trend} 
@@ -135,29 +162,6 @@ export const KpiCard = ({
               {trendLabel}
             </span>
           )}
-        </div>
-
-        {/* Mini Sparkline Area */}
-        <div className="w-20 sm:w-24 h-9 shrink-0 opacity-80 group-hover:opacity-100 transition-opacity">
-          <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={formattedSparkline} margin={{ top: 2, right: 0, left: 0, bottom: 0 }}>
-              <defs>
-                <linearGradient id={`grad-${title.replace(/\s+/g, '')}`} x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor={scheme.sparkline} stopOpacity={0.4} />
-                  <stop offset="100%" stopColor={scheme.sparkline} stopOpacity={0.0} />
-                </linearGradient>
-              </defs>
-              <Area
-                type="monotone"
-                dataKey="val"
-                stroke={scheme.sparkline}
-                strokeWidth={2}
-                fill={`url(#grad-${title.replace(/\s+/g, '')})`}
-                dot={false}
-                isAnimationActive={false}
-              />
-            </AreaChart>
-          </ResponsiveContainer>
         </div>
       </div>
     </div>

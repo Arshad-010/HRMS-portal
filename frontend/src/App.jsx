@@ -6,6 +6,7 @@ import AppRoutes from './routes/AppRoutes';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { ThemeProvider } from './context/ThemeContext';
+import { ChatProvider } from './context/ChatContext';
 
 export function AppContent() {
   const [isSidebarMobileOpen, setIsSidebarMobileOpen] = useState(false);
@@ -55,7 +56,9 @@ export function App() {
     <ThemeProvider>
       <AuthProvider>
         <NotificationProvider>
-          <AppContent />
+          <ChatProvider>
+            <AppContent />
+          </ChatProvider>
         </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
