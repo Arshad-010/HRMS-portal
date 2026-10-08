@@ -32,7 +32,7 @@ const attendanceSchema = new mongoose.Schema(
     status: {
       type: String,
       enum: {
-        values: ['PRESENT', 'ABSENT', 'HALF_DAY', 'ON_LEAVE', 'WEEKEND', 'HOLIDAY'],
+        values: ['PRESENT', 'ABSENT', 'HALF_DAY', 'ON_LEAVE', 'WEEKEND', 'HOLIDAY', 'ON_BREAK'],
         message: 'Invalid attendance status',
       },
       default: 'PRESENT',
@@ -42,6 +42,16 @@ const attendanceSchema = new mongoose.Schema(
       type: Number,
       default: 0,
       min: [0, 'Work hours cannot be negative'],
+    },
+    breaks: [
+      {
+        start: { type: Date, required: true },
+        end: { type: Date, default: null }
+      }
+    ],
+    totalBreakDuration: { // stored in minutes
+      type: Number,
+      default: 0,
     },
     remarks: {
       type: String,
@@ -65,7 +75,21 @@ attendanceSchema.index({ status: 1 });
 attendanceSchema.methods.calculateWorkHours = function () {
   if (this.checkIn && this.checkOut && this.checkOut > this.checkIn) {
     const diffMs = new Date(this.checkOut) - new Date(this.checkIn);
-    const hours = diffMs / (1000 * 60 * 60);
+    
+    // Calculate total break duration in ms
+    let totalBreakMs = 0;
+    if (this.breaks && this.breaks.length > 0) {
+      this.breaks.forEach(b => {
+        if (b.start && b.end && b.end > b.start) {
+          totalBreakMs += (new Date(b.end) - new Date(b.start));
+        }
+      });
+    }
+    
+    this.totalBreakDuration = Math.round(totalBreakMs / (1000 * 60)); // minutes
+    
+    const workMs = diffMs - totalBreakMs;
+    const hours = workMs > 0 ? workMs / (1000 * 60 * 60) : 0;
     this.workHours = Number(hours.toFixed(2));
 
     // Automatically flag half-day if less than standard full workday threshold (e.g. 4.5 hours)

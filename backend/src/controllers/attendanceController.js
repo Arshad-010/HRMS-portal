@@ -105,8 +105,19 @@ export const checkOut = async (req, res, next) => {
       });
     }
 
+    if (record.status === 'ON_BREAK') {
+      return res.status(400).json({
+        success: false,
+        message: 'You cannot check out while on a break. Please end your break first.',
+      });
+    }
+
     const now = new Date();
     record.checkOut = now;
+    if (record.status === 'PRESENT') {
+      // Just keep it or change it? The prompt says change status to Workday Completed, but backend model has 'PRESENT', 'ABSENT', 'HALF_DAY', 'ON_LEAVE', 'WEEKEND', 'HOLIDAY', 'ON_BREAK'
+      // We will keep 'PRESENT' or 'HALF_DAY' depending on calculateWorkHours, which handles status.
+    }
     if (req.body.remarks) {
       record.remarks = record.remarks ? `${record.remarks} | ${req.body.remarks}` : req.body.remarks;
     }
@@ -120,6 +131,96 @@ export const checkOut = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: `Check-out recorded successfully. Total work duration: ${record.workHours} hours.`,
+      data: record,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Start break for current working day
+ * @route   POST /api/attendance/break/start
+ * @access  Private (Employee self-service)
+ */
+export const startBreak = async (req, res, next) => {
+  try {
+    if (!req.user.employeeId) {
+      return res.status(400).json({ success: false, message: 'No employee record associated with this account' });
+    }
+
+    const today = normalizeToMidnightUTC(new Date());
+    const record = await Attendance.findOne({ employee: req.user.employeeId, date: today });
+
+    if (!record || !record.checkIn) {
+      return res.status(400).json({ success: false, message: 'You must be checked in to start a break.' });
+    }
+    if (record.checkOut) {
+      return res.status(400).json({ success: false, message: 'You have already checked out for today.' });
+    }
+    if (record.status === 'ON_BREAK') {
+      return res.status(400).json({ success: false, message: 'You are already on a break.' });
+    }
+
+    // Business rule: One break per working day
+    if (record.breaks && record.breaks.length > 0) {
+      return res.status(400).json({ success: false, message: 'You have already taken your break for today.' });
+    }
+
+    record.breaks.push({ start: new Date() });
+    record.status = 'ON_BREAK';
+    await record.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Break started successfully',
+      data: record,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * End break for current working day
+ * @route   POST /api/attendance/break/end
+ * @access  Private (Employee self-service)
+ */
+export const endBreak = async (req, res, next) => {
+  try {
+    if (!req.user.employeeId) {
+      return res.status(400).json({ success: false, message: 'No employee record associated with this account' });
+    }
+
+    const today = normalizeToMidnightUTC(new Date());
+    const record = await Attendance.findOne({ employee: req.user.employeeId, date: today });
+
+    if (!record || !record.checkIn) {
+      return res.status(400).json({ success: false, message: 'You must be checked in.' });
+    }
+    if (record.status !== 'ON_BREAK') {
+      return res.status(400).json({ success: false, message: 'You are not currently on a break.' });
+    }
+
+    const currentBreak = record.breaks[record.breaks.length - 1];
+    if (currentBreak && !currentBreak.end) {
+      const now = new Date();
+      currentBreak.end = now;
+      
+      // Calculate duration so far
+      const breakDurationMs = now - currentBreak.start;
+      const breakDurationMin = Math.round(breakDurationMs / 60000);
+      
+      // We can also let calculateWorkHours handle it later, but let's update totalBreakDuration here
+      record.totalBreakDuration = breakDurationMin;
+    }
+
+    record.status = 'PRESENT'; // change back to working
+    await record.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Break ended successfully',
       data: record,
     });
   } catch (error) {
