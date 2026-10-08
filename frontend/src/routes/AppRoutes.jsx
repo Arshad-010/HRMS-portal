@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LandingPage from '../pages/LandingPage';
 import Login from '../pages/Login';
 import DashboardOverview from '../pages/DashboardOverview';
 import Attendance from '../pages/Attendance';
@@ -17,6 +18,18 @@ import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
+import {
+  AboutPage,
+  FeaturesPage,
+  PublicAttendancePage,
+  PublicLeavePage,
+  PublicTasksPage,
+  PrivacyPage,
+  TermsPage,
+  ContactPage,
+  HelpPage
+} from '../pages/PublicInfoPages';
+
 export const AppRoutes = () => {
   const { isAuthenticated, loading } = useAuth();
 
@@ -31,7 +44,43 @@ export const AppRoutes = () => {
           ) : isAuthenticated ? (
             <Navigate to="/dashboard" replace />
           ) : (
-            <Navigate to="/login" replace />
+            <LandingPage />
+          )
+        }
+      />
+
+      {/* Public Info Routes */}
+      <Route path="/features" element={<FeaturesPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/privacy" element={<PrivacyPage />} />
+      <Route path="/terms" element={<TermsPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/help" element={<HelpPage />} />
+      <Route path="/leave" element={<PublicLeavePage />} />
+
+      {/* Mixed Public / Protected Routes */}
+      <Route
+        path="/attendance"
+        element={
+          isAuthenticated ? (
+            <ProtectedRoute>
+              <Attendance />
+            </ProtectedRoute>
+          ) : (
+            <PublicAttendancePage />
+          )
+        }
+      />
+
+      <Route
+        path="/tasks"
+        element={
+          isAuthenticated ? (
+            <ProtectedRoute>
+              <Tasks />
+            </ProtectedRoute>
+          ) : (
+            <PublicTasksPage />
           )
         }
       />
@@ -50,28 +99,10 @@ export const AppRoutes = () => {
       />
 
       <Route
-        path="/attendance"
-        element={
-          <ProtectedRoute>
-            <Attendance />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
         path="/leaves"
         element={
           <ProtectedRoute>
             <Leaves />
-          </ProtectedRoute>
-        }
-      />
-
-      <Route
-        path="/tasks"
-        element={
-          <ProtectedRoute>
-            <Tasks />
           </ProtectedRoute>
         }
       />
