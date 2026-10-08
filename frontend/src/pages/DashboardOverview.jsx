@@ -9,23 +9,16 @@ import {
   UserX, Briefcase, Calendar, CheckSquare
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
+import AdminCommandCenter from '../components/dashboard/AdminCommandCenter';
 
-export const DashboardOverview = () => {
-  const { user } = useAuth();
-
+// Employee & Manager Self-Service Portal Dashboard
+const EmployeePortalDashboard = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
   const [error, setError] = useState(null);
 
   const employee = user?.employee;
   const role = user?.role || 'EMPLOYEE';
-
-  const roleBadgeColors = {
-    ADMIN: 'bg-purple-500/10 text-purple-400 border-purple-500/20',
-    HR: 'bg-pink-500/10 text-pink-400 border-pink-500/20',
-    MANAGER: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
-    EMPLOYEE: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
-  };
 
   useEffect(() => {
     const fetchDashboard = async () => {
@@ -44,8 +37,6 @@ export const DashboardOverview = () => {
           setError('Your session has expired. Please log in again.');
         } else if (err.status === 403) {
           setError('You do not have permission to view this dashboard.');
-        } else if (err.status >= 500) {
-          setError('Unable to load dashboard data. Please try again.');
         } else {
           setError(err.message || 'Error loading dashboard');
         }
@@ -56,12 +47,11 @@ export const DashboardOverview = () => {
     fetchDashboard();
   }, []);
 
-  // Prepare chart data if available
   const taskChartData = dashboardData ? [
-    { name: 'To Do', value: dashboardData.tasks.todo, color: 'var(--color-slate-400)' },
-    { name: 'In Progress', value: dashboardData.tasks.inProgress, color: 'var(--color-cyan-400)' },
-    { name: 'Review', value: dashboardData.tasks.review, color: 'var(--color-purple-400)' },
-    { name: 'Completed', value: dashboardData.tasks.completed, color: 'var(--color-emerald-400)' }
+    { name: 'To Do', value: dashboardData.tasks?.todo || 0, color: 'var(--color-slate-400)' },
+    { name: 'In Progress', value: dashboardData.tasks?.inProgress || 0, color: 'var(--color-cyan-400)' },
+    { name: 'Review', value: dashboardData.tasks?.review || 0, color: 'var(--color-purple-400)' },
+    { name: 'Completed', value: dashboardData.tasks?.completed || 0, color: 'var(--color-emerald-400)' }
   ].filter(d => d.value > 0) : [];
 
   return (
@@ -113,14 +103,7 @@ export const DashboardOverview = () => {
         <>
           {/* Top KPI Cards Grid based on role */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {(role === 'ADMIN' || role === 'HR') ? (
-              <>
-                <StatCard title="Total Employees" value={dashboardData?.employees?.total} icon={Users} colorClass="indigo" loading={loading} />
-                <StatCard title="Present Today" value={dashboardData?.attendance?.presentToday} icon={UserCheck} colorClass="emerald" loading={loading} />
-                <StatCard title="Pending Leaves" value={dashboardData?.leaves?.pending} icon={CalendarClock} colorClass="amber" loading={loading} />
-                <StatCard title="Active Tasks" value={dashboardData?.tasks?.active} icon={ListTodo} colorClass="sky" loading={loading} />
-              </>
-            ) : role === 'MANAGER' ? (
+            {role === 'MANAGER' ? (
               <>
                 <StatCard title="Team Size" value={dashboardData?.employees?.total} icon={Users} colorClass="indigo" loading={loading} />
                 <StatCard title="Team Present Today" value={dashboardData?.attendance?.presentToday} icon={UserCheck} colorClass="emerald" loading={loading} />
@@ -140,41 +123,31 @@ export const DashboardOverview = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             {/* Chart Section */}
             <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm shadow-sm flex flex-col justify-between">
-               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                    {role === 'EMPLOYEE' ? 'My Task Distribution' : 'Workforce Task Status'}
-                  </span>
-               </div>
-               <div className="flex-1 min-h-[250px] mt-4 flex items-center justify-center">
-                  {loading ? (
-                    <div className="animate-pulse w-48 h-48 rounded-full bg-slate-100 dark:bg-slate-800"></div>
-                  ) : taskChartData.length === 0 ? (
-                    <p className="text-sm text-slate-500 italic">No task data available.</p>
-                  ) : (
-                    <ResponsiveContainer width="100%" height={250}>
-                      <PieChart>
-                        <Pie data={taskChartData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
-                          {taskChartData.map((entry, index) => (
-                            <Cell key={`cell-${index}`} fill={entry.color} />
-                          ))}
-                        </Pie>
-                        <Tooltip 
-                          contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                        />
-                      </PieChart>
-                    </ResponsiveContainer>
-                  )}
-               </div>
-               {taskChartData.length > 0 && (
-                 <div className="flex justify-center gap-4 mt-2">
-                   {taskChartData.map(d => (
-                     <div key={d.name} className="flex items-center gap-1.5 text-xs text-slate-600 dark:text-slate-300">
-                       <span className="w-3 h-3 rounded-full" style={{ backgroundColor: d.color }}></span>
-                       {d.name} ({d.value})
-                     </div>
-                   ))}
-                 </div>
-               )}
+              <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  {role === 'EMPLOYEE' ? 'My Task Distribution' : 'Team Task Status'}
+                </span>
+              </div>
+              <div className="flex-1 min-h-[250px] mt-4 flex items-center justify-center">
+                {loading ? (
+                  <div className="animate-pulse w-48 h-48 rounded-full bg-slate-100 dark:bg-slate-800"></div>
+                ) : taskChartData.length === 0 ? (
+                  <p className="text-sm text-slate-500 italic">No task data available.</p>
+                ) : (
+                  <ResponsiveContainer width="100%" height={250}>
+                    <PieChart>
+                      <Pie data={taskChartData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} paddingAngle={5} dataKey="value">
+                        {taskChartData.map((entry, index) => (
+                          <Cell key={`cell-${index}`} fill={entry.color} />
+                        ))}
+                      </Pie>
+                      <Tooltip 
+                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
+                      />
+                    </PieChart>
+                  </ResponsiveContainer>
+                )}
+              </div>
             </div>
 
             {/* Notifications Widget */}
@@ -197,17 +170,10 @@ export const DashboardOverview = () => {
                 </div>
 
                 <div className="mt-4 space-y-2.5">
-                  {loading ? (
-                    <div className="space-y-3">
-                      <div className="h-12 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse"></div>
-                      <div className="h-12 bg-slate-100 dark:bg-slate-800 rounded-xl animate-pulse"></div>
-                    </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center py-6">
-                      <Bell className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
-                      <p className="text-xs text-slate-500 text-center">See Notifications page for full history</p>
-                    </div>
-                  )}
+                  <div className="flex flex-col items-center justify-center py-6">
+                    <Bell className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
+                    <p className="text-xs text-slate-500 text-center">See Notifications page for full history</p>
+                  </div>
                 </div>
               </div>
 
@@ -226,6 +192,19 @@ export const DashboardOverview = () => {
       )}
     </div>
   );
+};
+
+export const DashboardOverview = () => {
+  const { user } = useAuth();
+  const role = user?.role || 'EMPLOYEE';
+
+  // If Admin or HR, render the full executive command center
+  if (role === 'ADMIN' || role === 'HR') {
+    return <AdminCommandCenter user={user} />;
+  }
+
+  // Employee or Manager view
+  return <EmployeePortalDashboard user={user} />;
 };
 
 export default DashboardOverview;

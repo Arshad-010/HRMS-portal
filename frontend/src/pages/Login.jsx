@@ -61,8 +61,8 @@ export const Login = () => {
     setSearchParams({ portal: type });
     setErrorMessage('');
     if (type === 'admin') {
-      setEmail('admin@example.com');
-      setPassword('lohith2605');
+      setEmail('admin@hrms.portal');
+      setPassword('AdminSecure@2026!');
     } else {
       setEmail('');
       setPassword('');
@@ -91,8 +91,8 @@ export const Login = () => {
 
   // Quick fill helper for testing initial admin credentials
   const fillAdminCredentials = () => {
-    setEmail('admin@example.com');
-    setPassword('lohith2605');
+    setEmail('admin@hrms.portal');
+    setPassword('AdminSecure@2026!');
     setErrorMessage('');
   };
 
@@ -199,7 +199,7 @@ export const Login = () => {
               </div>
             </div>
 
-            {/* Large Prominent Submit Button */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={submitting}
