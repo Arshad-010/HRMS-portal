@@ -53,8 +53,23 @@ export const getEmployees = async (req, res, next) => {
       ];
     }
 
-    const total = await Employee.countDocuments(query);
-    const employees = await Employee.find(query)
+    const userRole = req.user.role;
+    let finalQuery = query;
+
+    // Enforce RBAC for directory listing
+    if (userRole === 'EMPLOYEE') {
+      finalQuery = { $and: [{ _id: req.user.employeeId }, query] };
+    } else if (userRole === 'MANAGER') {
+      finalQuery = { 
+        $and: [
+          { $or: [{ _id: req.user.employeeId }, { reportingManagerId: req.user.employeeId }] },
+          query
+        ] 
+      };
+    }
+
+    const total = await Employee.countDocuments(finalQuery);
+    const employees = await Employee.find(finalQuery)
       .select('-profilePicture')
       .populate('departmentId', 'name code')
       .populate('reportingManagerId', 'firstName lastName employeeCode designation')
@@ -100,6 +115,27 @@ export const getEmployeeById = async (req, res, next) => {
         success: false,
         message: 'Employee not found',
       });
+    }
+
+    const userRole = req.user.role;
+    const isSelf = req.user.employeeId && req.user.employeeId.toString() === employee._id.toString();
+    const isDirectReport = employee.reportingManagerId && req.user.employeeId && employee.reportingManagerId._id.toString() === req.user.employeeId.toString();
+
+    // Enforce RBAC for specific employee details
+    if (userRole === 'EMPLOYEE') {
+      if (!isSelf) {
+        return res.status(403).json({
+          success: false,
+          message: 'You are not authorized to view this employee profile',
+        });
+      }
+    } else if (userRole === 'MANAGER') {
+      if (!isSelf && !isDirectReport) {
+        return res.status(403).json({
+          success: false,
+          message: 'You are not authorized to view this employee profile',
+        });
+      }
     }
 
     // Apply role-based filtering (salary strictly reserved for ADMIN and HR)

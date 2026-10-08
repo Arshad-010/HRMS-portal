@@ -52,8 +52,8 @@ export const Login = () => {
     setSearchParams({ portal: type });
     setErrorMessage('');
     if (type === 'admin') {
-      setEmail('admin@hrms.portal');
-      setPassword('AdminSecure@2026!');
+      setEmail('admin@example.com');
+      setPassword('lohith2605');
     } else {
       setEmail('');
       setPassword('');
@@ -82,8 +82,8 @@ export const Login = () => {
 
   // Quick fill helper for testing initial admin credentials
   const fillAdminCredentials = () => {
-    setEmail('admin@hrms.portal');
-    setPassword('AdminSecure@2026!');
+    setEmail('admin@example.com');
+    setPassword('lohith2605');
     setErrorMessage('');
   };
 
@@ -240,7 +240,7 @@ export const Login = () => {
                 className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-indigo-400 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
               >
                 <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-                <span>Fill Seed Admin Credentials (admin@hrms.portal)</span>
+                <span>Fill Seed Admin Credentials (admin@example.com)</span>
               </button>
             ) : (
               <button

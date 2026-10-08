@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import api from '../api/axios';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -30,6 +30,13 @@ export const Employees = () => {
   const [departments, setDepartments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user?.role === 'EMPLOYEE' && user?.employeeId) {
+      navigate(`/employees/${user.employeeId}`, { replace: true });
+    }
+  }, [user, navigate]);
 
   // Pagination & Filters State
   const [page, setPage] = useState(1);

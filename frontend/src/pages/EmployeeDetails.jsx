@@ -38,7 +38,7 @@ export const EmployeeDetails = () => {
         const response = await api.get(`/employees/${id}`);
         setEmployee(response.data.data);
       } catch (err) {
-        setError(err.message || 'Failed to retrieve employee profile');
+        setError(err.response?.data?.message || err.message || 'Failed to retrieve employee profile');
       } finally {
         setLoading(false);
       }
