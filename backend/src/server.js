@@ -3,10 +3,13 @@ import { connectDB } from './config/db.js';
 import { seedInitialAdmin } from './services/seedService.js';
 import { logger } from './utils/logger.js';
 
+import { initializeFirebaseAdmin } from './config/firebaseAdmin.js';
+
 const PORT = process.env.PORT || 5001;
 
 // Initialize database connection and initial admin bootstrap
 const startServer = async () => {
+  initializeFirebaseAdmin();
   await connectDB();
   await seedInitialAdmin();
 };
