@@ -310,32 +310,73 @@ export const LandingPage = () => {
           </p>
         </div>
 
+        {/* 3 Animated Support & Assistance Boxes */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center hover:border-indigo-500/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center mx-auto mb-4 border border-indigo-100 dark:border-indigo-500/20">
-              <Mail className="w-5 h-5" />
+          {/* Box 1: HR Administration */}
+          <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/25 transition-all" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/35 transition-all duration-300 group-hover:scale-120 group-hover:-rotate-12 group-hover:shadow-indigo-500/50">
+              <Mail className="w-7 h-7 text-white drop-shadow-md transition-transform group-hover:scale-110" />
             </div>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">HR Administration</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">For employee onboarding, leave queries &amp; records</p>
-            <span className="text-xs font-mono font-medium text-indigo-600 dark:text-indigo-400">admin@hrms.portal</span>
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-500/30 mb-3">
+              HR Ops &amp; Payroll
+            </span>
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+              HR Administration
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+              Assistance with new hire onboarding, leave balance adjustments &amp; official employee files.
+            </p>
+            <a 
+              href="mailto:admin@hrms.portal" 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all shadow-xs"
+            >
+              admin@hrms.portal
+            </a>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center hover:border-indigo-500/40 transition-colors">
-            <div className="w-10 h-10 rounded-xl bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center mx-auto mb-4 border border-violet-100 dark:border-violet-500/20">
-              <Shield className="w-5 h-5" />
+          {/* Box 2: IT & Access Support */}
+          <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/25 transition-all" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-500 to-indigo-600 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-cyan-500/35 transition-all duration-300 group-hover:scale-120 group-hover:rotate-12 group-hover:shadow-cyan-500/50">
+              <Shield className="w-7 h-7 text-white drop-shadow-md transition-transform group-hover:scale-110" />
             </div>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">IT &amp; Access Support</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">For credentials reset, login issues &amp; role grants</p>
-            <span className="text-xs font-mono font-medium text-violet-600 dark:text-violet-400">support@hrms.portal</span>
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-cyan-50 dark:bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-500/30 mb-3">
+              Identity &amp; Security
+            </span>
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-cyan-600 dark:group-hover:text-cyan-400 transition-colors">
+              IT &amp; Access Support
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+              Assistance with password resets, JWT authentication, and departmental RBAC permissions.
+            </p>
+            <a 
+              href="mailto:support@hrms.portal" 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-cyan-600 dark:text-cyan-400 hover:bg-cyan-600 hover:text-white dark:hover:bg-cyan-600 dark:hover:text-white transition-all shadow-xs"
+            >
+              support@hrms.portal
+            </a>
           </div>
 
-          <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-center hover:border-indigo-500/40 transition-colors sm:col-span-2 lg:col-span-1">
-            <div className="w-10 h-10 rounded-xl bg-teal-50 dark:bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center mx-auto mb-4 border border-teal-100 dark:border-teal-500/20">
-              <HelpCircle className="w-5 h-5" />
+          {/* Box 3: Knowledge & FAQ */}
+          <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-emerald-500 hover:shadow-2xl hover:shadow-emerald-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer sm:col-span-2 lg:col-span-1">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-emerald-500/10 rounded-full blur-2xl group-hover:bg-emerald-500/25 transition-all" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-emerald-500 via-teal-500 to-cyan-600 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-emerald-500/35 transition-all duration-300 group-hover:scale-120 group-hover:rotate-6 group-hover:shadow-emerald-500/50">
+              <HelpCircle className="w-7 h-7 text-white drop-shadow-md transition-transform group-hover:scale-110" />
             </div>
-            <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-1">Knowledge &amp; FAQ</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mb-3">Review step-by-step guides for common tasks</p>
-            <Link to="/help" className="text-xs font-medium text-teal-600 dark:text-teal-400 hover:underline">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border border-emerald-200/80 dark:border-emerald-500/30 mb-3">
+              Self-Service Docs
+            </span>
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
+              Knowledge &amp; FAQ
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
+              Step-by-step guides for punch clocks, requesting leave, delegating tasks, and audit logs.
+            </p>
+            <Link 
+              to="/help" 
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:bg-emerald-600 hover:text-white dark:hover:bg-emerald-600 dark:hover:text-white transition-all shadow-xs"
+            >
               Open Help Center &rarr;
             </Link>
           </div>
@@ -344,15 +385,15 @@ export const LandingPage = () => {
 
       {/* Terms & Conditions and Privacy Policy Section (Requirement 4) */}
       <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-200 dark:border-slate-800">
-        <div className="p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/40 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-1 max-w-2xl">
+        <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
+          <div className="space-y-1.5 max-w-2xl">
             <div className="flex items-center gap-2">
-              <Lock className="w-4 h-4 text-emerald-500" />
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider">
+              <Lock className="w-5 h-5 text-emerald-500" />
+              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">
                 Enterprise Trust, Compliance &amp; Governance
               </h3>
             </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
               HRMS Portal strictly adheres to organizational confidentiality standards, salted bcrypt hashing, stateless JWT validation, and encrypted data transport.
             </p>
           </div>
@@ -360,97 +401,227 @@ export const LandingPage = () => {
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setShowTermsModal(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 text-slate-700 dark:text-slate-200 text-xs font-semibold shadow-sm transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
             >
-              <FileText className="w-3.5 h-3.5 text-indigo-500" />
+              <FileText className="w-4 h-4 text-indigo-500" />
               <span>Terms &amp; Conditions</span>
             </button>
 
             <button
               onClick={() => setShowPrivacyModal(true)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 text-slate-700 dark:text-slate-200 text-xs font-semibold shadow-sm transition-all cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+              <ShieldCheck className="w-4 h-4 text-emerald-500" />
               <span>Privacy Policy</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* Terms & Conditions Modal */}
+      {/* Expanded Big Terms & Conditions Modal */}
       {showTermsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[85vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 max-w-5xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
             <button
               onClick={() => setShowTermsModal(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Close modal"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-600 dark:text-indigo-400">
-                <FileText className="w-5 h-5" />
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+                <FileText className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white m-0">Terms &amp; Conditions</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 m-0">Operational Guidelines and Acceptable Usage Policy</p>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white m-0">Terms &amp; Conditions of Service</h3>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 m-0 mt-0.5">Enterprise Operational Guidelines, Acceptable Usage &amp; Access Governance</p>
               </div>
             </div>
 
-            <div className="overflow-y-auto pr-2 space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-4">
-              <p><strong>1. Authorized Enterprise Use:</strong> This Human Resource Management System (HRMS) is intended exclusively for authorized organizational personnel. Unauthorized access attempts are monitored and logged.</p>
-              <p><strong>2. Account &amp; Credential Confidentiality:</strong> Users are solely responsible for maintaining the confidentiality of their passwords. Sharing credentials with unauthorized colleagues is strictly prohibited.</p>
-              <p><strong>3. Accurate Attendance &amp; Leave Reporting:</strong> Employees must accurately log their daily attendance and work hours. Submitting fraudulent punches or time-off claims violates internal company policies.</p>
-              <p><strong>4. Role-Based Data Isolation:</strong> Attempting to bypass role-based access controls (RBAC) to view unpermitted salary records, employee files, or private departmental details constitutes a violation of these terms.</p>
-              <p><strong>5. Modifications &amp; System Maintenance:</strong> Administrators reserve the right to audit activities, update software workflows, and adjust departmental quotas in accordance with executive policy.</p>
+            <div className="overflow-y-auto pr-3 space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed flex-1">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">01</span>
+                    <h4>Authorized Enterprise Use</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    This Human Resource Management System (HRMS) is designated exclusively for verified corporate employees, contractors, and managers. Unauthorized access attempts trigger security alerts and immutable audit logs.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">02</span>
+                    <h4>Credential Confidentiality</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Users must maintain strict confidentiality of their account credentials. Sharing session tokens, passwords, or granting unauthorized third-party access is strictly prohibited under company security bylaws.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">03</span>
+                    <h4>Accurate Attendance Reporting</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Personnel must accurately record daily check-in, check-out, and break intervals. Punch manipulations, fraudulent time claims, or proxy punching violate code-of-conduct policies and lead to disciplinary review.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">04</span>
+                    <h4>Role-Based Access Enforcement</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Salary details, performance appraisals, and executive records are shielded by cryptographically verified RBAC filters. Any attempt to exploit endpoints or access peer financial data constitutes a direct violation.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">05</span>
+                    <h4>Quota Balancing &amp; Restoration</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Leave entitlements are managed through atomic transactions. Deductions occur only upon official managerial approval, and balances are restored automatically if a leave request is cancelled prior to execution.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">06</span>
+                    <h4>Platform Updates &amp; Continuity</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Administrators reserve the right to deploy security patches, modify departmental structures, and archive inactive profiles in accordance with organizational governance.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <Link
+                to="/terms"
+                onClick={() => setShowTermsModal(false)}
+                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+              >
+                <span>Open full document page</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
               <button
                 onClick={() => setShowTermsModal(false)}
-                className="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold cursor-pointer transition-colors shadow-md shadow-indigo-600/20"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-indigo-600/30"
               >
-                Close Terms
+                Accept &amp; Close Terms
               </button>
             </div>
           </div>
         </div>
       )}
 
-      {/* Privacy Policy Modal */}
+      {/* Expanded Big Privacy Policy Modal */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-in fade-in duration-200">
-          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-2xl w-full shadow-2xl relative max-h-[85vh] flex flex-col">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+          <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 max-w-5xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
             <button
               onClick={() => setShowPrivacyModal(false)}
-              className="absolute top-5 right-5 text-slate-400 hover:text-slate-600 dark:hover:text-white transition-colors cursor-pointer"
+              className="absolute top-6 right-6 p-2 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+              aria-label="Close modal"
             >
-              <X className="w-5 h-5" />
+              <X className="w-6 h-6" />
             </button>
 
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-9 h-9 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
-                <ShieldCheck className="w-5 h-5" />
+            <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-lg shadow-emerald-500/30 shrink-0">
+                <ShieldCheck className="w-7 h-7" />
               </div>
               <div>
-                <h3 className="text-lg font-bold text-slate-900 dark:text-white m-0">Privacy &amp; Data Protection Policy</h3>
-                <p className="text-xs text-slate-500 dark:text-slate-400 m-0">How Employee Records &amp; Logs are Governed</p>
+                <h3 className="text-2xl font-black text-slate-900 dark:text-white m-0">Privacy &amp; Data Protection Policy</h3>
+                <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 m-0 mt-0.5">Corporate Employee Data Confidentiality, Encryption Standards &amp; Masking</p>
               </div>
             </div>
 
-            <div className="overflow-y-auto pr-2 space-y-4 text-xs text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-100 dark:border-slate-800 pt-4">
-              <p><strong>1. Personal Data Confidentiality:</strong> All employee information, including contact details, emergency contacts, attendance records, and leave requests, is encrypted and restricted by backend authorization filters.</p>
-              <p><strong>2. Salary &amp; Financial Security:</strong> Compensation data is strictly restricted from general Employee and Manager access. Only authorized Human Resource personnel and Administrators have salary visibility.</p>
-              <p><strong>3. Zero Third-Party Tracking:</strong> HRMS Portal does not track user behavior with third-party advertising cookies or external analytics beacons. Session identifiers exist solely to maintain secure authentication.</p>
-              <p><strong>4. Audit Log Sanitization:</strong> Our Activity Log service automatically purges sensitive tokens, passwords, and authorization headers from audit entries, preventing accidental exposure.</p>
-              <p><strong>5. Retention &amp; Rights:</strong> Deactivated employee records are archived securely in accordance with company compliance requirements and can be purged upon authorized administrative review.</p>
+            <div className="overflow-y-auto pr-3 space-y-4 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed flex-1">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">01</span>
+                    <h4>Personal Record Confidentiality</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Employee identity records, emergency contacts, home addresses, and phone numbers are encrypted in transit and protected by scoped database projections.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">02</span>
+                    <h4>Salary &amp; Financial Security</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Compensation values are strictly shielded from standard employee and manager views. Only authenticated HR executives and System Administrators possess access to compensation fields.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">03</span>
+                    <h4>Zero Third-Party Ad Trackers</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    HRMS Portal operates with zero third-party behavioral trackers or advertising beacons. Session tokens and local state cookies are used exclusively to maintain your authenticated session.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">04</span>
+                    <h4>Sanitized Audit Trail Stream</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    System activity logs automatically redact sensitive headers, authorization credentials, and raw passwords before logging, preventing credential leakage in operational audit trails.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">05</span>
+                    <h4>Archival &amp; Retention Policy</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Deactivated employee records are preserved through safe soft-deletion flags, ensuring organizational compliance with legal labor history requirements without compromising system performance.
+                  </p>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
+                  <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
+                    <span className="w-6 h-6 rounded-lg bg-emerald-500 text-white flex items-center justify-center text-xs font-bold shrink-0">06</span>
+                    <h4>Data Subject Rights</h4>
+                  </div>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
+                    Employees hold the right to review their profile details, request rectification of contact or emergency records, and obtain official attendance and leave summaries via their self-service dashboard.
+                  </p>
+                </div>
+              </div>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-100 dark:border-slate-800 flex justify-end">
+            <div className="mt-6 pt-5 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row justify-between items-center gap-3">
+              <Link
+                to="/privacy"
+                onClick={() => setShowPrivacyModal(false)}
+                className="text-xs font-bold text-emerald-600 dark:text-emerald-400 hover:underline flex items-center gap-1"
+              >
+                <span>Open full document page</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </Link>
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="px-5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold cursor-pointer transition-colors shadow-md shadow-emerald-600/20"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-emerald-600/30"
               >
                 Close Privacy Policy
               </button>
@@ -459,8 +630,11 @@ export const LandingPage = () => {
         </div>
       )}
 
-      {/* Footer */}
-      <PublicFooter />
+      {/* Footer with modal open callbacks */}
+      <PublicFooter 
+        onOpenTerms={() => setShowTermsModal(true)} 
+        onOpenPrivacy={() => setShowPrivacyModal(true)} 
+      />
     </div>
   );
 };

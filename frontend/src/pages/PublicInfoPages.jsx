@@ -1,12 +1,34 @@
 import React from 'react';
-import { Clock, Calendar, CheckSquare, Shield, Users, Building2, Bell } from 'lucide-react';
+import { 
+  Clock, 
+  Calendar, 
+  CheckSquare, 
+  Shield, 
+  Users, 
+  Building2, 
+  Bell, 
+  FileText, 
+  Lock, 
+  ShieldCheck, 
+  CheckCircle2, 
+  KeyRound, 
+  Database, 
+  UserCheck 
+} from 'lucide-react';
 import PublicFooter from '../components/common/PublicFooter';
 
-const PageWrapper = ({ title, children }) => (
-  <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white dark:bg-slate-900">
-    <div className="flex-1 py-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto w-full">
-      <h1 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-8 border-b border-slate-200 dark:border-slate-800 pb-4">{title}</h1>
-      <div className="text-slate-600 dark:text-slate-400 leading-relaxed space-y-6">
+const PageWrapper = ({ title, subtitle, badge, maxWidth = 'max-w-5xl', children }) => (
+  <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white dark:bg-slate-950 transition-colors">
+    <div className={`flex-1 py-16 px-4 sm:px-6 lg:px-8 ${maxWidth} mx-auto w-full`}>
+      {badge && (
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-4 border border-indigo-100 dark:border-indigo-500/20">
+          {badge}
+        </div>
+      )}
+      <h1 className="text-3xl md:text-5xl font-black text-slate-900 dark:text-white tracking-tight mb-3">{title}</h1>
+      {subtitle && <p className="text-base text-slate-500 dark:text-slate-400 mb-8">{subtitle}</p>}
+      <div className="border-b border-slate-200 dark:border-slate-800 mb-10 pb-2" />
+      <div className="text-slate-600 dark:text-slate-300 leading-relaxed space-y-6">
         {children}
       </div>
     </div>
@@ -137,37 +159,138 @@ export const PublicTasksPage = () => (
 );
 
 export const PrivacyPage = () => (
-  <PageWrapper title="Privacy Policy">
-    <p>
-      The HRMS Portal handles employee and organizational information through authenticated access and strict role-based permissions. 
-    </p>
-    <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Data Access</h3>
-    <p>
-      Users should access and use HRMS information only as permitted by their organizational role. 
-      Personal employee data, including attendance and leave records, is strictly isolated and visible only to the employee, their assigned manager, and authorized HR personnel.
-    </p>
-    <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Authentication</h3>
-    <p>
-      All interactions with the system require a secure, authenticated session. 
-      System administrators manage account provisioning and are responsible for ensuring appropriate access levels.
-    </p>
+  <PageWrapper 
+    title="Privacy & Data Protection Policy" 
+    subtitle="Enterprise Data Governance, Role-Based Access Isolation, and System Cryptographic Safeguards"
+    badge="Enterprise Governance &amp; Security"
+  >
+    <div className="p-6 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 mb-8">
+      <div className="flex items-start gap-4">
+        <ShieldCheck className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0 mt-1" />
+        <div>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Our Privacy Commitment</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            The HRMS Portal processes confidential organizational and employee data under rigorous access boundaries. 
+            All stored telemetry and personally identifiable records remain strictly segregated under your organization's tenant jurisdiction.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-6">
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+            <Lock className="w-5 h-5" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">01. Cryptographic Security</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          All passwords are encrypted using salted bcrypt hashing with high work factors. 
+          Communications are exclusively transmitted over TLS/HTTPS with stateless JWT session validation.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+            <UserCheck className="w-5 h-5" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">02. Role-Based Access Isolation</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Employees can only view their own punch clocks, leave requests, and task assignments. 
+          Managers are restricted to their assigned teams, and financial details are locked to authorized administrators.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
+            <Database className="w-5 h-5" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">03. Automated Activity Auditing</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Critical operations such as employee code generation, quota adjustments, and role elevation trigger immutable activity log entries with actor identities.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+            <KeyRound className="w-5 h-5" />
+          </div>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">04. Credential Confidentiality</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Logs and debugging streams explicitly scrub all credentials, API keys, and authorization headers, eliminating inadvertent data leakage.
+        </p>
+      </div>
+    </div>
   </PageWrapper>
 );
 
 export const TermsPage = () => (
-  <PageWrapper title="Terms of Use">
-    <p>
-      The HRMS Portal is intended strictly for authorized organizational users. 
-    </p>
-    <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Account Responsibilities</h3>
-    <p>
-      Users are responsible for maintaining the confidentiality of their account credentials and using the system according to their organization's internal policies.
-      Do not share your login credentials with colleagues or unauthorized personnel.
-    </p>
-    <h3 className="text-xl font-bold text-slate-900 dark:text-white mt-8 mb-4">Acceptable Use</h3>
-    <p>
-      The platform must be used solely for its intended purpose of managing workplace responsibilities, submitting HR requests, and tracking attendance.
-    </p>
+  <PageWrapper 
+    title="Terms & Conditions of Service" 
+    subtitle="Enterprise Operational Policies, Guidelines, and Acceptable Usage Rules"
+    badge="Enterprise Master Terms"
+  >
+    <div className="p-6 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 mb-8">
+      <div className="flex items-start gap-4">
+        <FileText className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0 mt-1" />
+        <div>
+          <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Acceptable Use Terms</h3>
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            This Human Resource Management System (HRMS) is provided solely for authorized organizational operations. 
+            By accessing this portal, users agree to abide by organizational codes of conduct and security standards.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div className="grid md:grid-cols-2 gap-6">
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">01</span>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Authorized Personnel Only</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Only actively provisioned employees and contracted personnel are allowed access. Sharing credentials or using third-party proxies is strictly prohibited.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">02</span>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Attendance &amp; Leave Accuracy</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Employees must log daily punch-ins accurately. Submitting fraudulent timesheet punches or unapproved leaves violates organizational policy.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">03</span>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Data Integrity &amp; RBAC Compliance</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Users must not attempt to bypass role boundaries or tamper with API payloads. Any unauthorized elevation attempt is flagged in audit streams.
+        </p>
+      </div>
+
+      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+        <div className="flex items-center gap-3 mb-3">
+          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">04</span>
+          <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Maintenance &amp; Audit Rights</h3>
+        </div>
+        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+          Administrators maintain full rights to audit attendance trends, conduct security sweeps, and update quotas in accordance with organizational policies.
+        </p>
+      </div>
+    </div>
   </PageWrapper>
 );
 
