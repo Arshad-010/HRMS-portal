@@ -2,6 +2,8 @@ import User from '../models/User.js';
 import Employee from '../models/Employee.js';
 import Department from '../models/Department.js';
 import { generateToken } from '../utils/jwt.js';
+import { admin } from '../config/firebaseAdmin.js';
+import { getAuth } from 'firebase-admin/auth';
 
 /**
  * Authenticate user and issue JWT
@@ -219,6 +221,117 @@ export const uploadProfilePicture = async (req, res, next) => {
       success: true,
       message: 'Profile picture updated successfully',
       profilePicture: employee.profilePicture,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Authenticate user with Google Firebase Token
+ * @route   POST /api/auth/google
+ * @access  Public
+ */
+export const googleLogin = async (req, res, next) => {
+  try {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({
+        success: false,
+        message: 'No Google identity token provided',
+      });
+    }
+
+    if (!admin) {
+      return res.status(500).json({
+        success: false,
+        message: 'Firebase Admin is not configured on the server',
+      });
+    }
+
+    // 1. Verify the token with Firebase Admin
+    let decodedToken;
+    try {
+      decodedToken = await getAuth().verifyIdToken(idToken);
+    } catch (error) {
+      console.error('Firebase token verification failed:', error);
+      return res.status(401).json({
+        success: false,
+        message: 'Google authentication failed or token expired',
+      });
+    }
+
+    const { email, email_verified } = decodedToken;
+
+    if (!email_verified) {
+      return res.status(401).json({
+        success: false,
+        message: 'Google email address is not verified',
+      });
+    }
+
+    if (!email) {
+      return res.status(401).json({
+        success: false,
+        message: 'Google account does not provide an email address',
+      });
+    }
+
+    // 2. Find the existing HRMS User by email
+    const user = await User.findOne({ email: email.toLowerCase() });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: 'No HRMS account is associated with this Google account. Please contact your administrator.',
+      });
+    }
+
+    // 3. Ensure user is active
+    if (!user.isActive) {
+      return res.status(403).json({
+        success: false,
+        message: 'Your HRMS account is inactive. Please contact your administrator.',
+      });
+    }
+
+    // 4. Update last login
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false });
+
+    // 5. Fetch associated employee record with department details
+    let employeeData = null;
+    if (user.employeeId) {
+      const employee = await Employee.findById(user.employeeId)
+        .populate('departmentId', 'name code')
+        .populate('reportingManagerId', 'firstName lastName employeeCode');
+
+      if (employee) {
+        employeeData = employee.filterForRole(user.role);
+      }
+    }
+
+    // 6. Generate existing HRMS JWT token
+    const token = generateToken({
+      id: user._id,
+      role: user.role,
+      email: user.email,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Google Login successful',
+      data: {
+        token,
+        user: {
+          id: user._id,
+          email: user.email,
+          role: user.role,
+          lastLogin: user.lastLogin,
+          employee: employeeData,
+        },
+      },
     });
   } catch (error) {
     next(error);

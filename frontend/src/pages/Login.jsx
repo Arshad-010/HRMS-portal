@@ -25,7 +25,7 @@ const GoogleIcon = () => (
 );
 
 export const Login = () => {
-  const { login, isAuthenticated } = useAuth();
+  const { login, loginWithGoogle, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -237,8 +237,19 @@ export const Login = () => {
           <div className="mt-5">
             <button
               type="button"
-              onClick={() => console.log('Google login not configured yet.')}
-              className="w-full py-2.5 px-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.99] text-slate-700 dark:text-slate-200 font-bold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer"
+              disabled={submitting}
+              onClick={async () => {
+                setErrorMessage('');
+                setSubmitting(true);
+                const result = await loginWithGoogle();
+                setSubmitting(false);
+                if (result.success) {
+                  navigate(from, { replace: true });
+                } else {
+                  setErrorMessage(result.error);
+                }
+              }}
+              className="w-full py-2.5 px-4 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800 active:scale-[0.99] text-slate-700 dark:text-slate-200 font-bold text-sm rounded-xl transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 disabled:pointer-events-none"
             >
               <GoogleIcon />
               <span>Continue with Google</span>
