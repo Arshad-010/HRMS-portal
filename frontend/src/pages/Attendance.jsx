@@ -261,7 +261,7 @@ export const Attendance = () => {
       await fetchMyAttendance();
       await fetchSummary();
     } catch (err) {
-      setPunchFeedback({ message: '', error: err.message || 'Check-in failed. Please try again.' });
+      setPunchFeedback({ message: '', error: err.response?.data?.message || err.message || 'Check-in failed. Please try again.' });
     } finally {
       setPunchLoading(false);
     }
@@ -283,7 +283,37 @@ export const Attendance = () => {
       await fetchMyAttendance();
       await fetchSummary();
     } catch (err) {
-      setPunchFeedback({ message: '', error: err.message || 'Check-out failed. Please try again.' });
+      setPunchFeedback({ message: '', error: err.response?.data?.message || err.message || 'Check-out failed. Please try again.' });
+    } finally {
+      setPunchLoading(false);
+    }
+  };
+
+  // Self-Service Start Break
+  const handleStartBreak = async () => {
+    setPunchLoading(true);
+    setPunchFeedback({ message: '', error: '' });
+    try {
+      await api.post('/attendance/break/start');
+      setPunchFeedback({ message: 'Break started successfully.', error: '' });
+      await fetchMyAttendance();
+    } catch (err) {
+      setPunchFeedback({ message: '', error: err.response?.data?.message || err.message || 'Failed to start break.' });
+    } finally {
+      setPunchLoading(false);
+    }
+  };
+
+  // Self-Service End Break
+  const handleEndBreak = async () => {
+    setPunchLoading(true);
+    setPunchFeedback({ message: '', error: '' });
+    try {
+      await api.post('/attendance/break/end');
+      setPunchFeedback({ message: 'Break ended successfully.', error: '' });
+      await fetchMyAttendance();
+    } catch (err) {
+      setPunchFeedback({ message: '', error: err.response?.data?.message || err.message || 'Failed to end break.' });
     } finally {
       setPunchLoading(false);
     }
@@ -449,7 +479,7 @@ export const Attendance = () => {
 
       {/* Hero Grid: Real-time Punch Card + Organization Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 my-6">
-        {/* Real-time Punch Card (5 cols on lg) */}
+        {/* Real-time Punch Clock (5 cols on lg) */}
         <div className="lg:col-span-5 bg-gradient-to-br from-white dark:from-slate-900 via-slate-50 dark:via-slate-900 to-indigo-100 dark:to-indigo-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-xl">
           <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
 
@@ -466,25 +496,38 @@ export const Attendance = () => {
 
             {/* Big Live Digital Clock */}
             <div className="my-5 text-center">
-              <div className="text-4xl sm:text-5xl font-mono font-extrabold text-slate-900 dark:text-white tracking-wider">
+              <div className="text-4xl sm:text-5xl font-mono font-extrabold text-slate-900 dark:text-white tracking-wider mb-3">
                 {currentTime.toLocaleTimeString()}
               </div>
-              <div className="mt-2 flex items-center justify-center gap-2">
-                {isCheckedIn && !isCheckedOut ? (
+              <div className="mt-2 flex flex-col items-center justify-center gap-2">
+                {todayRecord?.status === 'ON_BREAK' ? (
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-amber-500/10 text-amber-500 border border-amber-500/30">
+                    <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
+                    On Break
+                  </span>
+                ) : isCheckedIn && !isCheckedOut ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
                     <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
-                    Checked In at {formatTimeStr(todayRecord?.checkIn)} ({calculateElapsed()})
+                    Checked In / Working
                   </span>
                 ) : isCheckedIn && isCheckedOut ? (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
                     <CheckCircle2 className="w-3.5 h-3.5" />
-                    Shift Completed • {todayRecord?.workHours || 0} hrs logged
+                    Workday Completed
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-300 dark:border-slate-700">
                     <span className="w-2 h-2 rounded-full bg-slate-500" />
-                    Not Checked In Today
+                    Not Checked In
                   </span>
+                )}
+                
+                {/* Contextual subtext for punch clock */}
+                {isCheckedIn && !isCheckedOut && todayRecord?.status !== 'ON_BREAK' && (
+                  <span className="text-xs text-slate-500">Checked in at: {formatTimeStr(todayRecord?.checkIn)}</span>
+                )}
+                {todayRecord?.status === 'ON_BREAK' && todayRecord.breaks?.length > 0 && (
+                  <span className="text-xs text-slate-500">Break started at: {formatTimeStr(todayRecord.breaks[todayRecord.breaks.length - 1].start)}</span>
                 )}
               </div>
             </div>
@@ -504,11 +547,12 @@ export const Attendance = () => {
 
           {/* Action Buttons */}
           <div>
-            <div className="grid grid-cols-2 gap-3">
+            {!isCheckedIn || isCheckedOut ? (
+              /* State A: Not Checked In OR State D: Workday Completed */
               <button
                 onClick={handleCheckIn}
                 disabled={isCheckedIn || punchLoading || !user?.employee}
-                className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
+                className={`w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl text-sm font-semibold transition-all shadow-md ${
                   isCheckedIn
                     ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
                     : 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-emerald-600/20 active:scale-95 cursor-pointer'
@@ -517,20 +561,50 @@ export const Attendance = () => {
                 {punchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogIn className="w-4 h-4" />}
                 <span>Check In</span>
               </button>
+            ) : (
+              /* State B & C: Checked In or On Break */
+              <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-2 gap-3">
+                  {todayRecord?.status === 'ON_BREAK' ? (
+                    <button
+                      onClick={handleEndBreak}
+                      disabled={punchLoading}
+                      className="flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold bg-amber-500 hover:bg-amber-400 text-white transition-all shadow-md shadow-amber-500/20 active:scale-95 cursor-pointer"
+                    >
+                      {punchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Timer className="w-4 h-4" />}
+                      <span>End Break</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleStartBreak}
+                      disabled={punchLoading || (todayRecord?.breaks && todayRecord.breaks.length > 0)}
+                      className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
+                        (todayRecord?.breaks && todayRecord.breaks.length > 0)
+                          ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
+                          : 'bg-amber-500 hover:bg-amber-400 text-white shadow-amber-500/20 active:scale-95 cursor-pointer'
+                      }`}
+                      title={(todayRecord?.breaks && todayRecord.breaks.length > 0) ? "You have already taken a break today." : ""}
+                    >
+                      {punchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Timer className="w-4 h-4" />}
+                      <span>Start Break</span>
+                    </button>
+                  )}
 
-              <button
-                onClick={handleCheckOut}
-                disabled={!isCheckedIn || isCheckedOut || punchLoading || !user?.employee}
-                className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
-                  !isCheckedIn || isCheckedOut
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
-                    : 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/20 active:scale-95 cursor-pointer'
-                }`}
-              >
-                {punchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
-                <span>Check Out</span>
-              </button>
-            </div>
+                  <button
+                    onClick={handleCheckOut}
+                    disabled={punchLoading || todayRecord?.status === 'ON_BREAK'}
+                    className={`flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-semibold transition-all shadow-md ${
+                      todayRecord?.status === 'ON_BREAK'
+                        ? 'bg-slate-100 dark:bg-slate-800 text-slate-500 border border-slate-300 dark:border-slate-700 cursor-not-allowed'
+                        : 'bg-rose-600 hover:bg-rose-500 text-white shadow-rose-600/20 active:scale-95 cursor-pointer'
+                    }`}
+                  >
+                    {punchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <LogOut className="w-4 h-4" />}
+                    <span>Check Out</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Punch Notifications */}
             {punchFeedback.message && (
@@ -553,80 +627,66 @@ export const Attendance = () => {
           </div>
         </div>
 
-        {/* Organization / Today's Metrics (7 cols on lg) */}
+        {/* Today's Work Summary (7 cols on lg) */}
         <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
               <TrendingUp className="w-4 h-4 text-indigo-400" />
-              Workforce Today Overview
+              Today's Work Summary
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
-              Active Headcount: <strong className="text-slate-900 dark:text-white">{summaryMetrics.totalEmployees || 0}</strong>
+              Status: <strong className="text-slate-900 dark:text-white">{todayRecord?.status || 'Not Checked In'}</strong>
             </span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 my-4">
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-400" />
-                Present Today
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.present || 0}</div>
-              <p className="text-[10px] text-slate-500 mt-0.5">Checked-in & Active</p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 my-6">
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Check-in</span>
+              <span className="text-lg font-bold text-slate-900 dark:text-white">
+                {todayRecord?.checkIn ? formatTimeStr(todayRecord.checkIn) : 'Not yet'}
+              </span>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-amber-400" />
-                Half Day
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.halfDay || 0}</div>
-              <p className="text-[10px] text-slate-500 mt-0.5">&lt; 4.5 working hours</p>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Check-out</span>
+              <span className="text-lg font-bold text-slate-900 dark:text-white">
+                {todayRecord?.checkOut ? formatTimeStr(todayRecord.checkOut) : 'Not yet'}
+              </span>
+            </div>
+            
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Break</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                {todayRecord?.breaks && todayRecord.breaks.length > 0 ? (
+                  <>
+                    {formatTimeStr(todayRecord.breaks[0].start)} – {todayRecord.breaks[0].end ? formatTimeStr(todayRecord.breaks[0].end) : 'Now'}
+                  </>
+                ) : 'None'}
+              </span>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-blue-400" />
-                On Leave
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.onLeave || 0}</div>
-              <p className="text-[10px] text-slate-500 mt-0.5">Approved day-offs</p>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Break Duration</span>
+              <span className="text-lg font-bold text-amber-500">
+                {todayRecord?.totalBreakDuration || 0} min / 60 min
+              </span>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-rose-400" />
-                Absent
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.absent || 0}</div>
-              <p className="text-[10px] text-slate-500 mt-0.5">Unrecorded / missing</p>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Work Duration</span>
+              <span className="text-lg font-bold text-indigo-500">
+                {todayRecord?.workHours ? `${todayRecord.workHours}h` : calculateElapsed() || '0h 0m 0s'}
+              </span>
             </div>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-indigo-400" />
-                Pending Punch
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{summaryMetrics.pendingCheckIn || 0}</div>
-              <p className="text-[10px] text-slate-500 mt-0.5">Awaiting check-in</p>
-            </div>
-
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5">
-              <div className="text-[11px] font-medium text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-violet-400" />
-                Avg Work Hours
-              </div>
-              <div className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">
-                {summaryMetrics.avgWorkHours ? `${summaryMetrics.avgWorkHours}h` : '0h'}
-              </div>
-              <p className="text-[10px] text-slate-500 mt-0.5">Organization average</p>
+            <div className="flex flex-col gap-1">
+              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Status</span>
+              <span className="text-sm font-bold text-slate-900 dark:text-white mt-1">
+                {todayRecord?.status === 'ON_BREAK' ? 'On Break' : (isCheckedIn && !isCheckedOut) ? 'Working' : isCheckedOut ? 'Completed' : 'Not Started'}
+              </span>
             </div>
           </div>
 
-          <div className="text-[11px] text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between">
-            <span>Server Time: {currentTime.toISOString().slice(0, 10)} UTC</span>
-            <span className="text-indigo-400 font-medium">Automatic work hours validation enabled</span>
-          </div>
         </div>
       </div>
 

@@ -10,6 +10,8 @@ import {
   updateAttendance,
   deleteAttendance,
   getEmployeeAttendance,
+  startBreak,
+  endBreak,
 } from '../controllers/attendanceController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 
@@ -20,6 +22,8 @@ router.use(protect);
 // Self-service employee endpoints
 router.post('/check-in', checkIn);
 router.post('/check-out', checkOut);
+router.post('/break/start', startBreak);
+router.post('/break/end', endBreak);
 router.get('/my', getMyAttendance);
 
 // Summary & specific employee endpoints
