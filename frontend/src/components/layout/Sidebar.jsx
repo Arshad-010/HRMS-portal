@@ -69,21 +69,21 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
         to={link.path}
         onClick={() => setIsMobileOpen(false)}
         title={isCollapsed ? link.name : undefined}
-        className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 group relative ${
+        className={`flex items-center ${isCollapsed ? 'justify-center w-10 h-10 mx-auto' : 'gap-3 px-3.5 py-2.5'} rounded-xl text-xs sm:text-sm font-semibold transition-all duration-200 group relative ${
           isActive
             ? 'bg-gradient-to-r from-sky-500 via-sky-600 to-indigo-600 text-white shadow-lg shadow-sky-500/30 border border-sky-400/40 ring-1 ring-white/10'
-            : 'text-slate-300 dark:text-slate-300 hover:text-white dark:hover:text-white hover:bg-slate-800/80 dark:hover:bg-slate-800/80 hover:translate-x-1 border border-transparent'
+            : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 hover:translate-x-1 border border-transparent'
         }`}
       >
         {/* Active glowing accent indicator bar (hidden when collapsed) */}
         {isActive && !isCollapsed && (
-          <div className="w-1.5 h-4.5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] shrink-0" />
+          <div className="w-1.5 h-5 rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.9)] shrink-0" />
         )}
 
-        <Icon className={`w-4.5 h-4.5 shrink-0 transition-transform duration-200 ${
+        <Icon className={`w-5 h-5 shrink-0 transition-transform duration-200 ${
           isActive 
             ? 'text-white drop-shadow-sm scale-105' 
-            : 'text-slate-400 dark:text-slate-400 group-hover:text-sky-400 group-hover:scale-110'
+            : 'text-slate-400 dark:text-slate-400 group-hover:text-sky-600 dark:group-hover:text-sky-400 group-hover:scale-110'
         }`} />
         
         {!isCollapsed && (
@@ -168,13 +168,13 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 flex flex-col gap-5 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 flex flex-col gap-5 no-scrollbar">
           {navGroups.map((group) => (
             <div key={group.title} className="px-3">
               {!isCollapsed && (
                 <div className="flex items-center gap-2 px-3 mb-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400/80 shadow-[0_0_6px_rgba(56,189,248,0.7)]" />
-                  <h3 className="text-[10px] font-black uppercase tracking-wider text-sky-400 dark:text-sky-400 m-0">
+                  <span className="w-1.5 h-1.5 rounded-full bg-sky-500/80 dark:bg-sky-400/80 shadow-[0_0_6px_rgba(56,189,248,0.7)]" />
+                  <h3 className="text-[10px] font-black uppercase tracking-wider text-sky-700 dark:text-sky-400 m-0">
                     {group.title}
                   </h3>
                 </div>

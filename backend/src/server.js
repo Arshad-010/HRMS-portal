@@ -2,6 +2,7 @@ import app from './app.js';
 import { connectDB } from './config/db.js';
 import { seedInitialAdmin } from './services/seedService.js';
 import { logger } from './utils/logger.js';
+import { initSocket } from './socket.js';
 
 import { initializeFirebaseAdmin } from './config/firebaseAdmin.js';
 
@@ -24,6 +25,9 @@ const server = app.listen(PORT, () => {
     logger.info(`Server is running in production mode on port ${PORT}`);
   }
 });
+
+// Initialize Socket.IO
+initSocket(server);
 
 // Handle unhandled promise rejections
 process.on('unhandledRejection', (err) => {

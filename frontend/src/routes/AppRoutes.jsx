@@ -16,8 +16,8 @@ import Profile from '../pages/Profile';
 import Settings from '../pages/Settings';
 import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
-import Performance from '../pages/Performance';
 import Analytics from '../pages/Analytics';
+import Chat from '../pages/Chat';
 import ProtectedRoute from '../components/common/ProtectedRoute';
 
 import {
@@ -159,6 +159,15 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Notifications />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/chat"
+        element={
+          <ProtectedRoute>
+            <Chat />
           </ProtectedRoute>
         }
       />
