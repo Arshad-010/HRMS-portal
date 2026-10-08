@@ -10,11 +10,33 @@ dotenv.config();
 const app = express();
 
 // Middleware
-const corsOrigin = process.env.CORS_ORIGIN || 'http://localhost:5173';
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:5173,http://localhost:5174')
+  .split(',')
+  .map((o) => o.trim())
+  .filter(Boolean);
+
 app.use(
   cors({
-    origin: corsOrigin === '*' ? '*' : corsOrigin.split(','),
+    origin: (origin, callback) => {
+      // Allow requests with no origin (curl, mobile, server-to-server)
+      if (!origin) return callback(null, true);
+
+      // Allow if explicitly configured
+      if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+        return callback(null, true);
+      }
+
+      // Automatically allow any localhost or 127.0.0.1 port (e.g. 5173, 5174, 3000)
+      const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:[0-9]+)?$/.test(origin);
+      if (isLocalhost) {
+        return callback(null, true);
+      }
+
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
   })
 );
 
