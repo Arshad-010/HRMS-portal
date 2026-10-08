@@ -164,17 +164,25 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
     ? `${employee.firstName[0]}${employee.lastName?.[0] || ''}`.toUpperCase()
     : user?.email?.[0].toUpperCase();
 
+  const [isMobileNavOpen, setIsMobileNavOpen] = useState(false);
+
+  // Close mobile nav on route change
+  useEffect(() => {
+    setIsMobileNavOpen(false);
+  }, [location.pathname]);
+
   return (
-    <header className="border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 backdrop-blur-md sticky top-0 z-50">
-      <div className="px-4 lg:px-6 h-16 flex items-center justify-between">
-        {/* Brand & Hamburger */}
-        <div className="flex items-center gap-4">
+    <header className="border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-50 transition-colors">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        {/* Brand & Left Hamburger */}
+        <div className="flex items-center gap-3 shrink-0">
           {isAuthenticated ? (
             <>
               {/* Mobile Hamburger */}
               <button 
                 onClick={toggleMobileSidebar}
                 className="lg:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                aria-label="Open navigation sidebar"
               >
                 <Menu className="w-5 h-5" />
               </button>
@@ -184,120 +192,113 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
                 onClick={toggleCollapse}
                 className="hidden lg:flex p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+                aria-label="Collapse sidebar"
               >
                 <Menu className="w-5 h-5" />
               </button>
             </>
           ) : (
-            <Link to="/" className="flex items-center gap-3 no-underline">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/20">
-                <Layers className="w-5 h-5" />
+            /* Animated Brand Logo with hover slide animation (Requirement 3) */
+            <Link 
+              to="/" 
+              className="group flex items-center gap-3 no-underline cursor-pointer py-1 select-none"
+              title="HRMS Portal Home"
+            >
+              {/* Logo Icon with 3D lift, spin and pulse dot */}
+              <div className="relative w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 flex items-center justify-center text-white shadow-lg shadow-indigo-500/25 transition-all duration-300 group-hover:scale-110 group-hover:rotate-6 group-hover:shadow-indigo-500/40 shrink-0">
+                <Layers className="w-5 h-5 transition-transform duration-300 group-hover:scale-105" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900 group-hover:animate-ping opacity-75" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-emerald-400 rounded-full border-2 border-white dark:border-slate-900" />
               </div>
-              <div>
-                <h1 className="text-base font-bold tracking-tight text-slate-900 dark:text-white m-0">HRMS Portal</h1>
-                <p className="text-[10px] text-slate-500 dark:text-slate-400 m-0 leading-tight">Enterprise HR Suite</p>
+
+              {/* Site Name with Slide Animation when cursor nears it */}
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1.5 transition-all duration-300 ease-out group-hover:translate-x-2">
+                  <span className="text-base font-black tracking-tight text-indigo-600 dark:text-indigo-400 group-hover:text-indigo-500 dark:group-hover:text-indigo-300 transition-colors">
+                    HRMS
+                  </span>
+                  <span className="text-base font-bold text-slate-900 dark:text-white transition-colors">
+                    Portal
+                  </span>
+                  <span className="text-xs font-bold text-indigo-500 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0">
+                    &rarr;
+                  </span>
+                </div>
+                <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 m-0 leading-tight transition-all duration-300 ease-out group-hover:translate-x-2">
+                  Enterprise HR Suite
+                </p>
               </div>
             </Link>
           )}
         </div>
 
-        {/* Right Nav & User Actions */}
-        <div className="flex items-center gap-3">
-          {/* Theme / Appearance Dropdown */}
-          <div className="relative" ref={themeDropdownRef}>
-            <button
-              onClick={() => setIsThemeDropdownOpen(!isThemeDropdownOpen)}
-              title="Appearance settings"
-              className={`p-2 rounded-xl transition-colors cursor-pointer ${
-                isThemeDropdownOpen
-                  ? 'bg-slate-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400'
-                  : 'text-slate-500 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+        {/* Center Navigation for Unauthenticated Users (Requirements 2 & 6: Fills the empty bar with relevant HR features, removes About & Contact) */}
+        {!isAuthenticated && (
+          <nav className="hidden lg:flex items-center gap-1 px-3 py-1.5 rounded-full bg-slate-100/80 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-700/60 backdrop-blur-sm shadow-inner">
+            <Link 
+              to="/" 
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                location.pathname === '/' 
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
               }`}
             >
-              <Palette className="w-4 h-4" />
-            </button>
+              <Home className="w-3.5 h-3.5" />
+              <span>Home</span>
+            </Link>
 
-            {isThemeDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-56 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-2xl z-50 overflow-hidden animate-in fade-in slide-in-from-top-2 duration-150">
-                <div className="px-4 py-3 border-b border-slate-100 dark:border-slate-800">
-                  <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Appearance</h4>
-                </div>
-                
-                <div className="p-2 border-b border-slate-100 dark:border-slate-800">
-                  <span className="block px-2 mb-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Color Theme</span>
-                  <div className="space-y-1">
-                    <button
-                      onClick={() => setThemeFamily('sage')}
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#3F6B5B]"></span>
-                        Sage
-                      </span>
-                      {themeFamily === 'sage' && <Check className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
-                    </button>
-                    <button
-                      onClick={() => setThemeFamily('ocean')}
-                      className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg text-xs font-medium hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                    >
-                      <span className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
-                        <span className="w-2.5 h-2.5 rounded-full bg-[#287A96]"></span>
-                        Ocean
-                      </span>
-                      {themeFamily === 'ocean' && <Check className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />}
-                    </button>
-                  </div>
-                </div>
+            <Link 
+              to="/features" 
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                location.pathname === '/features' 
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>Features</span>
+            </Link>
 
-                <div className="p-2">
-                  <span className="block px-2 mb-1.5 text-[10px] font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Mode</span>
-                  <div className="flex bg-slate-100 dark:bg-slate-800/50 rounded-xl p-1">
-                    <button
-                      onClick={() => setThemeMode('light')}
-                      className={`flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        themeMode === 'light'
-                          ? 'bg-white text-indigo-600 shadow-sm'
-                          : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
-                      }`}
-                    >
-                      <Sun className="w-3 h-3" /> Light
-                    </button>
-                    <button
-                      onClick={() => setThemeMode('dark')}
-                      className={`flex-1 flex justify-center items-center gap-1.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-                        themeMode === 'dark'
-                          ? 'bg-slate-700 text-indigo-400 shadow-sm'
-                          : 'text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300'
-                      }`}
-                    >
-                      <Moon className="w-3 h-3" /> Dark
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
+            <Link 
+              to="/attendance" 
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                location.pathname === '/attendance' 
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
+              }`}
+            >
+              <Clock className="w-3.5 h-3.5" />
+              <span>Attendance</span>
+            </Link>
 
-          {!isAuthenticated && (
-            <nav className="hidden md:flex items-center gap-2 mr-2">
-              <Link to="/" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <Home className="w-3.5 h-3.5" />
-                <span>Home</span>
-              </Link>
-              <Link to="/features" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>Features</span>
-              </Link>
-              <Link to="/about" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <Info className="w-3.5 h-3.5" />
-                <span>About</span>
-              </Link>
-              <Link to="/contact" className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
-                <Phone className="w-3.5 h-3.5" />
-                <span>Contact</span>
-              </Link>
-            </nav>
-          )}
+            <Link 
+              to="/leave" 
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                location.pathname === '/leave' 
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
+              }`}
+            >
+              <Calendar className="w-3.5 h-3.5" />
+              <span>Leave Portal</span>
+            </Link>
+
+            <Link 
+              to="/tasks" 
+              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all ${
+                location.pathname === '/tasks' 
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-300 shadow-sm' 
+                  : 'text-slate-600 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-white/60 dark:hover:bg-slate-700/60'
+              }`}
+            >
+              <CheckSquare className="w-3.5 h-3.5" />
+              <span>Tasks</span>
+            </Link>
+          </nav>
+        )}
+
+        {/* Right Nav & Action Buttons (Requirements 1 & 2: User Login and Admin Portal) */}
+        <div className="flex items-center gap-2.5 shrink-0">
 
           {isAuthenticated ? (
             <div className="flex items-center gap-2.5">
@@ -503,24 +504,103 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
             </div>
           ) : (
             <div className="flex items-center gap-2">
+              {/* User Login Button (Requirement 1) */}
               <Link
-                to="/login"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-colors shadow-md shadow-indigo-600/20"
+                to="/login?portal=user"
+                className="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200/80 dark:bg-slate-800 dark:hover:bg-slate-750 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all border border-slate-200/90 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-500 shadow-sm"
+                title="Employee & Manager Login"
               >
-                <LogIn className="w-3.5 h-3.5" />
-                <span>Sign In</span>
+                <Users className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                <span>User Login</span>
               </Link>
+
+              {/* Admin Portal Button (Requirement 1) */}
               <Link
-                to="/login"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors border border-slate-200 dark:border-slate-700"
+                to="/login?portal=admin"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs font-bold transition-all shadow-md shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:-translate-y-0.5"
+                title="System Administrator & HR Management Portal"
               >
-                <Shield className="w-3.5 h-3.5 text-indigo-500 dark:text-indigo-400" />
+                <Shield className="w-3.5 h-3.5 text-white" />
                 <span>Admin Portal</span>
               </Link>
+
+              {/* Mobile Menu Toggle for unauthenticated users */}
+              <button
+                onClick={() => setIsMobileNavOpen(!isMobileNavOpen)}
+                className="lg:hidden p-2 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                aria-label="Toggle navigation menu"
+              >
+                <Menu className="w-5 h-5" />
+              </button>
             </div>
           )}
         </div>
       </div>
+
+      {/* Unauthenticated Mobile Dropdown Menu */}
+      {!isAuthenticated && isMobileNavOpen && (
+        <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 pt-3 pb-5 space-y-2 animate-in slide-in-from-top-2 duration-200 shadow-xl">
+          <Link
+            to="/"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <Home className="w-4 h-4 text-indigo-500" />
+            <span>Home</span>
+          </Link>
+          <Link
+            to="/features"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <Sparkles className="w-4 h-4 text-indigo-500" />
+            <span>Features</span>
+          </Link>
+          <Link
+            to="/attendance"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <Clock className="w-4 h-4 text-indigo-500" />
+            <span>Attendance Tracking</span>
+          </Link>
+          <Link
+            to="/leave"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <Calendar className="w-4 h-4 text-indigo-500" />
+            <span>Leave Management</span>
+          </Link>
+          <Link
+            to="/tasks"
+            onClick={() => setIsMobileNavOpen(false)}
+            className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800"
+          >
+            <CheckSquare className="w-4 h-4 text-indigo-500" />
+            <span>Task Management</span>
+          </Link>
+
+          <div className="pt-3 border-t border-slate-100 dark:border-slate-800 flex flex-col gap-2">
+            <Link
+              to="/login?portal=user"
+              onClick={() => setIsMobileNavOpen(false)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 text-xs font-bold border border-slate-200 dark:border-slate-700"
+            >
+              <Users className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+              <span>User Login</span>
+            </Link>
+            <Link
+              to="/login?portal=admin"
+              onClick={() => setIsMobileNavOpen(false)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 text-white text-xs font-bold shadow-md shadow-indigo-600/25"
+            >
+              <Shield className="w-4 h-4 text-white" />
+              <span>Admin Portal</span>
+            </Link>
+          </div>
+        </div>
+      )}
     </header>
   );
 };

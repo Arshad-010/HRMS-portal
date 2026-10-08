@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate, useLocation, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation, useSearchParams, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { 
   Layers, 
@@ -10,6 +10,8 @@ import {
   LogIn, 
   AlertCircle, 
   ShieldCheck, 
+  Shield,
+  Users,
   ArrowRight 
 } from 'lucide-react';
 
@@ -17,6 +19,19 @@ export const Login = () => {
   const { login, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  // Read query parameter: ?portal=admin vs ?portal=user
+  const portalParam = searchParams.get('portal');
+  const [portalType, setPortalType] = useState(portalParam === 'admin' ? 'admin' : 'user');
+
+  useEffect(() => {
+    if (portalParam === 'admin') {
+      setPortalType('admin');
+    } else if (portalParam === 'user') {
+      setPortalType('user');
+    }
+  }, [portalParam]);
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -31,6 +46,19 @@ export const Login = () => {
   if (isAuthenticated) {
     return <Navigate to={from} replace />;
   }
+
+  const handlePortalSwitch = (type) => {
+    setPortalType(type);
+    setSearchParams({ portal: type });
+    setErrorMessage('');
+    if (type === 'admin') {
+      setEmail('admin@hrms.portal');
+      setPassword('AdminSecure@2026!');
+    } else {
+      setEmail('');
+      setPassword('');
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,16 +91,60 @@ export const Login = () => {
     <div className="min-h-[85vh] flex items-center justify-center px-4 sm:px-6 lg:px-8 py-12">
       <div className="w-full max-w-md">
         {/* Brand Header */}
-        <div className="text-center mb-8">
-          <div className="inline-flex w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-600 items-center justify-center text-white shadow-xl shadow-indigo-500/25 mb-4">
+        <div className="text-center mb-6">
+          <div className="inline-flex w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-violet-600 items-center justify-center text-white shadow-xl shadow-indigo-500/25 mb-3">
             <Layers className="w-7 h-7" />
           </div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">HRMS Enterprise Portal</h2>
-          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Sign in with your organizational credentials</p>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
+            {portalType === 'admin' 
+              ? 'Administrative & HR Governance Control' 
+              : 'Sign in to access your workforce workspace'}
+          </p>
+        </div>
+
+        {/* Portal Mode Switcher Tabs (Requirement 1) */}
+        <div className="grid grid-cols-2 p-1 mb-5 rounded-2xl bg-slate-100 dark:bg-slate-800/80 border border-slate-200 dark:border-slate-700/80 shadow-inner">
+          <button
+            type="button"
+            onClick={() => handlePortalSwitch('user')}
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              portalType === 'user'
+                ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow-sm border border-slate-200/60 dark:border-slate-700'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Users className="w-4 h-4" />
+            <span>User Login</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => handlePortalSwitch('admin')}
+            className={`flex items-center justify-center gap-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              portalType === 'admin'
+                ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md shadow-indigo-600/25'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+            }`}
+          >
+            <Shield className="w-4 h-4" />
+            <span>Admin Portal</span>
+          </button>
         </div>
 
         {/* Login Card */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8 backdrop-blur-xl shadow-2xl shadow-black/40">
+        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-7 sm:p-8 backdrop-blur-xl shadow-2xl shadow-black/10 dark:shadow-black/40">
+          {portalType === 'admin' && (
+            <div className="mb-5 px-3 py-2 rounded-xl bg-indigo-50 dark:bg-indigo-500/10 border border-indigo-100 dark:border-indigo-500/20 text-indigo-700 dark:text-indigo-300 text-xs flex items-center justify-between">
+              <span className="flex items-center gap-1.5 font-semibold">
+                <ShieldCheck className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                <span>Admin Elevated Session</span>
+              </span>
+              <span className="text-[10px] font-mono uppercase bg-white dark:bg-slate-800 px-1.5 py-0.5 rounded border border-indigo-200 dark:border-indigo-500/30">
+                MASTER RBAC
+              </span>
+            </div>
+          )}
           {errorMessage && (
             <div className="mb-6 p-4 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-start gap-3 animate-fadeIn">
               <AlertCircle className="w-4 h-4 text-rose-400 flex-shrink-0 mt-0.5" />
@@ -146,8 +218,14 @@ export const Login = () => {
                 </>
               ) : (
                 <>
-                  <LogIn className="w-4 h-4" />
-                  <span>Sign In</span>
+                  {portalType === 'admin' ? (
+                    <Shield className="w-4 h-4" />
+                  ) : (
+                    <LogIn className="w-4 h-4" />
+                  )}
+                  <span>
+                    {portalType === 'admin' ? 'Access Admin Portal' : 'Sign In as Employee'}
+                  </span>
                 </>
               )}
             </button>
@@ -155,14 +233,25 @@ export const Login = () => {
 
           {/* Quick Demo Fill Helper */}
           <div className="mt-6 pt-5 border-t border-slate-200 dark:border-slate-800">
-            <button
-              type="button"
-              onClick={fillAdminCredentials}
-              className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-indigo-400 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
-            >
-              <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
-              <span>Use Admin Seed Credentials (for local testing)</span>
-            </button>
+            {portalType === 'admin' ? (
+              <button
+                type="button"
+                onClick={fillAdminCredentials}
+                className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-indigo-400 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Fill Seed Admin Credentials (admin@hrms.portal)</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={fillAdminCredentials}
+                className="w-full text-xs text-slate-500 dark:text-slate-400 hover:text-indigo-400 flex items-center justify-center gap-1.5 transition-colors cursor-pointer"
+              >
+                <Users className="w-3.5 h-3.5 text-indigo-400" />
+                <span>Need test credentials? Click to fill seeded login</span>
+              </button>
+            )}
           </div>
         </div>
 
