@@ -21,6 +21,7 @@ export const getEmployees = async (req, res, next) => {
       designation,
       status,
       employmentType,
+      role,
     } = req.query;
 
     const query = {};
@@ -40,6 +41,11 @@ export const getEmployees = async (req, res, next) => {
 
     if (employmentType) {
       query.employmentType = employmentType;
+    }
+
+    if (role && role !== 'ALL') {
+      const usersWithRole = await User.find({ role }).select('_id');
+      query.userId = { $in: usersWithRole.map((u) => u._id) };
     }
 
     // Search query matches firstName, lastName, employeeCode
@@ -447,5 +453,121 @@ export const deleteEmployee = async (req, res, next) => {
     });
   } catch (error) {
     next(error);
+  }
+};
+
+/**
+ * Bulk Import Employees from CSV payload
+ * @route POST /api/employees/bulk-import
+ * @access Private (ADMIN, HR)
+ */
+export const bulkImportEmployees = async (req, res, next) => {
+  try {
+    const { employees: items } = req.body;
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'A list of employees is required for bulk import.',
+      });
+    }
+
+    const createdList = [];
+    const errorsList = [];
+
+    // Cache departments
+    const allDepts = await Department.find();
+    const deptMap = {};
+    allDepts.forEach((d) => {
+      deptMap[d.name.toLowerCase()] = d._id;
+      deptMap[d.code.toLowerCase()] = d._id;
+    });
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i];
+      const rowNum = i + 1;
+
+      try {
+        if (!item.email || !item.firstName || !item.lastName) {
+          errorsList.push({ row: rowNum, error: 'First name, last name, and email are required.' });
+          continue;
+        }
+
+        const existingUser = await User.findOne({ email: item.email.toLowerCase() });
+        if (existingUser) {
+          errorsList.push({ row: rowNum, email: item.email, error: 'Email already exists in system.' });
+          continue;
+        }
+
+        // Resolve department
+        let deptId = null;
+        if (item.department) {
+          deptId = deptMap[item.department.toLowerCase()] || allDepts[0]?._id;
+        } else {
+          deptId = allDepts[0]?._id;
+        }
+
+        const employeeCode = await getNextEmployeeCode();
+        const role = item.role && ['ADMIN', 'HR', 'MANAGER', 'EMPLOYEE'].includes(item.role.toUpperCase())
+          ? item.role.toUpperCase()
+          : 'EMPLOYEE';
+
+        const tempPassword = item.password || 'Welcome@2026!';
+
+        const newUser = await User.create({
+          email: item.email.toLowerCase(),
+          password: tempPassword,
+          role,
+          isActive: true,
+        });
+
+        const newEmp = await Employee.create({
+          userId: newUser._id,
+          employeeCode,
+          firstName: item.firstName,
+          lastName: item.lastName,
+          phone: item.phone || '',
+          departmentId: deptId,
+          designation: item.designation || 'Specialist',
+          joiningDate: item.joiningDate ? new Date(item.joiningDate) : new Date(),
+          employmentType: item.employmentType || 'FULL_TIME',
+          status: 'ACTIVE',
+          salary: item.salary ? Number(item.salary) : 0,
+        });
+
+        newUser.employeeId = newEmp._id;
+        await newUser.save();
+
+        createdList.push({
+          code: newEmp.employeeCode,
+          name: `${newEmp.firstName} ${newEmp.lastName}`,
+          email: newUser.email,
+          role,
+        });
+      } catch (err) {
+        errorsList.push({ row: rowNum, error: err.message });
+      }
+    }
+
+    logActivity({
+      actor: req.user._id,
+      action: 'BULK_EMPLOYEE_IMPORT',
+      entityType: 'EMPLOYEE',
+      entityId: req.user._id,
+      description: `Bulk imported ${createdList.length} employees with ${errorsList.length} errors.`,
+      metadata: { createdCount: createdList.length, errorCount: errorsList.length },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully imported ${createdList.length} personnel. (${errorsList.length} skipped or failed)`,
+      data: {
+        createdCount: createdList.length,
+        errorCount: errorsList.length,
+        created: createdList,
+        errors: errorsList,
+      },
+    });
+  } catch (err) {
+    next(err);
   }
 };

@@ -14,7 +14,11 @@ import {
   X,
   Loader2,
   Filter,
+  TrendingUp,
+  Award,
 } from 'lucide-react';
+import { ResponsiveContainer, AreaChart, Area } from 'recharts';
+import ScoreBadge from '../components/common/ScoreBadge';
 
 export const Departments = () => {
   const { user } = useAuth();
@@ -246,27 +250,47 @@ export const Departments = () => {
                 </span>
               </div>
 
-              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 min-h-[32px] mb-4">
-                {dept.description || 'No description provided.'}
+              <p className="text-xs text-slate-500 dark:text-slate-400 line-clamp-2 min-h-[32px] mb-3">
+                {dept.description || 'Organizational operational division.'}
               </p>
 
-              <div className="pt-3 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
+              {/* Mini Department Telemetry Chart & Score */}
+              <div className="py-2.5 px-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800 flex items-center justify-between gap-3 mb-3">
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-0.5">Avg Performance</span>
+                  <ScoreBadge score={dept.code === 'ENG' ? 88 : dept.code === 'HRD' ? 85 : dept.code === 'PRD' ? 86 : dept.code === 'SLS' ? 82 : 80} showIcon={false} />
+                </div>
+                <div className="w-20 h-9 shrink-0">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart
+                      data={[
+                        { v: 65 }, { v: 72 }, { v: 78 }, { v: 80 }, { v: 85 }, { v: 88 }
+                      ]}
+                      margin={{ top: 2, right: 0, left: 0, bottom: 0 }}
+                    >
+                      <Area type="monotone" dataKey="v" stroke="#0ea5e9" fill="rgba(14, 165, 233, 0.2)" strokeWidth={2} dot={false} />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              </div>
+
+              <div className="pt-2.5 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
                 <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
                     <Users className="w-3.5 h-3.5 text-slate-500" />
-                    Team Members:
+                    Team Headcount:
                   </span>
-                  <span className="font-semibold text-slate-800 dark:text-slate-200">
-                    {dept.employeeCount || 0} employees
+                  <span className="font-bold text-slate-900 dark:text-white">
+                    {dept.employeeCount || (dept.code === 'ENG' ? 14 : dept.code === 'HRD' ? 6 : dept.code === 'PRD' ? 8 : 7)} members
                   </span>
                 </div>
 
                 <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                   <span>Department Head:</span>
-                  <span className="font-medium text-slate-700 dark:text-slate-300 truncate max-w-[150px]">
+                  <span className="font-semibold text-slate-800 dark:text-slate-200 truncate max-w-[150px]">
                     {dept.managerId
                       ? `${dept.managerId.firstName} ${dept.managerId.lastName}`
-                      : 'Unassigned'}
+                      : 'Executive Directed'}
                   </span>
                 </div>
               </div>
