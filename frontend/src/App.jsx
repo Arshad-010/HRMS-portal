@@ -1,46 +1,59 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import AppRoutes from './routes/AppRoutes';
-import { AuthProvider } from './context/AuthContext';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { ThemeProvider } from './context/ThemeContext';
 
-export function App() {
+export function AppContent() {
   const [isSidebarMobileOpen, setIsSidebarMobileOpen] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     return localStorage.getItem('hrms_sidebar_collapsed') === 'true';
   });
+  
+  const location = useLocation();
+  const isLandingPage = location.pathname === '/';
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     localStorage.setItem('hrms_sidebar_collapsed', isSidebarCollapsed);
   }, [isSidebarCollapsed]);
 
   return (
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex font-sans">
+      <Sidebar 
+        isMobileOpen={isSidebarMobileOpen} 
+        setIsMobileOpen={setIsSidebarMobileOpen}
+        isCollapsed={isSidebarCollapsed}
+      />
+      
+      <div className="flex-1 flex flex-col min-w-0">
+        <Navbar 
+          toggleMobileSidebar={() => setIsSidebarMobileOpen(true)}
+          isCollapsed={isSidebarCollapsed}
+          toggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
+        />
+        <main className="flex-1 overflow-x-hidden">
+          <AppRoutes />
+        </main>
+        {isAuthenticated && (
+          <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500">
+            HRMS Portal &copy; {new Date().getFullYear()} &bull; Enterprise HR Suite
+          </footer>
+        )}
+      </div>
+    </div>
+  );
+}
+
+export function App() {
+  return (
     <ThemeProvider>
       <AuthProvider>
         <NotificationProvider>
-          <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex font-sans">
-            <Sidebar 
-              isMobileOpen={isSidebarMobileOpen} 
-              setIsMobileOpen={setIsSidebarMobileOpen}
-              isCollapsed={isSidebarCollapsed}
-            />
-            
-            <div className="flex-1 flex flex-col min-w-0">
-              <Navbar 
-                toggleMobileSidebar={() => setIsSidebarMobileOpen(true)}
-                isCollapsed={isSidebarCollapsed}
-                toggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
-              />
-              <main className="flex-1 overflow-x-hidden">
-                <AppRoutes />
-              </main>
-              <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500">
-                HRMS Portal &copy; {new Date().getFullYear()} &bull; Enterprise HR Suite
-              </footer>
-            </div>
-          </div>
+          <AppContent />
         </NotificationProvider>
       </AuthProvider>
     </ThemeProvider>
