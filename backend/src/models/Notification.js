@@ -21,6 +21,8 @@ const notificationSchema = new mongoose.Schema(
           'TASK_COMPLETED',
           'ATTENDANCE_REMINDER',
           'SYSTEM',
+          'TEAM_MEMBER_ADDED',
+          'TEAM_MEMBER_REMOVED'
         ],
         message: '{VALUE} is not a recognized notification type',
       },
@@ -40,7 +42,7 @@ const notificationSchema = new mongoose.Schema(
     },
     relatedEntityType: {
       type: String,
-      enum: ['LEAVE', 'TASK', 'ATTENDANCE', 'EMPLOYEE', 'DEPARTMENT', 'SYSTEM', null],
+      enum: ['LEAVE', 'TASK', 'ATTENDANCE', 'EMPLOYEE', 'DEPARTMENT', 'SYSTEM', 'TEAM', null],
       default: null,
     },
     relatedEntityId: {

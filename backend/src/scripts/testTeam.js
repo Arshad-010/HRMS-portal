@@ -117,12 +117,20 @@ async function runTests() {
     const team2Id = team2Data.data._id;
 
     // TEST 3: Multiple employees can be added to a team, and one employee can belong to multiple teams.
-    let addMemberRes = await fetch(`${baseUrl}/teams/${team1Id}`, {
+    let addMemberRes = await fetch(`${baseUrl}/teams/${team1Id}/members`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${users.admin.token}` },
       body: JSON.stringify({ members: [users.member1.emp._id, users.member2.emp._id] })
     });
     assert(addMemberRes.status === 200, 'Employee can belong to multiple teams (member2 added to Alpha)', 3);
+
+    // TEST 3.5: Employee receives a notification after being added to a team
+    let member2NotifRes = await fetch(`${baseUrl}/notifications`, {
+      headers: { Authorization: `Bearer ${users.member2.token}` }
+    });
+    let member2Notifs = await member2NotifRes.json();
+    let hasAddedNotif = member2Notifs.data.notifications.some(n => n.type === 'TEAM_MEMBER_ADDED');
+    assert(hasAddedNotif, 'Employee receives a notification after being added to a team', 3.5);
 
     // TEST 4: Team Lead can assign a task to a member of a team they lead.
     let task1Res = await fetch(`${baseUrl}/tasks`, {

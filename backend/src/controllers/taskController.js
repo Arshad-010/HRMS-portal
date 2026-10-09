@@ -957,36 +957,55 @@ export const getTeamTaskSummary = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Employee profile not found' });
     }
 
+    const { teamId } = req.query;
     let teamEmployeeIds = [];
 
-    // Derive team logic matching employeeController.js
-    if (req.user.role === 'EMPLOYEE') {
-      if (!currentEmp.reportingManagerId) {
-        teamEmployeeIds = [employeeId];
-      } else {
-        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
-        teamEmployeeIds = peers.map(p => p._id);
-        teamEmployeeIds.push(currentEmp.reportingManagerId); // add manager
+    if (teamId) {
+      const team = await Team.findById(teamId).populate('members');
+      if (!team) {
+        return res.status(404).json({ success: false, message: 'Team not found' });
       }
-    } else if (req.user.role === 'MANAGER') {
-      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
-      teamEmployeeIds = reports.map(r => r._id);
-      teamEmployeeIds.push(employeeId);
-      if (currentEmp.reportingManagerId) {
-        teamEmployeeIds.push(currentEmp.reportingManagerId);
-        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
-        peers.forEach(p => teamEmployeeIds.push(p._id));
+      
+      const isMemberOrLead = 
+        team.teamLeadId.toString() === employeeId.toString() ||
+        team.members.some(m => m._id.toString() === employeeId.toString() || m.toString() === employeeId.toString());
+
+      if (req.user.role === 'EMPLOYEE' && !isMemberOrLead) {
+        return res.status(403).json({ success: false, message: 'Not authorized to view this team' });
       }
+
+      teamEmployeeIds = team.members.map(m => m._id || m);
+      teamEmployeeIds.push(team.teamLeadId);
     } else {
-      // HR/ADMIN
-      if (currentEmp.reportingManagerId) {
-        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
-        teamEmployeeIds = peers.map(p => p._id);
-        teamEmployeeIds.push(currentEmp.reportingManagerId);
+      // Derive team logic matching employeeController.js
+      if (req.user.role === 'EMPLOYEE') {
+        if (!currentEmp.reportingManagerId) {
+          teamEmployeeIds = [employeeId];
+        } else {
+          const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+          teamEmployeeIds = peers.map(p => p._id);
+          teamEmployeeIds.push(currentEmp.reportingManagerId); // add manager
+        }
+      } else if (req.user.role === 'MANAGER') {
+        const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+        teamEmployeeIds = reports.map(r => r._id);
+        teamEmployeeIds.push(employeeId);
+        if (currentEmp.reportingManagerId) {
+          teamEmployeeIds.push(currentEmp.reportingManagerId);
+          const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+          peers.forEach(p => teamEmployeeIds.push(p._id));
+        }
+      } else {
+        // HR/ADMIN
+        if (currentEmp.reportingManagerId) {
+          const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+          teamEmployeeIds = peers.map(p => p._id);
+          teamEmployeeIds.push(currentEmp.reportingManagerId);
+        }
+        const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+        reports.forEach(r => teamEmployeeIds.push(r._id));
+        teamEmployeeIds.push(employeeId);
       }
-      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
-      reports.forEach(r => teamEmployeeIds.push(r._id));
-      teamEmployeeIds.push(employeeId);
     }
 
     // Aggregate tasks for these employees

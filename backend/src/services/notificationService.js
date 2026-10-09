@@ -67,6 +67,16 @@ export const createNotification = async ({
       relatedEntityId,
       isRead: false,
     });
+    
+    try {
+      const { getIO } = await import('../socket.js');
+      const io = getIO();
+      if (io) {
+        io.to(userId.toString()).emit('notification:new', notification);
+      }
+    } catch (err) {
+      logger.warn(`Failed to emit socket notification: ${err.message}`);
+    }
 
     return notification;
   } catch (error) {

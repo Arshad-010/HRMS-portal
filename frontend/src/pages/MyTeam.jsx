@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useChat } from '../context/ChatContext';
 import {
   Users, Search, MessageSquare, Mail, Building2,
-  AlertCircle, Briefcase, ChevronRight, Phone, CheckSquare, Clock, Activity
+  AlertCircle, Briefcase, ChevronRight, Phone, CheckSquare, Clock
 } from 'lucide-react';
 import SkeletonLoader from '../components/common/SkeletonLoader';
 
@@ -18,37 +18,22 @@ const MyTeam = () => {
   const [selectedTeamId, setSelectedTeamId] = useState('legacy');
   const [teamMembers, setTeamMembers] = useState([]);
   const [teamTasks, setTeamTasks] = useState(null);
-  const [teamActivity, setTeamActivity] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchInitialData = async () => {
       setLoading(true);
       try {
-        const [teamsRes, membersRes, tasksRes, activityRes] = await Promise.all([
-          api.get('/teams/my-teams').catch(() => null),
-          api.get('/employees/team').catch(() => null),
-          api.get('/tasks/team-summary').catch(() => null),
-          api.get('/activity/team').catch(() => null)
-        ]);
-        
+        const teamsRes = await api.get('/teams/my-teams').catch(() => null);
         const explicitTeams = teamsRes?.data?.success ? teamsRes.data.data : [];
         setTeams(explicitTeams);
 
         if (explicitTeams.length > 0) {
           setSelectedTeamId(explicitTeams[0]._id);
-          setTeamMembers(explicitTeams[0].members || []);
-        } else if (membersRes?.data?.success) {
-          setTeamMembers(membersRes.data.data);
-        }
-
-        if (tasksRes?.data?.success) {
-          setTeamTasks(tasksRes.data.data);
-        }
-        if (activityRes?.data?.success) {
-          setTeamActivity(activityRes.data.data);
+        } else {
+          setSelectedTeamId('legacy');
         }
       } catch (err) {
         setError(err.response?.data?.message || err.message || 'Failed to load team data');
@@ -57,26 +42,52 @@ const MyTeam = () => {
       }
     };
     
-    fetchData();
+    fetchInitialData();
   }, []);
 
-  const handleTeamChange = async (e) => {
-    const tid = e.target.value;
-    setSelectedTeamId(tid);
-    
-    if (tid === 'legacy') {
+  useEffect(() => {
+    const fetchTeamDetails = async () => {
+      if (!selectedTeamId) return;
+      
+      setLoading(true);
       try {
-        const res = await api.get('/employees/team');
-        setTeamMembers(res.data.data || []);
+        const queryStr = selectedTeamId !== 'legacy' ? `?teamId=${selectedTeamId}` : '';
+        
+        let membersData = [];
+        if (selectedTeamId === 'legacy') {
+          const res = await api.get('/employees/team').catch(() => null);
+          membersData = res?.data?.success ? res.data.data : [];
+        } else {
+          const selected = teams.find(t => t._id === selectedTeamId);
+          if (selected) {
+            const membersList = [...(selected.members || [])];
+            if (selected.teamLeadId && !membersList.some(m => m._id === selected.teamLeadId._id)) {
+              membersList.unshift(selected.teamLeadId);
+            }
+            membersData = membersList;
+          }
+        }
+        setTeamMembers(membersData);
+
+        const tasksRes = await api.get(`/tasks/team-summary${queryStr}`).catch(() => null);
+
+        if (tasksRes?.data?.success) {
+          setTeamTasks(tasksRes.data.data);
+        } else {
+          setTeamTasks(null);
+        }
       } catch (err) {
-        console.error('Failed to load legacy team', err);
+        console.error('Failed to load team details', err);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      const selected = teams.find(t => t._id === tid);
-      if (selected) {
-        setTeamMembers(selected.members || []);
-      }
-    }
+    };
+
+    fetchTeamDetails();
+  }, [selectedTeamId, teams]);
+
+  const handleTeamChange = (e) => {
+    setSelectedTeamId(e.target.value);
   };
 
   const handleMessage = async (memberUserId) => {
@@ -138,12 +149,11 @@ const MyTeam = () => {
         )}
       </div>
 
-      {/* Split View: Team Work & Activity */}
-      {(!loading && (teamTasks || teamActivity.length > 0)) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      {/* Split View: Team Work */}
+      {(!loading && teamTasks) && (
+        <div className="grid grid-cols-1 gap-6 mb-6">
           {/* Team Work Summary Widget */}
-          {teamTasks && (
-            <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-all duration-300">
+          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-all duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
                   <CheckSquare className="w-5 h-5 text-indigo-500" />
@@ -208,42 +218,6 @@ const MyTeam = () => {
                 </div>
               )}
             </div>
-          )}
-
-          {/* Team Activity Widget */}
-          <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-all duration-300">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Activity className="w-5 h-5 text-indigo-500" />
-                Recent Activity
-              </h2>
-            </div>
-            
-            {teamActivity && teamActivity.length > 0 ? (
-              <div className="space-y-4 max-h-[220px] overflow-y-auto pr-2 custom-scrollbar">
-                {teamActivity.map((log) => (
-                  <div key={log._id} className="flex gap-3 items-start border-l-2 border-slate-100 dark:border-slate-800 pl-4 py-1">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm text-slate-900 dark:text-slate-200">
-                        <span className="font-semibold">{log.actor?.email?.split('@')[0] || 'A team member'}</span> {log.description.toLowerCase().replace(/by.*/, '')}
-                      </p>
-                      <p className="text-xs text-slate-500 mt-1">
-                        {new Date(log.createdAt).toLocaleString()}
-                      </p>
-                    </div>
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400">
-                      {log.entityType}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col items-center justify-center h-[200px] text-slate-500">
-                <Activity className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
-                <p className="text-sm">No recent team activity</p>
-              </div>
-            )}
-          </div>
         </div>
       )}
 

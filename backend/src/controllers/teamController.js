@@ -1,6 +1,7 @@
 import Team from '../models/Team.js';
 import Employee from '../models/Employee.js';
 import { logActivity } from '../services/activityService.js';
+import { notifyUsers } from '../services/notificationService.js';
 
 export const createTeam = async (req, res, next) => {
   try {
@@ -30,6 +31,17 @@ export const createTeam = async (req, res, next) => {
 
     await team.populate('teamLeadId', 'firstName lastName email employeeCode');
     await team.populate('departmentId', 'name');
+
+    // Notify initial members
+    if (members && members.length > 0) {
+      notifyUsers(members, {
+        type: 'TEAM_MEMBER_ADDED',
+        title: 'Added to Team',
+        message: `You have been added to the team "${team.name}" by ${req.user.email}.`,
+        relatedEntityType: 'TEAM',
+        relatedEntityId: team._id,
+      });
+    }
 
     res.status(201).json({ success: true, data: team });
   } catch (error) {
@@ -72,9 +84,23 @@ export const getMyTeams = async (req, res, next) => {
     const teams = await Team.find({
       $or: [{ teamLeadId: empId }, { members: empId }]
     })
-      .populate('teamLeadId', 'firstName lastName employeeCode')
+      .populate({
+        path: 'teamLeadId',
+        select: 'firstName lastName employeeCode designation profilePicture departmentId userId',
+        populate: [
+          { path: 'userId', select: 'email role' },
+          { path: 'departmentId', select: 'name' }
+        ]
+      })
+      .populate({
+        path: 'members',
+        select: 'firstName lastName employeeCode designation profilePicture departmentId userId phone',
+        populate: [
+          { path: 'userId', select: 'email role' },
+          { path: 'departmentId', select: 'name' }
+        ]
+      })
       .populate('departmentId', 'name')
-      .populate('members', 'firstName lastName employeeCode designation profilePicture')
       .sort({ name: 1 });
 
     res.status(200).json({ success: true, data: teams });
@@ -141,8 +167,35 @@ export const updateTeamMembers = async (req, res, next) => {
       return res.status(403).json({ success: false, message: 'Only Admin, HR, or the Team Lead can modify members' });
     }
 
+    const oldMembers = team.members.map(m => m.toString());
+    const newMembers = members.map(m => m.toString());
+
+    const added = newMembers.filter(m => !oldMembers.includes(m));
+    const removed = oldMembers.filter(m => !newMembers.includes(m));
+
     team.members = members;
     await team.save();
+
+    // Notifications
+    if (added.length > 0) {
+      notifyUsers(added, {
+        type: 'TEAM_MEMBER_ADDED',
+        title: 'Added to Team',
+        message: `You have been added to the team "${team.name}" by ${req.user.email}.`,
+        relatedEntityType: 'TEAM',
+        relatedEntityId: team._id,
+      });
+    }
+
+    if (removed.length > 0) {
+      notifyUsers(removed, {
+        type: 'TEAM_MEMBER_REMOVED',
+        title: 'Removed from Team',
+        message: `You have been removed from the team "${team.name}".`,
+        relatedEntityType: 'TEAM',
+        relatedEntityId: team._id,
+      });
+    }
 
     await team.populate('members', 'firstName lastName designation');
 
