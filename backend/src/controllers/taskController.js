@@ -1,6 +1,7 @@
 import Task from '../models/Task.js';
 import Employee from '../models/Employee.js';
 import Department from '../models/Department.js';
+import Team from '../models/Team.js';
 import {
   notifyTaskAssigned,
   notifyTaskStatusChanged,
@@ -12,7 +13,6 @@ import { logActivity } from '../services/activityService.js';
  */
 const isManagerAuthorizedForEmployee = async (managerEmployeeId, targetEmployeeId) => {
   if (!managerEmployeeId || !targetEmployeeId) return false;
-  if (managerEmployeeId.toString() === targetEmployeeId.toString()) return true;
 
   const targetEmployee = await Employee.findById(targetEmployeeId);
   if (!targetEmployee) return false;
@@ -40,6 +40,14 @@ const isManagerAuthorizedForEmployee = async (managerEmployeeId, targetEmployeeI
     if (isHead) return true;
   }
 
+  // Check explicit teams
+  const isTeamLead = await Team.exists({
+    teamLeadId: managerEmployeeId,
+    members: targetEmployeeId,
+    isActive: true,
+  });
+  if (isTeamLead) return true;
+
   return false;
 };
 
@@ -55,6 +63,7 @@ export const createTask = async (req, res, next) => {
       description = '',
       assignedTo,
       department,
+      teamId = null,
       priority = 'MEDIUM',
       dueDate,
       estimatedHours = 0,
@@ -135,14 +144,24 @@ export const createTask = async (req, res, next) => {
         message: `Employee ${employee.firstName} ${employee.lastName} does not belong to the selected department`,
       });
     }
+    
+    if (teamId) {
+      const teamDoc = await Team.findById(teamId);
+      if (!teamDoc || !teamDoc.isActive) {
+        return res.status(400).json({ success: false, message: 'Invalid or inactive team' });
+      }
+      if (!teamDoc.members.includes(employee._id)) {
+        return res.status(400).json({ success: false, message: 'Assignee is not a member of the selected team' });
+      }
+    }
 
-    // 4. Validate Manager authority if role is MANAGER
-    if (req.user.role === 'MANAGER') {
+    // 4. Validate Manager authority if role is MANAGER or EMPLOYEE
+    if (req.user.role === 'MANAGER' || req.user.role === 'EMPLOYEE') {
       const authorized = await isManagerAuthorizedForEmployee(req.user.employeeId, employee._id);
       if (!authorized) {
         return res.status(403).json({
           success: false,
-          message: 'Managers can only assign tasks to team members within their reporting line or managed department',
+          message: 'You can only assign tasks to team members within your reporting line, managed department, or explicit teams you lead.',
         });
       }
     }
@@ -154,6 +173,7 @@ export const createTask = async (req, res, next) => {
       assignedTo: employee._id,
       assignedBy: req.user._id,
       department: deptDoc._id,
+      teamId,
       priority,
       status: 'TODO',
       dueDate: parsedDueDate,
@@ -533,8 +553,8 @@ export const updateTask = async (req, res, next) => {
       });
     }
 
-    // Check manager authorization
-    if (req.user.role === 'MANAGER') {
+    // Check manager/employee authorization
+    if (req.user.role === 'MANAGER' || req.user.role === 'EMPLOYEE') {
       const authorized = await isManagerAuthorizedForEmployee(
         req.user.employeeId,
         task.assignedTo
@@ -716,7 +736,7 @@ export const deleteTask = async (req, res, next) => {
  */
 export const updateTaskStatus = async (req, res, next) => {
   try {
-    const { status } = req.body;
+    const { status, submissionNote } = req.body;
     const validStatuses = ['TODO', 'IN_PROGRESS', 'REVIEW', 'COMPLETED', 'CANCELLED'];
 
     if (!status || !validStatuses.includes(status)) {
@@ -737,10 +757,13 @@ export const updateTaskStatus = async (req, res, next) => {
     // Role check
     if (req.user.role === 'EMPLOYEE') {
       if (task.assignedTo.toString() !== req.user.employeeId?.toString()) {
-        return res.status(403).json({
-          success: false,
-          message: 'You are not authorized to update status for another employee task',
-        });
+        const authorized = await isManagerAuthorizedForEmployee(req.user.employeeId, task.assignedTo);
+        if (!authorized) {
+          return res.status(403).json({
+            success: false,
+            message: 'You are not authorized to update status for another employee task',
+          });
+        }
       }
     } else if (req.user.role === 'MANAGER') {
       const authorized = await isManagerAuthorizedForEmployee(
@@ -756,8 +779,16 @@ export const updateTaskStatus = async (req, res, next) => {
       }
     }
 
+    // Completion enforcement
+    if (status === 'COMPLETED' && req.user.role === 'EMPLOYEE' && task.assignedTo.toString() === req.user.employeeId?.toString()) {
+      return res.status(403).json({ success: false, message: 'You cannot approve your own submission' });
+    }
+
     // Status transition & completedAt management
     task.status = status;
+    if (status === 'REVIEW' && submissionNote) {
+      task.submissionNote = submissionNote;
+    }
     if (status === 'COMPLETED') {
       task.completedAt = new Date();
     } else {
@@ -821,10 +852,13 @@ export const assignTask = async (req, res, next) => {
     }
 
     if (req.user.role === 'EMPLOYEE') {
-      return res.status(403).json({
-        success: false,
-        message: 'Employees are not authorized to reassign tasks',
-      });
+      const authorized = await isManagerAuthorizedForEmployee(req.user.employeeId, task.assignedTo);
+      if (!authorized) {
+        return res.status(403).json({
+          success: false,
+          message: 'Employees are not authorized to reassign tasks unless they are the Team Lead',
+        });
+      }
     }
 
     const targetDeptId = department || task.department;
@@ -858,12 +892,12 @@ export const assignTask = async (req, res, next) => {
       });
     }
 
-    if (req.user.role === 'MANAGER') {
+    if (req.user.role === 'MANAGER' || req.user.role === 'EMPLOYEE') {
       const authorized = await isManagerAuthorizedForEmployee(req.user.employeeId, employee._id);
       if (!authorized) {
         return res.status(403).json({
           success: false,
-          message: 'Managers can only assign tasks to employees within their reporting scope',
+          message: 'You can only assign tasks to employees within your reporting scope or teams you lead',
         });
       }
     }
@@ -900,6 +934,93 @@ export const assignTask = async (req, res, next) => {
       success: true,
       message: `Task reassigned to ${employee.firstName} ${employee.lastName}`,
       data: task,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Get task summary counts for the user's team
+ * @route   GET /api/tasks/team-summary
+ * @access  Private (EMPLOYEE, MANAGER, HR, ADMIN)
+ */
+export const getTeamTaskSummary = async (req, res, next) => {
+  try {
+    const employeeId = req.user.employeeId;
+    if (!employeeId) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+    }
+
+    const currentEmp = await Employee.findById(employeeId).select('reportingManagerId');
+    if (!currentEmp) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+    }
+
+    let teamEmployeeIds = [];
+
+    // Derive team logic matching employeeController.js
+    if (req.user.role === 'EMPLOYEE') {
+      if (!currentEmp.reportingManagerId) {
+        teamEmployeeIds = [employeeId];
+      } else {
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        teamEmployeeIds = peers.map(p => p._id);
+        teamEmployeeIds.push(currentEmp.reportingManagerId); // add manager
+      }
+    } else if (req.user.role === 'MANAGER') {
+      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+      teamEmployeeIds = reports.map(r => r._id);
+      teamEmployeeIds.push(employeeId);
+      if (currentEmp.reportingManagerId) {
+        teamEmployeeIds.push(currentEmp.reportingManagerId);
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        peers.forEach(p => teamEmployeeIds.push(p._id));
+      }
+    } else {
+      // HR/ADMIN
+      if (currentEmp.reportingManagerId) {
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        teamEmployeeIds = peers.map(p => p._id);
+        teamEmployeeIds.push(currentEmp.reportingManagerId);
+      }
+      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+      reports.forEach(r => teamEmployeeIds.push(r._id));
+      teamEmployeeIds.push(employeeId);
+    }
+
+    // Aggregate tasks for these employees
+    const stats = await Task.aggregate([
+      {
+        $match: {
+          assignedTo: { $in: teamEmployeeIds }
+        }
+      },
+      {
+        $group: {
+          _id: '$status',
+          count: { $sum: 1 }
+        }
+      }
+    ]);
+
+    const summary = {
+      TODO: 0,
+      IN_PROGRESS: 0,
+      COMPLETED: 0,
+      REVIEW: 0,
+      CANCELLED: 0,
+      TOTAL: 0
+    };
+
+    stats.forEach(stat => {
+      summary[stat._id] = stat.count;
+      summary.TOTAL += stat.count;
+    });
+
+    res.status(200).json({
+      success: true,
+      data: summary
     });
   } catch (error) {
     next(error);

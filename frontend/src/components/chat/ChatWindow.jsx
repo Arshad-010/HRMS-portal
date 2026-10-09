@@ -23,8 +23,9 @@ const ChatWindow = ({ onBack }) => {
 
   if (!activeConversation) return null;
 
-  const otherUser = getOtherParticipant(activeConversation, user._id);
-  const name = getConversationName(activeConversation, user._id);
+  const currentUserId = user?.id || user?._id;
+  const otherUser = getOtherParticipant(activeConversation, currentUserId);
+  const name = getConversationName(activeConversation, currentUserId);
   const isOnline = otherUser && onlineUsers.has(otherUser._id);
   const designation = otherUser?.employee?.designation || 'Staff';
 

@@ -5,6 +5,11 @@ import api from '../api/axios';
 
 const AuthContext = createContext(null);
 
+const normalizeUser = (u) => {
+  if (!u) return null;
+  return { ...u, _id: u._id || u.id };
+};
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(() => localStorage.getItem('hrms_token'));
@@ -22,7 +27,7 @@ export const AuthProvider = ({ children }) => {
 
       try {
         const response = await api.get('/auth/me');
-        setUser(response.data.data);
+        setUser(normalizeUser(response.data.data));
         setToken(storedToken);
       } catch (err) {
         console.warn('Session hydration failed:', err.message);
@@ -48,9 +53,9 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem('hrms_token', receivedToken);
       setToken(receivedToken);
-      setUser(loggedInUser);
+      setUser(normalizeUser(loggedInUser));
 
-      return { success: true, user: loggedInUser };
+      return { success: true, user: normalizeUser(loggedInUser) };
     } catch (err) {
       const errorMessage = err.message || 'Authentication failed. Please check your credentials.';
       setError(errorMessage);
@@ -76,9 +81,9 @@ export const AuthProvider = ({ children }) => {
 
       localStorage.setItem('hrms_token', receivedToken);
       setToken(receivedToken);
-      setUser(loggedInUser);
+      setUser(normalizeUser(loggedInUser));
 
-      return { success: true, user: loggedInUser };
+      return { success: true, user: normalizeUser(loggedInUser) };
     } catch (err) {
       let errorMessage = 'Google sign-in failed. Please try again.';
       

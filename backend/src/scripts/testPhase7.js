@@ -272,18 +272,18 @@ const runPhase7Tests = async () => {
     const completeRes = await fetch(`${baseUrl}/tasks/${createdTaskId}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${emp1Token}` },
-      body: JSON.stringify({ status: 'COMPLETED' }),
+      body: JSON.stringify({ status: 'REVIEW', submissionNote: 'Done' }),
     });
     if (completeRes.status !== 200) {
-      throw new Error('TEST 6 FAILED: Task status update failed');
+      throw new Error(`TEST 6 FAILED: Task status update failed with status ${completeRes.status}`);
     }
     const managerTaskNotif = await Notification.findOne({
       recipient: managerUser._id,
-      type: 'TASK_COMPLETED',
+      type: 'TASK_STATUS_CHANGED',
       relatedEntityId: createdTaskId,
     });
     if (!managerTaskNotif) {
-      throw new Error('TEST 6 FAILED: Assigner did not receive TASK_COMPLETED notification');
+      throw new Error('TEST 6 FAILED: Assigner did not receive TASK_STATUS_CHANGED notification');
     }
     console.log('✅ TEST 6 PASSED: Task completion triggered assigner notification');
 

@@ -296,20 +296,20 @@ const runPhase3Tests = async () => {
     }
 
     // TEST 14: Salary protection via RBAC
-    const salaryAdminRes = await fetch(`${baseUrl}/employees/${createdEmpId}`, {
+    const salaryAdminRes = await fetch(`${baseUrl}/employees/${empUser.employeeId}`, {
       headers: { Authorization: `Bearer ${adminToken}` },
     });
     const salaryAdminData = await salaryAdminRes.json();
 
-    const salaryEmpRes = await fetch(`${baseUrl}/employees/${createdEmpId}`, {
+    const salaryEmpRes = await fetch(`${baseUrl}/employees/${empUser.employeeId}`, {
       headers: { Authorization: `Bearer ${empToken}` },
     });
     const salaryEmpData = await salaryEmpRes.json();
 
-    if (salaryAdminData.data.salary === 105000 && salaryEmpData.data.salary === undefined) {
-      console.log('✅ TEST 14 PASSED: Salary protection (Admin sees $105k, regular Employee sees undefined)');
+    if (salaryAdminData.data.salary === 65000 && salaryEmpData.data.salary === undefined) {
+      console.log('✅ TEST 14 PASSED: Salary protection (Admin sees $65k, regular Employee sees undefined)');
     } else {
-      throw new Error('TEST 14 FAILED: Salary was not properly filtered');
+      throw new Error(`TEST 14 FAILED: Salary was not properly filtered. Expected Admin=65000 Emp=undefined. Got Admin=${salaryAdminData.data?.salary} Emp=${salaryEmpData.data?.salary}`);
     }
 
     // TEST 15: Password hash protection

@@ -295,7 +295,7 @@ const runTaskTests = async () => {
     const res6b = await fetch(`${baseUrl}/tasks/${createdTask1Id}/status`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${emp1Token}` },
-      body: JSON.stringify({ status: 'REVIEW' }),
+      body: JSON.stringify({ status: 'REVIEW', submissionNote: 'Finished the API' }),
     });
     const data6b = await res6b.json();
     if (res6b.status !== 200 || data6b.data.status !== 'REVIEW') {
@@ -304,7 +304,7 @@ const runTaskTests = async () => {
 
     const res6c = await fetch(`${baseUrl}/tasks/${createdTask1Id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${emp1Token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${managerToken}` },
       body: JSON.stringify({ status: 'COMPLETED' }),
     });
     const data6c = await res6c.json();
@@ -322,7 +322,7 @@ const runTaskTests = async () => {
     // --- TEST 8: Reopening completed task clears completedAt ---
     const res8 = await fetch(`${baseUrl}/tasks/${createdTask1Id}/status`, {
       method: 'PATCH',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${emp1Token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${managerToken}` },
       body: JSON.stringify({ status: 'IN_PROGRESS' }),
     });
     const data8 = await res8.json();

@@ -7,6 +7,7 @@ import {
   deleteEmployee,
   bulkImportEmployees,
   resendInvitationEmail,
+  getTeamMembers,
 } from '../controllers/employeeController.js';
 import { protect, authorize } from '../middleware/authMiddleware.js';
 
@@ -18,6 +19,8 @@ router
   .route('/')
   .get(getEmployees)
   .post(authorize('ADMIN', 'HR'), createEmployee);
+
+router.get('/team', getTeamMembers);
 
 router.post('/bulk-import', authorize('ADMIN', 'HR'), bulkImportEmployees);
 
