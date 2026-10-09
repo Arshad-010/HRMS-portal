@@ -110,10 +110,21 @@ export const EmployeeDetails = () => {
     { cycle: 'Q3 2026', score: latestReview?.finalScore || 85 },
   ];
 
+  const handleResendInvite = async () => {
+    try {
+      const res = await api.post(`/employees/${id}/resend-invite`);
+      if (res.data?.success) {
+        alert('Invitation email resent successfully.');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Failed to resend invitation email.');
+    }
+  };
+
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
       {/* Back Button */}
-      <div>
+      <div className="flex items-center justify-between">
         <Link
           to="/employees"
           className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors no-underline"
@@ -121,6 +132,15 @@ export const EmployeeDetails = () => {
           <ArrowLeft className="w-4 h-4" />
           <span>Back to People Directory</span>
         </Link>
+        {isPrivileged && (
+          <button
+            onClick={handleResendInvite}
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 text-xs font-bold rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors cursor-pointer"
+          >
+            <Mail className="w-3.5 h-3.5" />
+            <span>Resend Invite</span>
+          </button>
+        )}
       </div>
 
       {/* Hero Header Card */}

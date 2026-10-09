@@ -24,7 +24,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
       title: 'MAIN',
       items: [
         { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-        { name: 'Analytics', path: '/analytics', icon: BarChart3, isNew: true },
+        ...(isAdmin || isHR ? [{ name: 'Analytics', path: '/analytics', icon: BarChart3, isNew: true }] : []),
         { name: 'Attendance', path: '/attendance', icon: Clock },
         { name: 'Leaves', path: '/leaves', icon: Calendar },
         { name: 'Tasks', path: '/tasks', icon: CheckSquare },
@@ -35,7 +35,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
       items: [
         { name: 'Employees', path: '/employees', icon: Users },
         { name: 'Departments', path: '/departments', icon: Building2 },
-        { name: 'Performance', path: '/performance', icon: Award, isNew: true },
+        ...(isAdmin || isHR ? [{ name: 'Performance', path: '/performance', icon: Award, isNew: true }] : []),
       ]
     },
     {
@@ -45,12 +45,12 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
         { name: 'Notifications', path: '/notifications', icon: Bell, badge: unreadCount },
       ]
     },
-    {
+    ...(isAdmin || isHR ? [{
       title: 'ACTIVITY',
       items: [
         { name: 'Activity', path: '/activity', icon: History },
       ]
-    }
+    }] : [])
   ];
 
   const bottomLinks = [
@@ -169,7 +169,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
 
         {/* Scrollable Content */}
         <div className="flex-1 overflow-y-auto overflow-x-hidden py-4 flex flex-col gap-5 no-scrollbar">
-          {navGroups.map((group) => (
+          {navGroups.map((group, index) => (
             <div key={group.title} className="px-3">
               {!isCollapsed && (
                 <div className="flex items-center gap-2 px-3 mb-2">
@@ -179,7 +179,7 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
                   </h3>
                 </div>
               )}
-              {isCollapsed && (
+              {isCollapsed && index > 0 && (
                 <div className="w-full flex justify-center mb-2">
                   <div className="w-4 border-t border-slate-300 dark:border-slate-700" />
                 </div>

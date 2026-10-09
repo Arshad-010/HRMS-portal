@@ -598,10 +598,13 @@ export const Employees = () => {
         isOpen={drawerOpen}
         initialRole={drawerRole}
         onClose={() => setDrawerOpen(false)}
-        onSuccess={() => {
-          setFeedback({ message: 'Personnel successfully provisioned!', error: '' });
+        onSuccess={(data, emailSent, emailError) => {
+          let msg = 'Personnel successfully provisioned!';
+          if (emailSent) msg += ' Activation email sent.';
+          if (emailError) msg += ' However, activation email failed to send.';
+          setFeedback({ message: msg, error: emailError ? emailError : '' });
           fetchEmployees();
-          setTimeout(() => setFeedback({ message: '', error: '' }), 3000);
+          setTimeout(() => setFeedback({ message: '', error: '' }), 5000);
         }}
       />
 

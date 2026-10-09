@@ -3,6 +3,8 @@ import User from '../models/User.js';
 import Department from '../models/Department.js';
 import { getNextEmployeeCode } from '../models/Counter.js';
 import { logActivity } from '../services/activityService.js';
+import crypto from 'crypto';
+import { sendActivationEmail } from '../services/emailService.js';
 
 /**
  * Get paginated employees list with search and filters
@@ -181,6 +183,7 @@ export const createEmployee = async (req, res, next) => {
       gender,
       address,
       emergencyContact,
+      sendInviteEmail,
     } = req.body;
 
     // Validate required fields
@@ -233,12 +236,24 @@ export const createEmployee = async (req, res, next) => {
     const employeeCode = await getNextEmployeeCode();
 
     // 1. Create corresponding User credentials
+    let rawToken = '';
+    let hashedToken = null;
+    let tokenExpire = null;
+
+    if (sendInviteEmail) {
+      rawToken = crypto.randomBytes(20).toString('hex');
+      hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+      tokenExpire = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+    }
+
     const defaultPassword = password || 'Welcome@2026!';
     const user = new User({
       email: normalizedEmail,
       password: defaultPassword, // Hashed by User model pre-save hook
       role,
       isActive: status !== 'TERMINATED',
+      activationToken: hashedToken,
+      activationTokenExpire: tokenExpire,
     });
 
     // 2. Create Employee record referencing User
@@ -288,10 +303,27 @@ export const createEmployee = async (req, res, next) => {
     // Populate department info for response
     await employee.populate('departmentId', 'name code');
 
+    let emailSent = false;
+    let emailError = '';
+
+    if (sendInviteEmail) {
+      const frontendUrl = process.env.CORS_ORIGIN || 'http://localhost:5173';
+      const activationUrl = `${frontendUrl}/activate/${rawToken}`;
+      
+      const emailResult = await sendActivationEmail(employee, activationUrl);
+      if (emailResult) {
+        emailSent = true;
+      } else {
+        emailError = 'Email failed to send';
+      }
+    }
+
     res.status(201).json({
       success: true,
       message: 'Employee created and user account provisioned successfully',
       data: employee.filterForRole(req.user.role),
+      emailSent,
+      emailError,
     });
   } catch (error) {
     next(error);
@@ -571,3 +603,61 @@ export const bulkImportEmployees = async (req, res, next) => {
     next(err);
   }
 };
+
+/**
+ * Resend activation email for an employee
+ * @route POST /api/employees/:id/resend-invite
+ * @access Private (ADMIN, HR)
+ */
+export const resendInvitationEmail = async (req, res, next) => {
+  try {
+    const employee = await Employee.findById(req.params.id).populate('userId');
+    if (!employee || !employee.userId) {
+      return res.status(404).json({
+        success: false,
+        message: 'Employee or associated user account not found',
+      });
+    }
+
+    const user = await User.findById(employee.userId);
+    
+    // Generate new token
+    const rawToken = crypto.randomBytes(20).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+    
+    user.activationToken = hashedToken;
+    user.activationTokenExpire = Date.now() + 24 * 60 * 60 * 1000;
+    await user.save();
+
+    const frontendUrl = process.env.CORS_ORIGIN || 'http://localhost:5173';
+    const activationUrl = `${frontendUrl}/activate/${rawToken}`;
+    
+    const emailResult = await sendActivationEmail(
+      { firstName: employee.firstName, email: user.email }, 
+      activationUrl
+    );
+
+    if (!emailResult) {
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send invitation email via Nodemailer',
+      });
+    }
+
+    logActivity({
+      actor: req.user._id,
+      action: 'INVITATION_RESENT',
+      entityType: 'EMPLOYEE',
+      entityId: employee._id,
+      description: `Activation invitation resent to ${user.email}`,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Invitation email successfully resent',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+

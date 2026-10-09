@@ -52,10 +52,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
             <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed mb-6">
               Next-generation Human Resource Management Platform designed for automated attendance, leave balances, task tracking, and role-based access security.
             </p>
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-              <span className="text-xs font-semibold text-slate-600 dark:text-slate-400">All Systems Operational &bull; 99.9% Uptime</span>
-            </div>
+
           </div>
           
           {/* Right - Columns: PRODUCT, COMPANY, SUPPORT (Enabled & Interactive) */}

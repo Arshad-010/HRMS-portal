@@ -1,14 +1,20 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useChat } from '../../context/ChatContext';
 import { useAuth } from '../../context/AuthContext';
 import MessageBubble from './MessageBubble';
 import MessageComposer from './MessageComposer';
-import { ChevronLeft, Info, Phone, Video } from 'lucide-react';
+import { ChevronLeft, Info, Phone, Video, X } from 'lucide-react';
 
 const ChatWindow = ({ onBack }) => {
-  const { activeConversation, messages, loading, onlineUsers } = useChat();
+  const { activeConversation, messages, loading, onlineUsers, createMeeting, getGoogleAuthUrl } = useChat();
   const { user } = useAuth();
   const messagesEndRef = useRef(null);
+
+  const [showMeetModal, setShowMeetModal] = useState(false);
+  const [meetTitle, setMeetTitle] = useState('Quick Sync');
+  const [meetText, setMeetText] = useState('Can we join for a quick meeting?');
+  const [isMeetCreating, setIsMeetCreating] = useState(false);
+  const [requiresGoogleAuth, setRequiresGoogleAuth] = useState(false);
 
   // Auto-scroll to bottom on new message
   useEffect(() => {
@@ -21,6 +27,33 @@ const ChatWindow = ({ onBack }) => {
   const name = getConversationName(activeConversation, user._id);
   const isOnline = otherUser && onlineUsers.has(otherUser._id);
   const designation = otherUser?.employee?.designation || 'Staff';
+
+  const handleCreateMeet = async () => {
+    setIsMeetCreating(true);
+    try {
+      const res = await createMeeting(activeConversation._id, meetTitle, meetText);
+      if (res.requiresGoogleAuth) {
+        setRequiresGoogleAuth(true);
+      } else {
+        setShowMeetModal(false);
+      }
+    } catch (error) {
+      alert('Failed to create meeting');
+    } finally {
+      setIsMeetCreating(false);
+    }
+  };
+
+  const handleConnectGoogle = async () => {
+    try {
+      const url = await getGoogleAuthUrl();
+      if (url) {
+        window.location.href = url;
+      }
+    } catch (error) {
+      alert('Failed to get Google Auth URL');
+    }
+  };
 
   return (
     <div className="flex flex-col h-full w-full bg-white dark:bg-slate-900 relative">
@@ -35,13 +68,15 @@ const ChatWindow = ({ onBack }) => {
             <ChevronLeft className="w-5 h-5" />
           </button>
           
-          <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center">
-              {name.charAt(0).toUpperCase()}
-            </div>
-            {isOnline && (
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
+          <div className="relative shrink-0">
+            {otherUser?.employee?.profileImage ? (
+              <img src={otherUser.employee.profileImage} alt={name} className="w-10 h-10 rounded-xl object-cover" />
+            ) : (
+              <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center text-sm shadow-sm">
+                {name.split(' ').map(n => n[0]).join('').substring(0, 2).toUpperCase()}
+              </div>
             )}
+            <div className={`absolute -bottom-1 -right-1 w-3 h-3 border-2 border-white dark:border-slate-900 rounded-full ${isOnline ? 'bg-emerald-500' : 'bg-slate-300 dark:bg-slate-600'}`} title={isOnline ? 'Online' : 'Offline'} />
           </div>
           
           <div>
@@ -56,7 +91,13 @@ const ChatWindow = ({ onBack }) => {
           <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg hidden sm:block transition-colors cursor-pointer">
             <Phone className="w-4 h-4" />
           </button>
-          <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg hidden sm:block transition-colors cursor-pointer">
+          <button 
+            onClick={() => {
+              setRequiresGoogleAuth(false);
+              setShowMeetModal(true);
+            }}
+            className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg hidden sm:block transition-colors cursor-pointer"
+          >
             <Video className="w-4 h-4" />
           </button>
           <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer">
@@ -91,6 +132,68 @@ const ChatWindow = ({ onBack }) => {
 
       {/* Composer Area */}
       <MessageComposer conversationId={activeConversation._id} />
+
+      {/* Meet Modal */}
+      {showMeetModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-sm overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
+              <h3 className="font-bold text-slate-900 dark:text-white">Start Video Meeting</h3>
+              <button onClick={() => setShowMeetModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-4">
+              {requiresGoogleAuth ? (
+                <div className="text-center">
+                  <div className="w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Video className="w-6 h-6" />
+                  </div>
+                  <h4 className="text-sm font-bold text-slate-900 dark:text-white mb-2">Google Calendar Not Connected</h4>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">
+                    Connect your Google Calendar to seamlessly create and share Google Meet links in chats.
+                  </p>
+                  <button 
+                    onClick={handleConnectGoogle}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors"
+                  >
+                    Connect Google Calendar
+                  </button>
+                </div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Meeting Title</label>
+                    <input 
+                      type="text" 
+                      value={meetTitle}
+                      onChange={(e) => setMeetTitle(e.target.value)}
+                      className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Invitation Text</label>
+                    <textarea 
+                      value={meetText}
+                      onChange={(e) => setMeetText(e.target.value)}
+                      className="w-full px-3 py-2 text-sm bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg focus:ring-2 focus:ring-indigo-500 outline-none resize-none"
+                      rows={2}
+                    />
+                  </div>
+                  <button 
+                    onClick={handleCreateMeet}
+                    disabled={isMeetCreating || !meetTitle.trim()}
+                    className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50 text-white font-medium text-sm py-2 px-4 rounded-lg transition-colors mt-2"
+                  >
+                    {isMeetCreating ? 'Creating Meeting...' : 'Create & Send Invitation'}
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
     </div>
   );
