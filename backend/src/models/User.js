@@ -39,6 +39,20 @@ const userSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    googleTokens: {
+      type: Object,
+      default: null,
+    },
+    activationToken: {
+      type: String,
+      default: null,
+      select: false,
+    },
+    activationTokenExpire: {
+      type: Date,
+      default: null,
+      select: false,
+    },
   },
   {
     timestamps: true,

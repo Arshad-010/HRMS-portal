@@ -41,11 +41,7 @@ export function AppContent() {
         <main className={`flex-1 ${isLoginPage ? 'h-[calc(100vh-4rem)] overflow-hidden no-scrollbar' : 'overflow-x-hidden'}`}>
           <AppRoutes />
         </main>
-        {isAuthenticated && (
-          <footer className="border-t border-slate-200 dark:border-slate-800 py-6 text-center text-xs text-slate-500">
-            HRMS Portal &copy; {new Date().getFullYear()} &bull; Enterprise HR Suite
-          </footer>
-        )}
+
       </div>
     </div>
   );

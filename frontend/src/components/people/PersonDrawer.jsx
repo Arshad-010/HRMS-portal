@@ -45,7 +45,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
     const fetchMetadata = async () => {
       try {
         const [deptRes, empRes] = await Promise.all([
-          api.get('/departments'),
+          api.get('/departments?isActive=true'),
           api.get('/employees?limit=100'),
         ]);
         if (deptRes.data?.success) {
@@ -125,7 +125,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
 
       const res = await api.post('/employees', payload);
       if (res.data?.success) {
-        onSuccess(res.data.data);
+        onSuccess(res.data.data, res.data.emailSent, res.data.emailError);
         onClose();
       } else {
         setError(res.data?.message || 'Failed to create employee profile.');
@@ -368,31 +368,14 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                 </div>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Temporary Generated Password</label>
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="flex-1 px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm font-mono font-bold focus:outline-none focus:ring-2 focus:ring-sky-500"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setFormData({ ...formData, password: `Emp@${Math.floor(1000 + Math.random() * 9000)}!` })}
-                    className="px-3.5 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold transition-colors cursor-pointer"
-                  >
-                    Regenerate
-                  </button>
-                </div>
-              </div>
+              {/* Removed Temporary Password Field */}
 
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
                   <Send className="w-4 h-4 text-sky-500" />
                   <div>
                     <div className="text-xs font-bold text-slate-900 dark:text-white">Send Welcome &amp; Invite Email</div>
-                    <div className="text-[11px] text-slate-400">Includes secure link and temporary access key</div>
+                    <div className="text-[11px] text-slate-400">Includes a secure account activation link</div>
                   </div>
                 </div>
                 <input

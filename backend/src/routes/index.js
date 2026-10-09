@@ -12,6 +12,7 @@ import dashboardRoutes from './dashboardRoutes.js';
 import analyticsRoutes from './analyticsRoutes.js';
 import performanceRoutes from './performanceRoutes.js';
 import chatRoutes from './chatRoutes.js';
+import meetRoutes from './meetRoutes.js';
 
 const router = express.Router();
 
@@ -29,5 +30,6 @@ router.use('/dashboard', dashboardRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/performance', performanceRoutes);
 router.use('/chat', chatRoutes);
+router.use('/meet', meetRoutes);
 
 export default router;

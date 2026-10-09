@@ -17,8 +17,10 @@ import Settings from '../pages/Settings';
 import HealthCheck from '../pages/HealthCheck';
 import Unauthorized from '../pages/Unauthorized';
 import Analytics from '../pages/Analytics';
+import Performance from '../pages/Performance';
 import Chat from '../pages/Chat';
 import ProtectedRoute from '../components/common/ProtectedRoute';
+import ActivateAccount from '../pages/ActivateAccount';
 
 import {
   AboutPage,
@@ -89,6 +91,7 @@ export const AppRoutes = () => {
 
       {/* Public Authentication Route */}
       <Route path="/login" element={<Login />} />
+      <Route path="/activate/:token" element={<ActivateAccount />} />
 
       {/* Protected Routes */}
       <Route
@@ -175,7 +178,7 @@ export const AppRoutes = () => {
       <Route
         path="/activity"
         element={
-          <ProtectedRoute>
+          <ProtectedRoute allowedRoles={['ADMIN', 'HR']}>
             <Activity />
           </ProtectedRoute>
         }

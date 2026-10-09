@@ -114,13 +114,13 @@ export const LandingPage = () => {
       <section ref={featuresRef} id="features" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full scroll-mt-20">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-3 uppercase tracking-wider">
-            <Zap className="w-3.5 h-3.5 text-amber-500" /> Core Modules
+            <Zap className="w-3.5 h-3.5 text-amber-500" /> Powerful Features
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
-            Everything you need to orchestrate workforce operations
+            Everything you need to manage your workforce
           </h2>
           <p className="text-sm md:text-base text-slate-500 dark:text-slate-400 max-w-2xl mx-auto">
-            Engineered with strict RBAC access controls, high-speed MongoDB persistence, and intuitive self-service workflows.
+            Comprehensive tools for HR management, from onboarding to performance tracking and employee engagement.
           </p>
         </div>
 
@@ -383,40 +383,7 @@ export const LandingPage = () => {
         </div>
       </section>
 
-      {/* Terms & Conditions and Privacy Policy Section (Requirement 4) */}
-      <section className="py-16 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-200 dark:border-slate-800">
-        <div className="p-8 sm:p-10 rounded-3xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-6 shadow-sm">
-          <div className="space-y-1.5 max-w-2xl">
-            <div className="flex items-center gap-2">
-              <Lock className="w-5 h-5 text-emerald-500" />
-              <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white uppercase tracking-wider">
-                Enterprise Trust, Compliance &amp; Governance
-              </h3>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-              HRMS Portal strictly adheres to organizational confidentiality standards, salted bcrypt hashing, stateless JWT validation, and encrypted data transport.
-            </p>
-          </div>
 
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => setShowTermsModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-indigo-500 hover:bg-indigo-50/50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
-            >
-              <FileText className="w-4 h-4 text-indigo-500" />
-              <span>Terms &amp; Conditions</span>
-            </button>
-
-            <button
-              onClick={() => setShowPrivacyModal(true)}
-              className="inline-flex items-center gap-2 px-5 py-3 rounded-2xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-emerald-500 hover:bg-emerald-50/50 dark:hover:bg-slate-750 text-slate-800 dark:text-slate-100 text-xs sm:text-sm font-bold shadow-md hover:shadow-xl hover:-translate-y-0.5 transition-all cursor-pointer"
-            >
-              <ShieldCheck className="w-4 h-4 text-emerald-500" />
-              <span>Privacy Policy</span>
-            </button>
-          </div>
-        </div>
-      </section>
 
       {/* Expanded Big Terms & Conditions Modal */}
       {showTermsModal && (

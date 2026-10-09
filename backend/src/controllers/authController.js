@@ -337,3 +337,55 @@ export const googleLogin = async (req, res, next) => {
     next(error);
   }
 };
+
+import crypto from 'crypto';
+
+/**
+ * Activate user account and set password using activation token
+ * @route   POST /api/auth/activate/:token
+ * @access  Public
+ */
+export const activateAccount = async (req, res, next) => {
+  try {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    if (!password || password.length < 8) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 8 characters long',
+      });
+    }
+
+    // Hash token to compare with database
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    const user = await User.findOne({
+      activationToken: hashedToken,
+      activationTokenExpire: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Activation link is invalid or has expired',
+      });
+    }
+
+    // Set new password and clear activation fields
+    user.password = password;
+    user.activationToken = undefined;
+    user.activationTokenExpire = undefined;
+    user.isActive = true;
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Account activated successfully. You can now login.',
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
