@@ -9,9 +9,11 @@ import {
   UserX, Briefcase, Calendar, CheckSquare
 } from 'lucide-react';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
-import AdminCommandCenter from '../components/dashboard/AdminCommandCenter';
+import { AdminCommandCenter } from '../components/dashboard/AdminCommandCenter';
+import { HRDashboard } from '../components/dashboard/HRDashboard';
+import { ManagerDashboard } from '../components/dashboard/ManagerDashboard';
 
-// Employee & Manager Self-Service Portal Dashboard
+// Employee Portal Dashboard
 const EmployeePortalDashboard = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [dashboardData, setDashboardData] = useState(null);
@@ -101,31 +103,18 @@ const EmployeePortalDashboard = ({ user }) => {
         </div>
       ) : (
         <>
-          {/* Top KPI Cards Grid based on role */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {role === 'MANAGER' ? (
-              <>
-                <StatCard title="Team Size" value={dashboardData?.employees?.total} icon={Users} colorClass="indigo" loading={loading} />
-                <StatCard title="Team Present Today" value={dashboardData?.attendance?.presentToday} icon={UserCheck} colorClass="emerald" loading={loading} />
-                <StatCard title="Team Pending Leaves" value={dashboardData?.leaves?.pending} icon={CalendarClock} colorClass="amber" loading={loading} />
-                <StatCard title="Overdue Team Tasks" value={dashboardData?.tasks?.overdue} icon={AlertTriangle} colorClass="rose" loading={loading} />
-              </>
-            ) : (
-              <>
-                <StatCard title="Today's Hours" value={dashboardData?.attendance?.personalTodayHours} icon={Clock} colorClass="emerald" loading={loading} trendLabel="hrs" />
-                <StatCard title="Pending Leaves" value={dashboardData?.leaves?.pending} icon={CalendarClock} colorClass="amber" loading={loading} />
-                <StatCard title="Active Tasks" value={dashboardData?.tasks?.active} icon={ListTodo} colorClass="sky" loading={loading} />
-                <StatCard title="Overdue Tasks" value={dashboardData?.tasks?.overdue} icon={AlertTriangle} colorClass="rose" loading={loading} />
-              </>
-            )}
+            <StatCard title="Today's Hours" value={dashboardData?.attendance?.personalTodayHours} icon={Clock} colorClass="emerald" loading={loading} trendLabel="hrs" />
+            <StatCard title="Pending Leaves" value={dashboardData?.leaves?.pending} icon={CalendarClock} colorClass="amber" loading={loading} />
+            <StatCard title="Active Tasks" value={dashboardData?.tasks?.active} icon={ListTodo} colorClass="sky" loading={loading} />
+            <StatCard title="Overdue Tasks" value={dashboardData?.tasks?.overdue} icon={AlertTriangle} colorClass="rose" loading={loading} />
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            {/* Chart Section */}
             <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                 <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-                  {role === 'EMPLOYEE' ? 'My Task Distribution' : 'Team Task Status'}
+                  My Task Distribution
                 </span>
               </div>
               <div className="flex-1 min-h-[250px] mt-4 flex items-center justify-center">
@@ -141,16 +130,13 @@ const EmployeePortalDashboard = ({ user }) => {
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
-                      <Tooltip 
-                        contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                      />
+                      <Tooltip contentStyle={{ borderRadius: '12px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }} />
                     </PieChart>
                   </ResponsiveContainer>
                 )}
               </div>
             </div>
 
-            {/* Notifications Widget */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm shadow-sm flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
@@ -168,7 +154,6 @@ const EmployeePortalDashboard = ({ user }) => {
                     <span className="text-[11px] text-slate-500">All caught up</span>
                   )}
                 </div>
-
                 <div className="mt-4 space-y-2.5">
                   <div className="flex flex-col items-center justify-center py-6">
                     <Bell className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
@@ -176,12 +161,8 @@ const EmployeePortalDashboard = ({ user }) => {
                   </div>
                 </div>
               </div>
-
               <div className="mt-4 pt-3 border-t border-slate-200 dark:border-slate-800">
-                <Link
-                  to="/notifications"
-                  className="text-xs text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 font-medium flex items-center justify-between no-underline"
-                >
+                <Link to="/notifications" className="text-xs text-indigo-500 dark:text-indigo-400 hover:text-indigo-600 dark:hover:text-indigo-300 font-medium flex items-center justify-between no-underline">
                   <span>View All Notifications</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
@@ -198,12 +179,15 @@ export const DashboardOverview = () => {
   const { user } = useAuth();
   const role = user?.role || 'EMPLOYEE';
 
-  // If Admin or HR, render the full executive command center
-  if (role === 'ADMIN' || role === 'HR') {
+  if (role === 'ADMIN') {
     return <AdminCommandCenter user={user} />;
+  } else if (role === 'HR') {
+    return <HRDashboard user={user} />;
+  } else if (role === 'MANAGER') {
+    return <ManagerDashboard user={user} />;
   }
 
-  // Employee or Manager view
+  // Employee view
   return <EmployeePortalDashboard user={user} />;
 };
 
