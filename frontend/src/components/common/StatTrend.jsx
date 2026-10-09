@@ -23,7 +23,7 @@ export const StatTrend = ({
   // Determine if this change is good or bad
   const isGood = isPositiveGood ? isUp : !isUp;
 
-  let colorClasses = 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700';
+  let colorClasses = 'bg-slate-100 text-slate-600 dark:text-slate-400 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700';
   if (!isZero) {
     if (isGood) {
       colorClasses = 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20';

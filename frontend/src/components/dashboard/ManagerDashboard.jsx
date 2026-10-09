@@ -103,7 +103,7 @@ export const ManagerDashboard = ({ user }) => {
             <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
               Manager Dashboard
             </h2>
-            <p className="text-slate-600 dark:text-slate-400 text-sm mt-1 max-w-2xl">
+            <p className="text-slate-600 dark:text-slate-400 dark:text-slate-400 text-sm mt-1 max-w-2xl">
               Welcome back, {employee?.firstName ? `${employee.firstName} ${employee.lastName}` : user?.email}! Here's your team's overview.
             </p>
           </div>
@@ -163,7 +163,7 @@ export const ManagerDashboard = ({ user }) => {
             {/* Chart Section */}
             <div className="lg:col-span-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm shadow-sm flex flex-col justify-between">
               <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 dark:text-slate-400 flex items-center gap-2">
                   <ListTodo className="w-4 h-4" />
                   Team Task Status
                 </span>
@@ -172,7 +172,7 @@ export const ManagerDashboard = ({ user }) => {
                 {loading ? (
                   <div className="animate-pulse w-48 h-48 rounded-full bg-slate-100 dark:bg-slate-800"></div>
                 ) : taskChartData.length === 0 ? (
-                  <p className="text-sm text-slate-500 italic">No task data available.</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 italic">No task data available.</p>
                 ) : (
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
@@ -195,7 +195,7 @@ export const ManagerDashboard = ({ user }) => {
               <div>
                 <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 dark:text-slate-400">
                       Pending Actions
                     </span>
                   </div>
@@ -222,7 +222,7 @@ export const ManagerDashboard = ({ user }) => {
                           <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                             {leave.employee?.firstName} {leave.employee?.lastName}
                           </div>
-                          <div className="text-[11px] text-slate-400 truncate">
+                          <div className="text-[11px] text-slate-400 dark:text-slate-400 truncate">
                             {leave.leaveType} &bull; {leave.numberOfDays} day{leave.numberOfDays > 1 ? 's' : ''} &bull; {new Date(leave.startDate).toLocaleDateString()}
                           </div>
                         </div>
@@ -262,7 +262,7 @@ export const ManagerDashboard = ({ user }) => {
             {/* Team Attendance List */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
                <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 dark:text-slate-400 flex items-center gap-2">
                     <CheckSquare className="w-4 h-4" />
                     Team Attendance Today
                   </span>
@@ -271,7 +271,7 @@ export const ManagerDashboard = ({ user }) => {
                  {loading ? (
                     <SkeletonLoader type="list" />
                  ) : dashboardData?.teamAttendance?.length === 0 ? (
-                    <p className="text-sm text-slate-500 italic">No attendance records today.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 italic">No attendance records today.</p>
                  ) : (
                    dashboardData?.teamAttendance?.map((att) => (
                       <div key={att._id} className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800">
@@ -293,7 +293,7 @@ export const ManagerDashboard = ({ user }) => {
             {/* Recent Activity */}
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">
                <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 dark:text-slate-400 flex items-center gap-2">
                     <Bell className="w-4 h-4" />
                     Recent Team Activity
                   </span>
@@ -302,12 +302,12 @@ export const ManagerDashboard = ({ user }) => {
                  {loading ? (
                     <SkeletonLoader type="list" />
                  ) : dashboardData?.recentActivity?.length === 0 ? (
-                    <p className="text-sm text-slate-500 italic">No recent activity.</p>
+                    <p className="text-sm text-slate-500 dark:text-slate-400 italic">No recent activity.</p>
                  ) : (
                    dashboardData?.recentActivity?.map((act) => (
                       <div key={act._id} className="text-xs border-l-2 border-indigo-500 pl-3 py-1">
                         <div className="font-semibold text-slate-800 dark:text-slate-200">{act.action}</div>
-                        <div className="text-[10px] text-slate-500">{new Date(act.createdAt).toLocaleString()}</div>
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400 dark:text-slate-400">{new Date(act.createdAt).toLocaleString()}</div>
                       </div>
                    ))
                  )}

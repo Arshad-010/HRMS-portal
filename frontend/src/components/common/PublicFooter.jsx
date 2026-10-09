@@ -52,13 +52,13 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
             </Link>
             
             <div className="flex items-center gap-3 mt-4 mb-6">
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg>
               </a>
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
+              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="w-4 h-4"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>
               </a>
-              <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Company Portal" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
+              <a href="https://example.com" target="_blank" rel="noopener noreferrer" aria-label="Company Portal" className="w-9 h-9 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-500 dark:text-slate-400 hover:bg-sky-100 hover:text-sky-600 dark:hover:bg-sky-500/20 dark:hover:text-sky-400 transition-colors">
                 <Globe className="w-4 h-4" />
               </a>
             </div>
@@ -78,7 +78,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                   <Link 
                     to="/features" 
                     onClick={() => scrollToSection('features')}
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <ChevronRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Features Directory</span>
@@ -87,7 +87,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                 <li>
                   <Link 
                     to="/attendance" 
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <Clock className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Attendance &amp; Hours</span>
@@ -96,7 +96,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                 <li>
                   <Link 
                     to="/leave" 
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <Calendar className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Leave Quotas</span>
@@ -105,7 +105,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                 <li>
                   <Link 
                     to="/tasks" 
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <CheckSquare className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Task Delegations</span>
@@ -125,7 +125,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                   <Link 
                     to="/about" 
                     onClick={() => scrollToSection('about')}
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <Info className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>About HRMS Suite</span>
@@ -135,7 +135,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                   <button 
                     type="button"
                     onClick={() => onOpenPrivacy ? onOpenPrivacy() : window.location.assign('/privacy')}
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1 text-left cursor-pointer"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1 text-left cursor-pointer"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Privacy Policy</span>
@@ -145,7 +145,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                   <button 
                     type="button"
                     onClick={() => onOpenTerms ? onOpenTerms() : window.location.assign('/terms')}
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1 text-left cursor-pointer"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1 text-left cursor-pointer"
                   >
                     <FileText className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Terms &amp; Conditions</span>
@@ -165,7 +165,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                   <Link 
                     to="/contact" 
                     onClick={() => scrollToSection('contact')}
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <Mail className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Contact Help Desk</span>
@@ -174,7 +174,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                 <li>
                   <Link 
                     to="/help" 
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <HelpCircle className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Knowledge &amp; FAQ</span>
@@ -183,7 +183,7 @@ export const PublicFooter = ({ onOpenTerms, onOpenPrivacy }) => {
                 <li>
                   <Link 
                     to="/login" 
-                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
+                    className="group flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:text-slate-400 dark:hover:text-indigo-400 transition-all hover:translate-x-1"
                   >
                     <LogIn className="w-3.5 h-3.5 text-slate-400 group-hover:text-indigo-500 transition-colors" />
                     <span>Portal Login</span>

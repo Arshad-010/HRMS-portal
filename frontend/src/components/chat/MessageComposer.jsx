@@ -98,7 +98,7 @@ const MessageComposer = ({ conversationId }) => {
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder="Type a message..."
-            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-32 min-h-[44px] py-3 px-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-500"
+            className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-32 min-h-[44px] py-3 px-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-500 dark:text-slate-400"
             rows={1}
             onKeyDown={(e) => {
               if (e.key === 'Enter' && !e.shiftKey) {

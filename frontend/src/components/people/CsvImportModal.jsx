@@ -118,7 +118,7 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
       <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
         <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
           <h2 className="text-lg font-semibold text-slate-900">Bulk Import Employees</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:text-slate-400 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -133,7 +133,7 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
                   </div>
                   <div>
                     <h3 className="text-sm font-medium text-slate-900">Download Template</h3>
-                    <p className="text-xs text-slate-500">Use this CSV template to format your data.</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">Use this CSV template to format your data.</p>
                   </div>
                 </div>
                 <button onClick={handleDownloadTemplate} className="text-sm font-medium text-sky-600 hover:text-sky-700 flex items-center gap-1">
@@ -144,7 +144,7 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
               <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors">
                 <Upload className="w-8 h-8 text-slate-400 mb-3" />
                 <p className="text-sm font-medium text-slate-900 mb-1">Click to upload CSV</p>
-                <p className="text-xs text-slate-500 mb-4">Maximum 500 records recommended.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mb-4">Maximum 500 records recommended.</p>
                 <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
                   Select File
                   <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
@@ -157,7 +157,7 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
             <div className="space-y-4">
               <div className="flex justify-between items-center">
                 <h3 className="text-sm font-semibold text-slate-900">Data Preview</h3>
-                <span className="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded">
+                <span className="text-xs font-medium bg-slate-100 text-slate-600 dark:text-slate-400 px-2 py-1 rounded">
                   {parsedData.length} Records
                 </span>
               </div>
@@ -181,25 +181,25 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
                 <table className="w-full text-left text-sm whitespace-nowrap">
                   <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
-                      <th className="px-4 py-3 font-medium text-slate-500">Name</th>
-                      <th className="px-4 py-3 font-medium text-slate-500">Email</th>
-                      <th className="px-4 py-3 font-medium text-slate-500">Role</th>
-                      <th className="px-4 py-3 font-medium text-slate-500">Department</th>
+                      <th className="px-4 py-3 font-medium text-slate-500 dark:text-slate-400">Name</th>
+                      <th className="px-4 py-3 font-medium text-slate-500 dark:text-slate-400">Email</th>
+                      <th className="px-4 py-3 font-medium text-slate-500 dark:text-slate-400">Role</th>
+                      <th className="px-4 py-3 font-medium text-slate-500 dark:text-slate-400">Department</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
                     {parsedData.slice(0, 5).map((row, i) => (
                       <tr key={i}>
                         <td className="px-4 py-3 text-slate-900">{row.firstName} {row.lastName}</td>
-                        <td className="px-4 py-3 text-slate-500">{row.email}</td>
-                        <td className="px-4 py-3 text-slate-500">{row.role}</td>
-                        <td className="px-4 py-3 text-slate-500">{row.department}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{row.email}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{row.role}</td>
+                        <td className="px-4 py-3 text-slate-500 dark:text-slate-400">{row.department}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
                 {parsedData.length > 5 && (
-                  <div className="px-4 py-2 bg-slate-50 text-xs text-center text-slate-500 border-t border-slate-100">
+                  <div className="px-4 py-2 bg-slate-50 text-xs text-center text-slate-500 dark:text-slate-400 border-t border-slate-100">
                     Showing 5 of {parsedData.length} records
                   </div>
                 )}
@@ -221,17 +221,17 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
               
               <div>
                 <h3 className="text-lg font-semibold text-slate-900">Import Complete</h3>
-                <p className="text-sm text-slate-500 mt-1">Processed {importResult.createdCount + importResult.errorCount} total records.</p>
+                <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Processed {importResult.createdCount + importResult.errorCount} total records.</p>
               </div>
 
               <div className="flex justify-center gap-6">
                 <div className="text-center">
                   <span className="block text-2xl font-semibold text-emerald-600">{importResult.createdCount}</span>
-                  <span className="text-xs text-slate-500 font-medium">Imported</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Imported</span>
                 </div>
                 <div className="text-center">
                   <span className="block text-2xl font-semibold text-red-600">{importResult.errorCount}</span>
-                  <span className="text-xs text-slate-500 font-medium">Failed/Skipped</span>
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Failed/Skipped</span>
                 </div>
               </div>
             </div>

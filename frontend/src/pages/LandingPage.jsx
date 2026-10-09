@@ -784,7 +784,7 @@ const RoleCard = ({
         <Icon className="w-6 h-6 text-white drop-shadow-sm" />
       </div>
       {badge && (
-        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
           {badge}
         </span>
       )}

@@ -76,7 +76,7 @@ export const AuthProvider = ({ children }) => {
       try {
         const response = await api.post('/auth/2fa/login', { code, isRecoveryCode }, {
           headers: {
-            Authorization: \`Bearer \${challengeToken}\`
+            Authorization: `Bearer ${challengeToken}`
           }
         });
 

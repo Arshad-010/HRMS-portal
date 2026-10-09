@@ -68,7 +68,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">New Message</h2>
           <button 
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:text-slate-400 hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
@@ -84,7 +84,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
-              className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 placeholder:text-slate-500"
+              className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 placeholder:text-slate-500 dark:text-slate-400"
             />
           </div>
         </div>
@@ -92,9 +92,9 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
         {/* User List */}
         <div className="flex-1 overflow-y-auto p-2 no-scrollbar">
           {loading ? (
-            <div className="p-4 text-center text-sm text-slate-500">Loading directory...</div>
+            <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">Loading directory...</div>
           ) : filteredUsers.length === 0 ? (
-            <div className="p-4 text-center text-sm text-slate-500">No colleagues found.</div>
+            <div className="p-4 text-center text-sm text-slate-500 dark:text-slate-400">No colleagues found.</div>
           ) : (
             filteredUsers.map(emp => (
               <button
@@ -110,7 +110,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
                   <h4 className="text-sm font-semibold text-slate-900 dark:text-white">
                     {emp.firstName} {emp.lastName}
                   </h4>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-slate-400">
                     {emp.designation || 'Employee'}
                   </p>
                 </div>

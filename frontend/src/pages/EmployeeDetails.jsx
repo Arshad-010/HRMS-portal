@@ -204,7 +204,7 @@ export const EmployeeDetails = () => {
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab
                 ? 'bg-sky-500 text-white shadow-sm'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
             {tab}
@@ -335,7 +335,7 @@ export const EmployeeDetails = () => {
               {/* Criteria Scores Table */}
               <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
                 <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-slate-50 dark:bg-slate-850 text-slate-500 font-bold uppercase tracking-wider">
+                  <thead className="bg-slate-50 dark:bg-slate-850 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider">
                     <tr>
                       <th className="p-3">Criterion</th>
                       <th className="p-3">Weight</th>
@@ -347,7 +347,7 @@ export const EmployeeDetails = () => {
                     {(latestReview.scores || []).map((sc, i) => (
                       <tr key={i}>
                         <td className="p-3 font-semibold text-slate-800 dark:text-slate-200">{sc.criterion}</td>
-                        <td className="p-3 text-slate-500">{sc.weight}%</td>
+                        <td className="p-3 text-slate-500 dark:text-slate-400">{sc.weight}%</td>
                         <td className="p-3">
                           <span className="font-bold text-sky-500">★ {sc.rating}/5</span>
                         </td>

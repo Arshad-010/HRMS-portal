@@ -153,7 +153,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
           </div>
           <button
             onClick={onClose}
-            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
+            className="p-2 rounded-xl text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -176,7 +176,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     ? 'bg-emerald-500 text-white'
                     : isCurrent
                     ? 'bg-sky-500 text-white shadow-sm'
-                    : 'bg-slate-200 dark:bg-slate-700 text-slate-500'
+                    : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                 }`}>
                   {isCompleted ? <Check className="w-4 h-4" /> : s.num}
                 </div>
