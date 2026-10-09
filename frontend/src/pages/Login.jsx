@@ -25,7 +25,7 @@ const GoogleIcon = () => (
 );
 
 export const Login = () => {
-  const { login, loginWithGoogle, isAuthenticated } = useAuth();
+  const { login, loginWithGoogle, isAuthenticated, verify2FALogin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -80,6 +80,31 @@ export const Login = () => {
 
     setSubmitting(true);
     const result = await login(email, password);
+    setSubmitting(false);
+
+    if (result.success) {
+      if (result.requires2FA) {
+        setRequires2FA(true);
+        setChallengeToken(result.challengeToken);
+      } else {
+        navigate(from, { replace: true });
+      }
+    } else {
+      setErrorMessage(result.error);
+    }
+  };
+
+  const handle2FASubmit = async (e) => {
+    e.preventDefault();
+    setErrorMessage('');
+    
+    if (!twoFactorCode) {
+      setErrorMessage('Please enter the verification code.');
+      return;
+    }
+
+    setSubmitting(true);
+    const result = await verify2FALogin(challengeToken, twoFactorCode, isRecoveryMode);
     setSubmitting(false);
 
     if (result.success) {

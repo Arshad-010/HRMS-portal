@@ -45,23 +45,54 @@ export const AuthProvider = ({ children }) => {
   /**
    * Log in user with credentials and persist token
    */
-  const login = async (email, password) => {
-    setError(null);
-    try {
-      const response = await api.post('/auth/login', { email, password });
-      const { token: receivedToken, user: loggedInUser } = response.data.data;
+    const login = async (email, password) => {
+      setError(null);
+      try {
+        const response = await api.post('/auth/login', { email, password });
+        
+        if (response.data.requires2FA) {
+          return { success: true, requires2FA: true, challengeToken: response.data.data.token };
+        }
 
-      localStorage.setItem('hrms_token', receivedToken);
-      setToken(receivedToken);
-      setUser(normalizeUser(loggedInUser));
+        const { token: receivedToken, user: loggedInUser } = response.data.data;
 
-      return { success: true, user: normalizeUser(loggedInUser) };
-    } catch (err) {
-      const errorMessage = err.message || 'Authentication failed. Please check your credentials.';
-      setError(errorMessage);
-      return { success: false, error: errorMessage };
-    }
-  };
+        localStorage.setItem('hrms_token', receivedToken);
+        setToken(receivedToken);
+        setUser(normalizeUser(loggedInUser));
+
+        return { success: true, requires2FA: false, user: normalizeUser(loggedInUser) };
+      } catch (err) {
+        const errorMessage = err.message || 'Authentication failed. Please check your credentials.';
+        setError(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+    };
+
+    /**
+     * Complete login with 2FA Challenge Token
+     */
+    const verify2FALogin = async (challengeToken, code, isRecoveryCode = false) => {
+      setError(null);
+      try {
+        const response = await api.post('/auth/2fa/login', { code, isRecoveryCode }, {
+          headers: {
+            Authorization: \`Bearer \${challengeToken}\`
+          }
+        });
+
+        const { token: receivedToken, user: loggedInUser } = response.data.data;
+
+        localStorage.setItem('hrms_token', receivedToken);
+        setToken(receivedToken);
+        setUser(normalizeUser(loggedInUser));
+
+        return { success: true, user: normalizeUser(loggedInUser) };
+      } catch (err) {
+        const errorMessage = err.message || '2FA verification failed.';
+        setError(errorMessage);
+        return { success: false, error: errorMessage };
+      }
+    };
 
   /**
    * Log in user with Google Firebase Authentication
@@ -77,13 +108,18 @@ export const AuthProvider = ({ children }) => {
       const idToken = await result.user.getIdToken();
 
       const response = await api.post('/auth/google', { idToken });
+      
+      if (response.data.requires2FA) {
+        return { success: true, requires2FA: true, challengeToken: response.data.data.token };
+      }
+
       const { token: receivedToken, user: loggedInUser } = response.data.data;
 
       localStorage.setItem('hrms_token', receivedToken);
       setToken(receivedToken);
       setUser(normalizeUser(loggedInUser));
 
-      return { success: true, user: normalizeUser(loggedInUser) };
+      return { success: true, requires2FA: false, user: normalizeUser(loggedInUser) };
     } catch (err) {
       let errorMessage = 'Google sign-in failed. Please try again.';
       
@@ -169,6 +205,7 @@ export const AuthProvider = ({ children }) => {
     error,
     isAuthenticated: Boolean(token && user),
     login,
+    verify2FALogin,
     loginWithGoogle,
     logout,
     changePassword,

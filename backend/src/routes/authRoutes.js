@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, getMe, changePassword, uploadProfilePicture, googleLogin, activateAccount, forgotPassword, resetPassword } from '../controllers/authController.js';
+import { login, getMe, changePassword, uploadProfilePicture, googleLogin, activateAccount, forgotPassword, resetPassword, setup2FA, verify2FASetup, disable2FA, verify2FALogin, regenerateRecoveryCodes } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { seedInitialAdmin } from '../services/seedService.js';
 
@@ -51,6 +51,11 @@ router.get('/debug-token/:token', async (req, res) => {
 });
 
 router.post('/login', login);
+router.post('/2fa/login', verify2FALogin);
+router.post('/2fa/setup', protect, setup2FA);
+router.post('/2fa/verify-setup', protect, verify2FASetup);
+router.post('/2fa/disable', protect, disable2FA);
+router.post('/2fa/recovery-codes', protect, regenerateRecoveryCodes);
 router.post('/google', googleLogin);
 router.post('/activate/:token', activateAccount);
 router.post('/forgot-password', forgotPasswordLimiter, forgotPassword);

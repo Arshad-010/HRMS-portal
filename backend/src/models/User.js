@@ -58,6 +58,29 @@ const userSchema = new mongoose.Schema(
       default: null,
       select: false,
     },
+    twoFactorEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    twoFactorSecretEncrypted: {
+      type: String,
+      select: false,
+    },
+    twoFactorPendingSecretEncrypted: {
+      type: String,
+      select: false,
+    },
+    twoFactorPendingExpiresAt: {
+      type: Date,
+      select: false,
+    },
+    twoFactorEnabledAt: {
+      type: Date,
+    },
+    twoFactorRecoveryCodeHashes: {
+      type: [String],
+      select: false,
+    },
     resetPasswordExpire: {
       type: Date,
       default: null,
