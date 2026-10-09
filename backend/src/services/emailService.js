@@ -113,3 +113,66 @@ export const sendActivationEmail = async (employee, activationUrl) => {
     html
   });
 };
+
+/**
+ * Send password reset email
+ * @param {string} email 
+ * @param {string} resetUrl 
+ * @returns {Promise<boolean>}
+ */
+export const sendPasswordResetEmail = async (email, resetUrl) => {
+  const subject = 'HRMS Portal - Password Reset Request';
+  
+  const text = `
+    Hello,
+    
+    You are receiving this email because a password reset request was made for your HRMS Portal account.
+    
+    Please set a new password by clicking the link below:
+    ${resetUrl}
+    
+    This link will expire in 30 minutes.
+    
+    If you did not request this password reset, please ignore this email and your password will remain unchanged.
+    
+    Best regards,
+    HRMS Portal Team
+  `;
+
+  const html = `
+    <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
+      <div style="background-color: #0ea5e9; padding: 20px; text-align: center;">
+        <h2 style="color: white; margin: 0;">HRMS Portal</h2>
+      </div>
+      <div style="padding: 30px;">
+        <h3 style="color: #0f172a; margin-top: 0;">Password Reset Request</h3>
+        <p style="color: #475569; line-height: 1.6;">
+          You are receiving this email because a password reset request was made for your account.
+        </p>
+        <p style="color: #475569; line-height: 1.6;">
+          Click the button below to securely set a new password for your account.
+        </p>
+        <div style="text-align: center; margin: 30px 0;">
+          <a href="${resetUrl}" style="background-color: #0ea5e9; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold; display: inline-block;">
+            Reset Password
+          </a>
+        </div>
+        <p style="color: #64748b; font-size: 13px; text-align: center;">
+          Or copy and paste this link into your browser:<br/>
+          <a href="${resetUrl}" style="color: #0ea5e9; word-break: break-all;">${resetUrl}</a>
+        </p>
+        <div style="margin-top: 30px; padding-top: 20px; border-top: 1px solid #e2e8f0; font-size: 12px; color: #94a3b8; text-align: center;">
+          <p>This secure link will expire in 30 minutes.</p>
+          <p>If you did not request this password reset, please ignore this email and your password will remain unchanged.</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  return sendEmail({
+    to: email,
+    subject,
+    text,
+    html
+  });
+};

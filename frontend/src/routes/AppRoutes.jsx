@@ -3,6 +3,8 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LandingPage from '../pages/LandingPage';
 import Login from '../pages/Login';
+import ForgotPassword from '../pages/ForgotPassword';
+import ResetPassword from '../pages/ResetPassword';
 import DashboardOverview from '../pages/DashboardOverview';
 import Attendance from '../pages/Attendance';
 import Leaves from '../pages/Leaves';
@@ -91,6 +93,8 @@ export const AppRoutes = () => {
 
       {/* Public Authentication Route */}
       <Route path="/login" element={<Login />} />
+      <Route path="/forgot-password" element={<ForgotPassword />} />
+      <Route path="/reset-password/:token" element={<ResetPassword />} />
       <Route path="/activate/:token" element={<ActivateAccount />} />
 
       {/* Protected Routes */}

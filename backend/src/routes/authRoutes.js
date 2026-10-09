@@ -1,5 +1,5 @@
 import express from 'express';
-import { login, getMe, changePassword, uploadProfilePicture, googleLogin, activateAccount } from '../controllers/authController.js';
+import { login, getMe, changePassword, uploadProfilePicture, googleLogin, activateAccount, forgotPassword, resetPassword } from '../controllers/authController.js';
 import { protect } from '../middleware/authMiddleware.js';
 import { seedInitialAdmin } from '../services/seedService.js';
 
@@ -16,6 +16,15 @@ router.get('/debug-seed', async (req, res) => {
 
 import User from '../models/User.js';
 import crypto from 'crypto';
+import rateLimit from 'express-rate-limit';
+
+const forgotPasswordLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 5, // limit each IP to 5 requests per windowMs
+  message: { success: false, message: 'Too many password reset requests from this IP, please try again after 15 minutes' },
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 router.get('/debug-token/:token', async (req, res) => {
   try {
@@ -44,6 +53,8 @@ router.get('/debug-token/:token', async (req, res) => {
 router.post('/login', login);
 router.post('/google', googleLogin);
 router.post('/activate/:token', activateAccount);
+router.post('/forgot-password', forgotPasswordLimiter, forgotPassword);
+router.post('/reset-password/:token', resetPassword);
 router.get('/me', protect, getMe);
 router.post('/change-password', protect, changePassword);
 router.post('/profile-picture', protect, uploadProfilePicture);

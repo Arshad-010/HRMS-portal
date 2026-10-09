@@ -173,6 +173,13 @@ export const Login = () => {
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300" htmlFor="password">
                   Account Password
                 </label>
+                <button
+                  type="button"
+                  onClick={() => navigate('/forgot-password')}
+                  className="text-xs font-semibold text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300 transition-colors cursor-pointer"
+                >
+                  Forgot Password?
+                </button>
               </div>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">

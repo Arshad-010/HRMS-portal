@@ -22,23 +22,26 @@ export function AppContent() {
     localStorage.setItem('hrms_sidebar_collapsed', isSidebarCollapsed);
   }, [isSidebarCollapsed]);
 
-  const isLoginPage = location.pathname === '/login';
+  const isAuthPage = location.pathname === '/login' || 
+                     location.pathname === '/forgot-password' || 
+                     location.pathname.startsWith('/reset-password') || 
+                     location.pathname.startsWith('/activate');
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex font-sans ${isLoginPage ? 'h-screen overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex font-sans ${isAuthPage ? 'h-screen overflow-hidden' : ''}`}>
       <Sidebar 
         isMobileOpen={isSidebarMobileOpen} 
         setIsMobileOpen={setIsSidebarMobileOpen}
         isCollapsed={isSidebarCollapsed}
       />
       
-      <div className={`flex-1 flex flex-col min-w-0 ${isLoginPage ? 'h-screen overflow-hidden' : ''}`}>
+      <div className={`flex-1 flex flex-col min-w-0 ${isAuthPage ? 'h-screen overflow-hidden' : ''}`}>
         <Navbar 
           toggleMobileSidebar={() => setIsSidebarMobileOpen(true)}
           isCollapsed={isSidebarCollapsed}
           toggleCollapse={() => setIsSidebarCollapsed(!isSidebarCollapsed)}
         />
-        <main className={`flex-1 ${isLoginPage ? 'h-[calc(100vh-4rem)] overflow-hidden no-scrollbar' : 'overflow-x-hidden'}`}>
+        <main className={`flex-1 ${isAuthPage ? 'h-[calc(100vh-4rem)] overflow-hidden no-scrollbar' : 'overflow-x-hidden'}`}>
           <AppRoutes />
         </main>
 
