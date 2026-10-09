@@ -336,38 +336,6 @@ export const getChatUsers = async (req, res, next) => {
     
     let query = { isActive: true, _id: { $ne: req.user._id } };
 
-    if (role === 'EMPLOYEE') {
-      const deptId = currentUser.employeeId?.departmentId;
-      const managerId = currentUser.employeeId?.reportingManagerId;
-      const allowedRoles = ['ADMIN', 'HR'];
-      const allowedUsersQuery = { $or: [{ role: { $in: allowedRoles } }] };
-      const employeeQuery = { $or: [] };
-      if (deptId) employeeQuery.$or.push({ departmentId: deptId });
-      if (managerId) employeeQuery.$or.push({ _id: managerId });
-      if (employeeQuery.$or.length > 0) {
-        const Employee = (await import('../models/Employee.js')).default;
-        const allowedEmployees = await Employee.find(employeeQuery).select('userId');
-        const allowedUserIds = allowedEmployees.map(emp => emp.userId).filter(Boolean);
-        allowedUsersQuery.$or.push({ _id: { $in: allowedUserIds } });
-      }
-      query = { $and: [query, allowedUsersQuery] };
-    } else if (role === 'MANAGER') {
-      const deptId = currentUser.employeeId?.departmentId;
-      const myEmpId = currentUser.employeeId?._id;
-      const allowedRoles = ['ADMIN', 'HR', 'MANAGER'];
-      const allowedUsersQuery = { $or: [{ role: { $in: allowedRoles } }] };
-      const employeeQuery = { $or: [] };
-      if (myEmpId) employeeQuery.$or.push({ reportingManagerId: myEmpId });
-      if (deptId) employeeQuery.$or.push({ departmentId: deptId });
-      if (employeeQuery.$or.length > 0) {
-        const Employee = (await import('../models/Employee.js')).default;
-        const allowedEmployees = await Employee.find(employeeQuery).select('userId');
-        const allowedUserIds = allowedEmployees.map(emp => emp.userId).filter(Boolean);
-        allowedUsersQuery.$or.push({ _id: { $in: allowedUserIds } });
-      }
-      query = { $and: [query, allowedUsersQuery] };
-    }
-
     const users = await User.find(query)
       .select('email role employeeId isActive')
       .populate({
