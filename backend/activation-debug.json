@@ -1,0 +1,43 @@
+{
+  "time": "2026-10-09T03:42:27.728Z",
+  "providedRawToken": "ea4cc562ccc090f513895bc0cffa352f062620a4",
+  "computedHashedToken": "9de7aa0357f8ea5c494f95544d49247889aea324b9198035463697fed293b191",
+  "foundWithHashOnly": false,
+  "allTokensInDb": [
+    {
+      "email": "admin@example.com",
+      "token": null,
+      "expire": null
+    },
+    {
+      "email": "lohithbasetti@gmail.com",
+      "token": null,
+      "expire": null
+    },
+    {
+      "email": "yourslohith@gmail.com",
+      "token": null,
+      "expire": null
+    },
+    {
+      "email": "maya@example.com",
+      "token": "b44f28dc997924abbb7c024e6ec446a14e267e0ab48f22020d90b40e3263ee8b",
+      "expire": "2026-10-10T02:37:33.175Z"
+    },
+    {
+      "email": "lohithkumarbasettii@gmail.com",
+      "token": null,
+      "expire": null
+    },
+    {
+      "email": "hr.dashboard.test@example.com",
+      "token": null,
+      "expire": null
+    },
+    {
+      "email": "manager.dashboard.test@example.com",
+      "token": null,
+      "expire": null
+    }
+  ]
+}

@@ -92,6 +92,19 @@ export const getOverview = async (req, res) => {
       personalTodayHours = myTodayAtt?.workHours || 0;
     }
 
+    let pendingApprovals = [];
+    let teamAttendance = [];
+    if (role === 'MANAGER') {
+      pendingApprovals = await Leave.find({ ...leaveMatch, status: 'PENDING' })
+        .populate('employee', 'firstName lastName employeeCode designation')
+        .sort({ appliedAt: -1 })
+        .limit(10);
+        
+      teamAttendance = await Attendance.find({ ...attendanceMatch, date: { $gte: today } })
+        .populate('employee', 'firstName lastName')
+        .limit(20);
+    }
+
     res.json({
       success: true,
       data: {
@@ -124,7 +137,9 @@ export const getOverview = async (req, res) => {
         notifications: {
           unread: unreadNotifications
         },
-        recentActivity
+        recentActivity,
+        pendingApprovals,
+        teamAttendance
       }
     });
 

@@ -358,7 +358,8 @@ export const activateAccount = async (req, res, next) => {
     }
 
     // Hash token to compare with database
-    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+    const cleanToken = token.trim();
+    const hashedToken = crypto.createHash('sha256').update(cleanToken).digest('hex');
 
     const user = await User.findOne({
       activationToken: hashedToken,
@@ -366,6 +367,20 @@ export const activateAccount = async (req, res, next) => {
     });
 
     if (!user) {
+      // DEBUG: Find out why user was not found
+      import('fs').then(async fs => {
+        const anyUserWithToken = await User.findOne({ activationToken: hashedToken });
+        const allUsers = await User.find({}).select('+activationToken +activationTokenExpire email');
+        const debugInfo = {
+          time: new Date(),
+          providedRawToken: token,
+          computedHashedToken: hashedToken,
+          foundWithHashOnly: !!anyUserWithToken,
+          allTokensInDb: allUsers.map(u => ({ email: u.email, token: u.activationToken, expire: u.activationTokenExpire }))
+        };
+        fs.writeFileSync('activation-debug.json', JSON.stringify(debugInfo, null, 2));
+      });
+
       return res.status(400).json({
         success: false,
         message: 'Activation link is invalid or has expired',
