@@ -1,4 +1,7 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+const path = 'frontend/src/components/dashboard/AdminCommandCenter.jsx';
+
+const newContent = `import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import {
   Users, UserCheck, CalendarClock, ListTodo,
@@ -10,7 +13,6 @@ import {
 import api from '../../api/axios';
 import PersonDrawer from '../people/PersonDrawer';
 import EmptyState from '../common/EmptyState';
-import CsvImportModal from '../people/CsvImportModal';
 
 export const AdminCommandCenter = ({ user }) => {
   const navigate = useNavigate();
@@ -21,7 +23,6 @@ export const AdminCommandCenter = ({ user }) => {
   const [pendingApprovals, setPendingApprovals] = useState([]);
   
   const [isAddDrawerOpen, setIsAddDrawerOpen] = useState(false);
-  const [isImportModalOpen, setIsImportModalOpen] = useState(false);
   const [drawerRole, setDrawerRole] = useState('EMPLOYEE');
   const [actionMessage, setActionMessage] = useState(null);
 
@@ -46,7 +47,7 @@ export const AdminCommandCenter = ({ user }) => {
 
   const handleApproveLeave = async (leaveId) => {
     try {
-      const res = await api.put(`/leaves/${leaveId}/approve`, { reviewerComment: 'Approved via Executive Dashboard' });
+      const res = await api.put(\`/leaves/\${leaveId}/approve\`, { reviewerComment: 'Approved via Executive Dashboard' });
       if (res.data?.success) {
         setPendingApprovals(prev => prev.filter(p => p._id !== leaveId));
         setActionMessage({ type: 'success', text: 'Leave request approved successfully.' });
@@ -93,11 +94,11 @@ export const AdminCommandCenter = ({ user }) => {
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-2 text-sm font-medium border-b-2 transition-colors ${
+            className={\`px-4 py-2 text-sm font-medium border-b-2 transition-colors \${
               activeTab === tab
                 ? 'border-slate-900 text-slate-900'
                 : 'border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300'
-            }`}
+            }\`}
           >
             {tab}
           </button>
@@ -106,11 +107,11 @@ export const AdminCommandCenter = ({ user }) => {
 
       {/* Action Notification Toast */}
       {actionMessage && (
-        <div className={`p-4 rounded-lg border text-sm font-medium flex items-center gap-2 ${
+        <div className={\`p-4 rounded-lg border text-sm font-medium flex items-center gap-2 \${
           actionMessage.type === 'success'
             ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
             : 'bg-red-50 text-red-700 border-red-200'
-        }`}>
+        }\`}>
           {actionMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
           <span>{actionMessage.text}</span>
         </div>
@@ -121,7 +122,7 @@ export const AdminCommandCenter = ({ user }) => {
       {activeTab === 'Overview' && (
         <div className="space-y-8 animate-fade-in">
           {/* Metrics Row */}
-          <div className="grid grid-cols-2 md:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
               <span className="text-sm text-slate-500 font-medium">Total employees</span>
               <span className="text-3xl font-semibold text-slate-900 mt-2">{kpis.totalEmployees?.value || '-'}</span>
@@ -137,14 +138,6 @@ export const AdminCommandCenter = ({ user }) => {
             <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
               <span className="text-sm text-slate-500 font-medium">Active tasks</span>
               <span className="text-3xl font-semibold text-slate-900 mt-2">{kpis.activeTasks?.value || '0'}</span>
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
-              <span className="text-sm text-slate-500 font-medium">Joined (7D)</span>
-              <span className="text-3xl font-semibold text-slate-900 mt-2">{kpis.newJoiners7D?.value || '0'}</span>
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm flex flex-col justify-between">
-              <span className="text-sm text-slate-500 font-medium">Joined (30D)</span>
-              <span className="text-3xl font-semibold text-slate-900 mt-2">{kpis.newJoiners30D?.value || '0'}</span>
             </div>
           </div>
           
@@ -231,18 +224,6 @@ export const AdminCommandCenter = ({ user }) => {
                 </div>
               </div>
             </div>
-                      <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:border-slate-300 transition-colors flex items-center justify-between cursor-pointer group" onClick={() => setIsImportModalOpen(true)}>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center text-emerald-600">
-                  <FileText className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-slate-900">Import Employees (CSV)</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Bulk upload personnel data</p>
-                </div>
-              </div>
-              <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
-            </div>
           </div>
         </div>
       )}
@@ -295,36 +276,11 @@ export const AdminCommandCenter = ({ user }) => {
                   <Shield className="w-5 h-5" />
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-slate-900">Add Manager</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Provision new leadership roles</p>
+                  <h4 className="text-sm font-medium text-slate-900">Managers & HR Directory</h4>
+                  <p className="text-xs text-slate-500 mt-0.5">Quickly provision new leadership roles</p>
                 </div>
               </div>
               <UserPlus className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            </div>
-            
-            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:border-slate-300 transition-colors flex items-center justify-between cursor-pointer group" onClick={() => { setDrawerRole('HR'); setIsAddDrawerOpen(true); }}>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-slate-50 border border-slate-100 rounded flex items-center justify-center text-slate-600">
-                  <Shield className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-slate-900">Add HR</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Provision new HR personnel</p>
-                </div>
-              </div>
-              <UserPlus className="w-5 h-5 text-slate-400 group-hover:text-slate-600" />
-            </div>
-            <div className="bg-white p-5 rounded-lg border border-slate-200 shadow-sm hover:border-slate-300 transition-colors flex items-center justify-between cursor-pointer group" onClick={() => setIsImportModalOpen(true)}>
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 bg-emerald-50 border border-emerald-100 rounded flex items-center justify-center text-emerald-600">
-                  <FileText className="w-5 h-5" />
-                </div>
-                <div>
-                  <h4 className="text-sm font-medium text-slate-900">Import Employees (CSV)</h4>
-                  <p className="text-xs text-slate-500 mt-0.5">Bulk upload personnel data</p>
-                </div>
-              </div>
-              <ArrowRight className="w-5 h-5 text-slate-400 group-hover:text-emerald-600" />
             </div>
           </div>
         </div>
@@ -461,12 +417,6 @@ export const AdminCommandCenter = ({ user }) => {
         </div>
       )}
 
-            <CsvImportModal 
-        isOpen={isImportModalOpen} 
-        onClose={() => setIsImportModalOpen(false)} 
-        onSuccess={fetchDashboardData} 
-      />
-
       {/* Quick Add Person Drawer */}
       <PersonDrawer
         isOpen={isAddDrawerOpen}
@@ -475,7 +425,7 @@ export const AdminCommandCenter = ({ user }) => {
         onSuccess={() => {
           setIsAddDrawerOpen(false);
           fetchDashboardData();
-          setActionMessage({ type: 'success', text: `New ${drawerRole.toLowerCase()} added successfully!` });
+          setActionMessage({ type: 'success', text: \`New \${drawerRole.toLowerCase()} added successfully!\` });
           setTimeout(() => setActionMessage(null), 3500);
         }}
       />
@@ -484,3 +434,7 @@ export const AdminCommandCenter = ({ user }) => {
 };
 
 export default AdminCommandCenter;
+`;
+
+fs.writeFileSync(path, newContent, 'utf8');
+console.log('Successfully redesigned AdminCommandCenter.jsx');

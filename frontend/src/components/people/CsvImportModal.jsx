@@ -1,254 +1,277 @@
 import React, { useState } from 'react';
-import {
-  X, Upload, Download, CheckCircle2, AlertTriangle,
-  FileSpreadsheet, AlertCircle, ArrowRight
-} from 'lucide-react';
+import { X, Upload, Download, CheckCircle2, AlertTriangle, FileSpreadsheet } from 'lucide-react';
+import Papa from 'papaparse';
 import api from '../../api/axios';
 
-export const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
-  const [csvText, setCsvText] = useState('');
-  const [parsedRows, setParsedRows] = useState([]);
-  const [parseErrors, setParseErrors] = useState([]);
-  const [submitting, setSubmitting] = useState(false);
+const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
+  const [step, setStep] = useState('UPLOAD'); // UPLOAD -> PREVIEW -> RESULT
+  const [file, setFile] = useState(null);
+  const [parsedData, setParsedData] = useState([]);
+  const [isValidating, setIsValidating] = useState(false);
+  const [validationErrors, setValidationErrors] = useState([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  // Results from backend
   const [importResult, setImportResult] = useState(null);
 
   if (!isOpen) return null;
 
-  // Download sample CSV template
   const handleDownloadTemplate = () => {
-    const csvContent =
-      'First Name,Last Name,Email,Role,Department,Designation,Phone,Salary\n' +
-      'Aarav,Sharma,aarav.sharma@company.com,EMPLOYEE,Engineering,Full Stack Developer,+91 9876543210,850000\n' +
-      'Priya,Patel,priya.patel@company.com,MANAGER,Engineering,Engineering Lead,+91 9876543211,1400000\n' +
-      'Rohan,Mehta,rohan.mehta@company.com,HR,Human Resources,People Partner,+91 9876543212,900000\n';
-
-    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute('download', 'hrms_employee_import_template.csv');
+    const headers = ['firstName', 'lastName', 'email', 'department', 'role', 'designation', 'joiningDate', 'employmentType', 'salary'];
+    const sample = ['Jane', 'Doe', 'jane.doe@company.com', 'Engineering', 'EMPLOYEE', 'Software Engineer', '2026-10-15', 'FULL_TIME', '80000'];
+    
+    const csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n" + sample.join(",");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "employee_import_template.csv");
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
   };
 
-  // Parse CSV string into objects
   const handleFileUpload = (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const text = event.target?.result;
-      if (typeof text === 'string') {
-        setCsvText(text);
-        parseCsv(text);
+    const uploadedFile = e.target.files[0];
+    if (!uploadedFile) return;
+    setFile(uploadedFile);
+    
+    setIsValidating(true);
+    Papa.parse(uploadedFile, {
+      header: true,
+      skipEmptyLines: true,
+      complete: (results) => {
+        const rows = results.data;
+        const errors = [];
+        
+        // Basic frontend validation
+        rows.forEach((row, idx) => {
+          if (!row.firstName || !row.lastName || !row.email) {
+            errors.push({ row: idx + 1, error: 'Missing required fields (firstName, lastName, email)' });
+          }
+          if (row.email && !/^\\S+@\\S+\\.\\S+$/.test(row.email)) {
+            errors.push({ row: idx + 1, error: 'Invalid email format' });
+          }
+        });
+        
+        setParsedData(rows);
+        setValidationErrors(errors);
+        setIsValidating(false);
+        setStep('PREVIEW');
+      },
+      error: (err) => {
+        setValidationErrors([{ row: 0, error: 'Failed to parse CSV: ' + err.message }]);
+        setIsValidating(false);
+        setStep('PREVIEW');
       }
-    };
-    reader.readAsText(file);
+    });
   };
 
-  const parseCsv = (rawText) => {
-    setParseErrors([]);
-    setImportResult(null);
-
-    const lines = rawText.trim().split(/\r?\n/).filter(line => line.trim().length > 0);
-    if (lines.length < 2) {
-      setParseErrors(['CSV must have a header row and at least one data record.']);
-      setParsedRows([]);
-      return;
-    }
-
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/\s+/g, ''));
-    const rows = [];
-    const errors = [];
-
-    for (let i = 1; i < lines.length; i++) {
-      const values = lines[i].split(',').map(v => v.trim());
-      if (values.length < 3) {
-        errors.push(`Row #${i + 1}: Incomplete row data.`);
-        continue;
-      }
-
-      const rowObj = {
-        firstName: values[0] || '',
-        lastName: values[1] || '',
-        email: values[2] || '',
-        role: values[3] || 'EMPLOYEE',
-        department: values[4] || 'Engineering',
-        designation: values[5] || 'Specialist',
-        phone: values[6] || '',
-        salary: values[7] || '0',
-      };
-
-      if (!rowObj.email || !rowObj.firstName) {
-        errors.push(`Row #${i + 1}: Missing First Name or Email.`);
-      }
-
-      rows.push(rowObj);
-    }
-
-    setParsedRows(rows);
-    setParseErrors(errors);
-  };
-
-  const handleExecuteImport = async () => {
-    if (parsedRows.length === 0) return;
-    setSubmitting(true);
-    setImportResult(null);
-
+  const handleConfirmImport = async () => {
+    setIsSubmitting(true);
     try {
-      const res = await api.post('/employees/bulk-import', { employees: parsedRows });
+      const res = await api.post('/employees/bulk-import', { employees: parsedData });
       if (res.data?.success) {
         setImportResult(res.data.data);
-        onSuccess();
+        setStep('RESULT');
       }
     } catch (err) {
-      setParseErrors([err.response?.data?.message || err.message || 'Import failed.']);
+      setImportResult({
+        createdCount: 0,
+        errorCount: parsedData.length,
+        errors: [{ row: 0, error: err.response?.data?.message || err.message }]
+      });
+      setStep('RESULT');
     } finally {
-      setSubmitting(false);
+      setIsSubmitting(false);
     }
+  };
+
+  const handleDownloadErrorReport = () => {
+    if (!importResult?.errors?.length) return;
+    const headers = ['Row', 'Email', 'Error'];
+    const rows = importResult.errors.map(err => [err.row || '-', err.email || '-', err.error]);
+    
+    let csvContent = "data:text/csv;charset=utf-8," + headers.join(",") + "\n";
+    rows.forEach(row => {
+      csvContent += row.map(v => `"${(v||'').toString().replace(/"/g, '""')}"`).join(",") + "\n";
+    });
+    
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "import_errors.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+
+  const handleReset = () => {
+    setStep('UPLOAD');
+    setFile(null);
+    setParsedData([]);
+    setValidationErrors([]);
+    setImportResult(null);
   };
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 sm:p-6 animate-in fade-in duration-200">
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-8 max-w-3xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between pb-5 border-b border-slate-100 dark:border-slate-800">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-              <FileSpreadsheet className="w-5 h-5" />
-            </div>
-            <div>
-              <h2 className="text-xl font-black text-slate-900 dark:text-white m-0">Bulk Personnel Import</h2>
-              <p className="text-xs text-slate-500 dark:text-slate-400 m-0">Onboard multiple employees, managers, and HR team members from CSV</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 dark:hover:text-white rounded-xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] flex flex-col">
+        <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between">
+          <h2 className="text-lg font-semibold text-slate-900">Bulk Import Employees</h2>
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        {/* Body */}
-        <div className="overflow-y-auto flex-1 py-5 space-y-5">
-          {/* Action Row: Download Template */}
-          <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200 dark:border-slate-800 flex items-center justify-between gap-4">
-            <div>
-              <div className="text-xs font-bold text-slate-900 dark:text-white">Need the correct column format?</div>
-              <div className="text-[11px] text-slate-500">Download the pre-structured Excel/CSV template with demo headers.</div>
-            </div>
-            <button
-              onClick={handleDownloadTemplate}
-              className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white dark:bg-slate-700 border border-slate-200 dark:border-slate-600 text-xs font-bold hover:border-emerald-500 transition-colors cursor-pointer"
-            >
-              <Download className="w-3.5 h-3.5 text-emerald-500" />
-              <span>Download Template</span>
-            </button>
-          </div>
-
-          {/* Upload Area */}
-          <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 text-center hover:border-sky-500 transition-colors">
-            <input
-              type="file"
-              accept=".csv"
-              onChange={handleFileUpload}
-              className="hidden"
-              id="csv-file-input"
-            />
-            <label htmlFor="csv-file-input" className="cursor-pointer block">
-              <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
-              <span className="text-xs font-bold text-sky-500 block mb-1">Click to select CSV file</span>
-              <span className="text-[11px] text-slate-400">Supports comma-separated UTF-8 values</span>
-            </label>
-          </div>
-
-          {/* Parse Errors */}
-          {parseErrors.length > 0 && (
-            <div className="p-3.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-600 dark:text-rose-400 text-xs space-y-1">
-              <div className="font-bold flex items-center gap-1.5">
-                <AlertCircle className="w-4 h-4" />
-                <span>Validation Notices:</span>
+        <div className="p-6 overflow-y-auto flex-1">
+          {step === 'UPLOAD' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center p-4 bg-slate-50 border border-slate-200 rounded-lg">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white rounded shadow-sm border border-slate-200">
+                    <FileSpreadsheet className="w-5 h-5 text-emerald-600" />
+                  </div>
+                  <div>
+                    <h3 className="text-sm font-medium text-slate-900">Download Template</h3>
+                    <p className="text-xs text-slate-500">Use this CSV template to format your data.</p>
+                  </div>
+                </div>
+                <button onClick={handleDownloadTemplate} className="text-sm font-medium text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                  <Download className="w-4 h-4" /> Template
+                </button>
               </div>
-              <ul className="list-disc pl-5 m-0 space-y-0.5">
-                {parseErrors.map((err, i) => <li key={i}>{err}</li>)}
-              </ul>
+
+              <div className="border-2 border-dashed border-slate-300 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-slate-50 transition-colors">
+                <Upload className="w-8 h-8 text-slate-400 mb-3" />
+                <p className="text-sm font-medium text-slate-900 mb-1">Click to upload CSV</p>
+                <p className="text-xs text-slate-500 mb-4">Maximum 500 records recommended.</p>
+                <label className="cursor-pointer bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                  Select File
+                  <input type="file" accept=".csv" className="hidden" onChange={handleFileUpload} />
+                </label>
+              </div>
             </div>
           )}
 
-          {/* Preview Table */}
-          {parsedRows.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-bold text-slate-900 dark:text-white">
-                  Preview ({parsedRows.length} records parsed)
+          {step === 'PREVIEW' && (
+            <div className="space-y-4">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold text-slate-900">Data Preview</h3>
+                <span className="text-xs font-medium bg-slate-100 text-slate-600 px-2 py-1 rounded">
+                  {parsedData.length} Records
                 </span>
               </div>
-              <div className="rounded-xl border border-slate-200 dark:border-slate-800 overflow-x-auto max-h-56">
-                <table className="w-full text-left text-xs border-collapse">
-                  <thead className="bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-bold sticky top-0">
+              
+              {validationErrors.length > 0 && (
+                <div className="p-3 bg-red-50 border border-red-200 rounded-lg flex gap-3">
+                  <AlertTriangle className="w-5 h-5 text-red-600 shrink-0" />
+                  <div>
+                    <h4 className="text-sm font-medium text-red-800">Validation Errors Found ({validationErrors.length})</h4>
+                    <ul className="text-xs text-red-700 mt-1 space-y-0.5 list-disc pl-4">
+                      {validationErrors.slice(0, 3).map((err, i) => (
+                        <li key={i}>Row {err.row}: {err.error}</li>
+                      ))}
+                      {validationErrors.length > 3 && <li>...and {validationErrors.length - 3} more</li>}
+                    </ul>
+                  </div>
+                </div>
+              )}
+
+              <div className="border border-slate-200 rounded-lg overflow-x-auto">
+                <table className="w-full text-left text-sm whitespace-nowrap">
+                  <thead className="bg-slate-50 border-b border-slate-200">
                     <tr>
-                      <th className="p-2.5">Name</th>
-                      <th className="p-2.5">Email</th>
-                      <th className="p-2.5">Role</th>
-                      <th className="p-2.5">Department</th>
-                      <th className="p-2.5">Designation</th>
+                      <th className="px-4 py-3 font-medium text-slate-500">Name</th>
+                      <th className="px-4 py-3 font-medium text-slate-500">Email</th>
+                      <th className="px-4 py-3 font-medium text-slate-500">Role</th>
+                      <th className="px-4 py-3 font-medium text-slate-500">Department</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-                    {parsedRows.map((r, i) => (
-                      <tr key={i} className="hover:bg-slate-50 dark:hover:bg-slate-800/40">
-                        <td className="p-2.5 font-semibold">{r.firstName} {r.lastName}</td>
-                        <td className="p-2.5 text-slate-500 font-mono text-[11px]">{r.email}</td>
-                        <td className="p-2.5"><span className="px-1.5 py-0.5 rounded text-[10px] font-bold bg-slate-100 dark:bg-slate-800">{r.role}</span></td>
-                        <td className="p-2.5">{r.department}</td>
-                        <td className="p-2.5">{r.designation}</td>
+                  <tbody className="divide-y divide-slate-100">
+                    {parsedData.slice(0, 5).map((row, i) => (
+                      <tr key={i}>
+                        <td className="px-4 py-3 text-slate-900">{row.firstName} {row.lastName}</td>
+                        <td className="px-4 py-3 text-slate-500">{row.email}</td>
+                        <td className="px-4 py-3 text-slate-500">{row.role}</td>
+                        <td className="px-4 py-3 text-slate-500">{row.department}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
+                {parsedData.length > 5 && (
+                  <div className="px-4 py-2 bg-slate-50 text-xs text-center text-slate-500 border-t border-slate-100">
+                    Showing 5 of {parsedData.length} records
+                  </div>
+                )}
               </div>
             </div>
           )}
 
-          {/* Import Result Feedback */}
-          {importResult && (
-            <div className="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 space-y-2">
-              <div className="font-bold flex items-center gap-2">
-                <CheckCircle2 className="w-5 h-5" />
-                <span>Import Finished: {importResult.createdCount} accounts provisioned successfully!</span>
+          {step === 'RESULT' && importResult && (
+            <div className="space-y-6 text-center py-4">
+              <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto">
+                {importResult.errorCount === 0 ? (
+                  <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+                ) : importResult.createdCount > 0 ? (
+                  <AlertTriangle className="w-8 h-8 text-amber-500" />
+                ) : (
+                  <X className="w-8 h-8 text-red-500" />
+                )}
               </div>
-              {importResult.errorCount > 0 && (
-                <div className="text-xs text-rose-500 mt-1">
-                  {importResult.errorCount} records were skipped due to conflicts or duplicate emails.
+              
+              <div>
+                <h3 className="text-lg font-semibold text-slate-900">Import Complete</h3>
+                <p className="text-sm text-slate-500 mt-1">Processed {importResult.createdCount + importResult.errorCount} total records.</p>
+              </div>
+
+              <div className="flex justify-center gap-6">
+                <div className="text-center">
+                  <span className="block text-2xl font-semibold text-emerald-600">{importResult.createdCount}</span>
+                  <span className="text-xs text-slate-500 font-medium">Imported</span>
                 </div>
-              )}
+                <div className="text-center">
+                  <span className="block text-2xl font-semibold text-red-600">{importResult.errorCount}</span>
+                  <span className="text-xs text-slate-500 font-medium">Failed/Skipped</span>
+                </div>
+              </div>
             </div>
           )}
         </div>
 
-        {/* Footer */}
-        <div className="pt-4 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
-          <button
-            onClick={onClose}
-            className="px-4 py-2 rounded-xl border border-slate-200 dark:border-slate-700 text-xs font-bold text-slate-600 dark:text-slate-300"
-          >
-            Close
-          </button>
+        <div className="px-6 py-4 border-t border-slate-200 bg-slate-50 rounded-b-xl flex justify-end gap-3">
+          {step === 'UPLOAD' && (
+            <button onClick={onClose} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors">
+              Cancel
+            </button>
+          )}
+          
+          {step === 'PREVIEW' && (
+            <>
+              <button onClick={handleReset} className="px-4 py-2 text-sm font-medium text-slate-700 bg-white border border-slate-300 rounded-lg hover:bg-slate-50 transition-colors" disabled={isSubmitting}>
+                Back
+              </button>
+              <button 
+                onClick={handleConfirmImport} 
+                disabled={isSubmitting || parsedData.length === 0}
+                className="px-4 py-2 text-sm font-medium text-white bg-slate-900 border border-transparent rounded-lg hover:bg-slate-800 transition-colors disabled:opacity-50"
+              >
+                {isSubmitting ? 'Importing...' : 'Confirm Import'}
+              </button>
+            </>
+          )}
 
-          <button
-            onClick={handleExecuteImport}
-            disabled={submitting || parsedRows.length === 0}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/25 transition-all cursor-pointer disabled:opacity-50"
-          >
-            {submitting ? (
-              <span>Importing {parsedRows.length} records...</span>
-            ) : (
-              <>
-                <span>Import {parsedRows.length} Personnel</span>
-                <ArrowRight className="w-4 h-4" />
-              </>
-            )}
-          </button>
+          {step === 'RESULT' && (
+            <>
+              {importResult?.errorCount > 0 && (
+                <button onClick={handleDownloadErrorReport} className="px-4 py-2 text-sm font-medium text-red-700 bg-white border border-red-200 rounded-lg hover:bg-red-50 transition-colors flex items-center gap-2">
+                  <Download className="w-4 h-4" /> Download Error Report
+                </button>
+              )}
+              <button onClick={() => { onSuccess(); onClose(); }} className="px-4 py-2 text-sm font-medium text-white bg-slate-900 rounded-lg hover:bg-slate-800 transition-colors">
+                Done
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

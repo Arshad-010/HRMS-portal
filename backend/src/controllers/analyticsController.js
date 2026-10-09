@@ -85,6 +85,20 @@ export const getAnalyticsOverview = async (req, res) => {
       ...empFilter,
       joiningDate: { $gte: monthStart }
     });
+    
+    const date7D = new Date(today);
+    date7D.setDate(date7D.getDate() - 7);
+    const newJoiners7D = await Employee.countDocuments({
+      ...empFilter,
+      joiningDate: { $gte: date7D }
+    });
+    
+    const date30D = new Date(today);
+    date30D.setDate(date30D.getDate() - 30);
+    const newJoiners30D = await Employee.countDocuments({
+      ...empFilter,
+      joiningDate: { $gte: date30D }
+    });
 
     const resignedCount = await Employee.countDocuments({ status: 'RESIGNED' });
     const attritionRate = totalEmployees > 0 
@@ -193,6 +207,8 @@ export const getAnalyticsOverview = async (req, res) => {
           activeTasks: { value: activeTasks, trend: 8.3, sparkline: [24, 28, 30, 35, 32, 38, activeTasks] },
           avgPerformanceScore: { value: `${avgPerformanceScore}/100`, trend: 3.5, sparkline: [76, 78, 79, 81, 80, 83, avgPerformanceScore] },
           newJoiners: { value: newJoiners, trend: 20.0, sparkline: [1, 2, 3, 2, 4, 5, newJoiners] },
+          newJoiners7D: { value: newJoiners7D, trend: 15.0 },
+          newJoiners30D: { value: newJoiners30D, trend: 10.0 },
           attritionRate: { value: `${attritionRate}%`, trend: -0.8, isPositiveGood: false, sparkline: [4.2, 4.0, 3.8, 3.6, 3.5, 3.2, attritionRate] },
         },
         roleDistribution: {
