@@ -132,7 +132,7 @@ export const TwoFactorAuth = () => {
   };
 
   if (loading && status === 'idle' && !message.text) {
-    return <div className="p-4 text-sm text-slate-500">Checking security status...</div>;
+    return <div className="p-4 text-sm text-slate-500 dark:text-slate-400">Checking security status...</div>;
   }
 
   return (
@@ -148,11 +148,11 @@ export const TwoFactorAuth = () => {
       </div>
 
       {message.text && (
-        <div className={\`mb-6 p-3 rounded-xl border text-xs flex items-start gap-2 \${
+        <div className={`mb-6 p-3 rounded-xl border text-xs flex items-start gap-2 ${
           message.type === 'success' 
             ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-600 dark:text-emerald-300'
             : 'bg-rose-500/10 border-rose-500/20 text-rose-600 dark:text-rose-300'
-        }\`}>
+        }`}>
           {message.type === 'error' && <AlertTriangle className="w-4 h-4 shrink-0" />}
           <span>{message.text}</span>
         </div>
@@ -167,7 +167,7 @@ export const TwoFactorAuth = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-900 dark:text-white">Two-Factor Authentication is <span className="text-rose-500">Disabled</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">We highly recommend enabling 2FA to secure your HRMS Portal access.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">We highly recommend enabling 2FA to secure your HRMS Portal access.</p>
             </div>
           </div>
           <button
@@ -192,7 +192,7 @@ export const TwoFactorAuth = () => {
             <div className="space-y-4">
               <div>
                 <h4 className="text-sm font-semibold text-slate-900 dark:text-white">1. Scan QR Code</h4>
-                <p className="text-xs text-slate-500 mt-1">Open your authenticator app (e.g. Google Authenticator, Authy) and scan the QR code.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Open your authenticator app (e.g. Google Authenticator, Authy) and scan the QR code.</p>
               </div>
               
               <div>
@@ -227,7 +227,7 @@ export const TwoFactorAuth = () => {
             <button 
               type="button" 
               onClick={() => { setStatus('idle'); setQrCodeUrl(''); setManualKey(''); setSetupCode(''); }}
-              className="mt-3 text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 transition"
+              className="mt-3 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition"
             >
               Cancel enrollment
             </button>
@@ -244,7 +244,7 @@ export const TwoFactorAuth = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-slate-900 dark:text-white">Two-Factor Authentication is <span className="text-emerald-500">Enabled</span></p>
-              <p className="text-xs text-slate-500 mt-0.5">Your account is secured with an additional verification step.</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">Your account is secured with an additional verification step.</p>
             </div>
           </div>
 

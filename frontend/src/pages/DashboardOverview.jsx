@@ -121,7 +121,7 @@ const EmployeePortalDashboard = ({ user }) => {
                 {loading ? (
                   <div className="animate-pulse w-48 h-48 rounded-full bg-slate-100 dark:bg-slate-800"></div>
                 ) : taskChartData.length === 0 ? (
-                  <p className="text-sm text-slate-500 italic">No task data available.</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 italic">No task data available.</p>
                 ) : (
                   <ResponsiveContainer width="100%" height={250}>
                     <PieChart>
@@ -151,13 +151,13 @@ const EmployeePortalDashboard = ({ user }) => {
                       {dashboardData.notifications.unread} unread
                     </span>
                   ) : (
-                    <span className="text-[11px] text-slate-500">All caught up</span>
+                    <span className="text-[11px] text-slate-500 dark:text-slate-400">All caught up</span>
                   )}
                 </div>
                 <div className="mt-4 space-y-2.5">
                   <div className="flex flex-col items-center justify-center py-6">
-                    <Bell className="w-8 h-8 text-slate-300 dark:text-slate-700 mb-2" />
-                    <p className="text-xs text-slate-500 text-center">See Notifications page for full history</p>
+                    <Bell className="w-8 h-8 text-slate-300 dark:text-slate-600 dark:text-slate-400 mb-2" />
+                    <p className="text-xs text-slate-500 dark:text-slate-400 text-center">See Notifications page for full history</p>
                   </div>
                 </div>
               </div>

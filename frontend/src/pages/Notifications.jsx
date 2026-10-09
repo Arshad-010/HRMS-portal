@@ -289,7 +289,7 @@ export const Notifications = () => {
                         NEW
                       </span>
                     )}
-                    <span className="text-[10px] font-mono text-slate-500">
+                    <span className="text-[10px] font-mono text-slate-500 dark:text-slate-400">
                       &bull; {new Date(notif.createdAt).toLocaleString()}
                     </span>
                   </div>
@@ -305,7 +305,7 @@ export const Notifications = () => {
                       </span>
                     )}
                     {notif.isRead && notif.readAt && (
-                      <span className="text-[10px] text-slate-500">
+                      <span className="text-[10px] text-slate-500 dark:text-slate-400">
                         Read {new Date(notif.readAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </span>
                     )}

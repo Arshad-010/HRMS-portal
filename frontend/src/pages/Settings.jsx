@@ -99,6 +99,9 @@ export const Settings = () => {
         </div>
 
         {/* 2FA Section */}
+        <div style={{ padding: '20px', background: 'red', color: 'white', fontWeight: 'bold' }}>
+          DEBUG: 2FA Section should appear below this box
+        </div>
         <TwoFactorAuth />
       </div>
     </div>

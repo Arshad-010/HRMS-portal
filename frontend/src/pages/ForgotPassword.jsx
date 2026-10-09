@@ -67,7 +67,7 @@ const ForgotPassword = () => {
               Email Address
             </label>
             <div className="relative">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 dark:text-slate-400">
                 <Mail className="w-4 h-4" />
               </div>
               <input
@@ -102,7 +102,7 @@ const ForgotPassword = () => {
           <button
             type="button"
             onClick={() => navigate('/login')}
-            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-300 transition-colors cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             Back to Login

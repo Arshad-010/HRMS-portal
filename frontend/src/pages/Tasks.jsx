@@ -547,31 +547,31 @@ export const Tasks = () => {
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total Tasks</span>
           <p className="text-2xl font-bold text-slate-900 dark:text-white mt-1.5">{stats.total}</p>
-          <span className="text-[10px] text-slate-500">In current scope</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">In current scope</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">To Do</span>
           <p className="text-2xl font-bold text-slate-700 dark:text-slate-300 mt-1.5">{stats.todo}</p>
-          <span className="text-[10px] text-slate-500">Awaiting start</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">Awaiting start</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-sky-400">In Progress</span>
           <p className="text-2xl font-bold text-sky-400 mt-1.5">{stats.inProgress}</p>
-          <span className="text-[10px] text-slate-500">Active execution</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">Active execution</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-purple-400">In Review</span>
           <p className="text-2xl font-bold text-purple-400 mt-1.5">{stats.review}</p>
-          <span className="text-[10px] text-slate-500">Pending review</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">Pending review</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <span className="text-[11px] font-semibold uppercase tracking-wider text-emerald-400">Completed</span>
           <p className="text-2xl font-bold text-emerald-400 mt-1.5">{stats.completed}</p>
-          <span className="text-[10px] text-slate-500">Successfully closed</span>
+          <span className="text-[10px] text-slate-500 dark:text-slate-400">Successfully closed</span>
         </div>
 
         <div className="bg-white dark:bg-slate-900 border border-rose-500/20 bg-rose-500/5 rounded-2xl p-4 backdrop-blur-sm">
@@ -631,7 +631,7 @@ export const Tasks = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
             {/* Search */}
             <div className="relative">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
+              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500 dark:text-slate-400" />
               <input
                 type="text"
                 placeholder="Search title, description..."
@@ -730,10 +730,10 @@ export const Tasks = () => {
               </button>
             </div>
           ) : tasks.length === 0 ? (
-            <div className="p-16 text-center text-slate-500 text-xs">
-              <CheckSquare className="w-10 h-10 mx-auto text-slate-600 mb-2 opacity-50" />
+            <div className="p-16 text-center text-slate-500 dark:text-slate-400 text-xs">
+              <CheckSquare className="w-10 h-10 mx-auto text-slate-600 dark:text-slate-400 mb-2 opacity-50" />
               <p className="font-semibold text-slate-500 dark:text-slate-400">No tasks found</p>
-              <p className="mt-1 text-slate-500">
+              <p className="mt-1 text-slate-500 dark:text-slate-400">
                 {search || filterStatus || filterPriority || filterDept || filterOverdue
                   ? 'No tasks match your selected filter criteria'
                   : 'All caught up! No tasks currently assigned.'}
@@ -786,7 +786,7 @@ export const Tasks = () => {
                             <>
                               <span>•</span>
                               <span className="flex items-center gap-1">
-                                <Clock className="w-3 h-3 text-slate-500" />
+                                <Clock className="w-3 h-3 text-slate-500 dark:text-slate-400" />
                                 {task.estimatedHours}h est.
                               </span>
                             </>
@@ -806,7 +806,7 @@ export const Tasks = () => {
                                 ? `${task.assignedTo.firstName} ${task.assignedTo.lastName}`
                                 : 'Unassigned'}
                             </p>
-                            <p className="text-[10px] text-slate-500 font-mono m-0">
+                            <p className="text-[10px] text-slate-500 dark:text-slate-400 font-mono m-0">
                               {task.assignedTo?.employeeCode || ''}
                             </p>
                           </div>
@@ -1414,7 +1414,7 @@ export const Tasks = () => {
 
             <div className="grid grid-cols-2 gap-3 text-xs mb-4">
               <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-[10px] uppercase font-semibold text-slate-500">Assignee</span>
+                <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Assignee</span>
                 <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.assignedTo?.firstName
                     ? `${selectedTask.assignedTo.firstName} ${selectedTask.assignedTo.lastName}`
@@ -1426,7 +1426,7 @@ export const Tasks = () => {
               </div>
 
               <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-[10px] uppercase font-semibold text-slate-500">Department</span>
+                <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Department</span>
                 <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.department?.name || 'N/A'}
                 </p>
@@ -1436,7 +1436,7 @@ export const Tasks = () => {
               </div>
 
               <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-[10px] uppercase font-semibold text-slate-500">Due Date</span>
+                <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Due Date</span>
                 <p
                   className={`font-semibold mt-0.5 ${
                     selectedTask.isOverdue ? 'text-rose-400' : 'text-slate-800 dark:text-slate-200'
@@ -1447,7 +1447,7 @@ export const Tasks = () => {
               </div>
 
               <div className="bg-slate-50 dark:bg-slate-950 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800">
-                <span className="text-[10px] uppercase font-semibold text-slate-500">Estimated Effort</span>
+                <span className="text-[10px] uppercase font-semibold text-slate-500 dark:text-slate-400">Estimated Effort</span>
                 <p className="font-semibold text-slate-800 dark:text-slate-200 mt-0.5">
                   {selectedTask.estimatedHours || 0} hours
                 </p>

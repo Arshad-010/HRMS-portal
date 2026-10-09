@@ -379,9 +379,9 @@ export const Activity = () => {
               ) : logs.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 dark:text-slate-400">
-                    <History className="w-8 h-8 text-slate-600 mx-auto mb-2" />
+                    <History className="w-8 h-8 text-slate-600 dark:text-slate-400 mx-auto mb-2" />
                     <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-0.5">No Activity Logs Found</p>
-                    <p className="text-[11px] text-slate-500 mb-0">Try clearing active filters or check back later.</p>
+                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-0">Try clearing active filters or check back later.</p>
                   </td>
                 </tr>
               ) : (
@@ -396,7 +396,7 @@ export const Activity = () => {
                       {/* Timestamp */}
                       <td className="py-3.5 px-4 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                         <div>{new Date(log.createdAt).toLocaleDateString()}</div>
-                        <div className="text-[10px] text-slate-500">
+                        <div className="text-[10px] text-slate-500 dark:text-slate-400">
                           {new Date(log.createdAt).toLocaleTimeString()}
                         </div>
                       </td>
@@ -453,7 +453,7 @@ export const Activity = () => {
                             <Eye className="w-4 h-4" />
                           </button>
                         ) : (
-                          <span className="text-slate-600 font-mono text-[11px]">&mdash;</span>
+                          <span className="text-slate-600 dark:text-slate-400 font-mono text-[11px]">&mdash;</span>
                         )}
                       </td>
                     </tr>

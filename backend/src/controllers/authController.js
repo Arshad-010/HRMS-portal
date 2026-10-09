@@ -133,6 +133,7 @@ export const getMe = async (req, res, next) => {
         role: user.role,
         lastLogin: user.lastLogin,
         employee: employeeData,
+        twoFactorEnabled: user.twoFactorEnabled,
       },
     });
   } catch (error) {

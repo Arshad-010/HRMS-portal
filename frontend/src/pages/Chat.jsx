@@ -37,7 +37,7 @@ const Chat = () => {
               className={`py-3.5 text-sm font-semibold whitespace-nowrap border-b-2 transition-colors ${
                 activeRoleTab === tab.id
                   ? 'border-indigo-500 text-indigo-600 dark:text-indigo-400'
-                  : 'border-transparent text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
+                  : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200'
               }`}
             >
               {tab.label}

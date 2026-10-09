@@ -47,6 +47,10 @@ export const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [requires2FA, setRequires2FA] = useState(false);
+  const [challengeToken, setChallengeToken] = useState('');
+  const [twoFactorCode, setTwoFactorCode] = useState('');
+  const [isRecoveryMode, setIsRecoveryMode] = useState(false);
 
   // Target destination after login (or default to /dashboard)
   const from = location.state?.from?.pathname || '/dashboard';
@@ -138,7 +142,7 @@ export const Login = () => {
             className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
               portalType === 'user'
                 ? 'bg-white dark:bg-slate-900 text-indigo-600 dark:text-indigo-400 shadow border border-slate-200/80 dark:border-slate-700'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-white'
             }`}
           >
             <Users className="w-4 h-4" />
@@ -151,7 +155,7 @@ export const Login = () => {
             className={`flex items-center justify-center gap-2 py-2 px-3 rounded-lg text-sm font-bold transition-all cursor-pointer ${
               portalType === 'admin'
                 ? 'bg-indigo-600 text-white shadow shadow-indigo-600/30'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-white'
             }`}
           >
             <Shield className="w-4 h-4" />
@@ -170,14 +174,64 @@ export const Login = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          {requires2FA ? (
+          <div className="space-y-6">
+            <div className="text-center">
+              <div className="mx-auto w-12 h-12 bg-indigo-100 dark:bg-indigo-900/30 rounded-full flex items-center justify-center mb-4">
+                <ShieldCheck className="w-6 h-6 text-indigo-600 dark:text-indigo-400" />
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white">Two-Factor Authentication</h2>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mt-2">
+                {isRecoveryMode 
+                  ? "Enter one of your emergency recovery codes."
+                  : "Enter the 6-digit code from your authenticator app."}
+              </p>
+            </div>
+
+            <form onSubmit={handle2FASubmit} className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  placeholder={isRecoveryMode ? "Recovery Code (e.g., a1b2-c3d4)" : "6-Digit Code"}
+                  value={twoFactorCode}
+                  onChange={(e) => setTwoFactorCode(isRecoveryMode ? e.target.value : e.target.value.replace(/\D/g, ''))}
+                  maxLength={isRecoveryMode ? 20 : 6}
+                  required
+                  autoFocus
+                  className="w-full text-center tracking-widest text-lg px-4 py-3 bg-white dark:bg-slate-950 border border-slate-300 dark:border-slate-700 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/20 rounded-xl outline-none transition-all shadow-sm text-slate-900 dark:text-white"
+                />
+              </div>
+              
+              <button
+                type="submit"
+                disabled={submitting || (!isRecoveryMode && twoFactorCode.length !== 6)}
+                className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-indigo-600 hover:bg-indigo-500 text-white text-sm font-bold rounded-xl transition-all disabled:opacity-50 cursor-pointer shadow-md shadow-indigo-600/25"
+              >
+                {submitting ? 'Verifying...' : 'Verify Code'}
+                {!submitting && <ArrowRight className="w-4 h-4" />}
+              </button>
+            </form>
+            
+            <div className="text-center">
+              <button 
+                type="button"
+                onClick={() => { setIsRecoveryMode(!isRecoveryMode); setTwoFactorCode(''); setErrorMessage(''); }}
+                className="text-sm text-indigo-600 hover:text-indigo-800 dark:text-indigo-400 dark:hover:text-indigo-300 font-semibold transition-colors cursor-pointer"
+              >
+                {isRecoveryMode ? 'Use Authenticator App instead' : 'Lost access to your authenticator?'}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <>
+<form onSubmit={handleSubmit} className="space-y-4">
             {/* Email Field */}
             <div>
               <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5" htmlFor="email">
                 Work Email Address
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 dark:text-slate-400">
                   <Mail className="w-4 h-4" />
                 </div>
                 <input
@@ -207,7 +261,7 @@ export const Login = () => {
                 </button>
               </div>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 dark:text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -261,7 +315,7 @@ export const Login = () => {
           {/* Divider */}
           <div className="mt-5 relative flex items-center">
             <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
-            <span className="flex-shrink-0 mx-4 text-xs text-slate-400 dark:text-slate-500 uppercase tracking-widest">or continue with</span>
+            <span className="flex-shrink-0 mx-4 text-xs text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest">or continue with</span>
             <div className="flex-grow border-t border-slate-200 dark:border-slate-800"></div>
           </div>
 
@@ -287,6 +341,8 @@ export const Login = () => {
               <span>Continue with Google</span>
             </button>
           </div>
+          </>
+        )}
 
 
         </div>

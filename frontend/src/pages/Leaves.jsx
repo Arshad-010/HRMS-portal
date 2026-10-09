@@ -453,7 +453,7 @@ export const Leaves = () => {
               <span className="text-2xl font-bold text-slate-900 dark:text-white">{balances.casual ?? 0}</span>
               <span className="text-xs text-slate-500 dark:text-slate-400"> days left</span>
             </div>
-            <span className="text-[11px] text-slate-500">Used: {usedBalances.casual ?? 0}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.casual ?? 0}</span>
           </div>
           <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
             <div
@@ -481,7 +481,7 @@ export const Leaves = () => {
               <span className="text-2xl font-bold text-slate-900 dark:text-white">{balances.sick ?? 0}</span>
               <span className="text-xs text-slate-500 dark:text-slate-400"> days left</span>
             </div>
-            <span className="text-[11px] text-slate-500">Used: {usedBalances.sick ?? 0}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.sick ?? 0}</span>
           </div>
           <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
             <div
@@ -509,7 +509,7 @@ export const Leaves = () => {
               <span className="text-2xl font-bold text-slate-900 dark:text-white">{balances.earned ?? balances.paid ?? 0}</span>
               <span className="text-xs text-slate-500 dark:text-slate-400"> days left</span>
             </div>
-            <span className="text-[11px] text-slate-500">Used: {usedBalances.earned ?? 0}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.earned ?? 0}</span>
           </div>
           <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
             <div
@@ -539,7 +539,7 @@ export const Leaves = () => {
               <span className="text-2xl font-bold text-slate-900 dark:text-white">{balances.other ?? 0}</span>
               <span className="text-xs text-slate-500 dark:text-slate-400"> days left</span>
             </div>
-            <span className="text-[11px] text-slate-500">Used: {usedBalances.other ?? 0}</span>
+            <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.other ?? 0}</span>
           </div>
           <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
             <div
@@ -567,7 +567,7 @@ export const Leaves = () => {
               <span className="text-2xl font-bold text-slate-900 dark:text-white">{usedBalances.unpaid ?? 0}</span>
               <span className="text-xs text-slate-500 dark:text-slate-400"> days taken</span>
             </div>
-            <span className="text-[10px] text-slate-500">No balance deduction</span>
+            <span className="text-[10px] text-slate-500 dark:text-slate-400">No balance deduction</span>
           </div>
           <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
             <div className="bg-slate-600 h-1.5 rounded-full w-full" />
@@ -671,9 +671,9 @@ export const Leaves = () => {
               </div>
             ) : myLeaves.length === 0 ? (
               <div className="py-16 text-center text-slate-500 dark:text-slate-400">
-                <Calendar className="w-8 h-8 mx-auto text-slate-600 mb-2" />
+                <Calendar className="w-8 h-8 mx-auto text-slate-600 dark:text-slate-400 mb-2" />
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-300">No leave requests found</p>
-                <p className="text-xs text-slate-500 mt-1">
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
                   Click "Apply for Leave" above to submit a new time-off application.
                 </p>
               </div>
@@ -763,7 +763,7 @@ export const Leaves = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
               {/* Employee Search */}
               <div className="relative">
-                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+                <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
                 <input
                   type="text"
                   placeholder="Search name, code..."
@@ -863,7 +863,7 @@ export const Leaves = () => {
                   }}
                   className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
-                <span className="text-slate-500">to</span>
+                <span className="text-slate-500 dark:text-slate-400">to</span>
                 <input
                   type="date"
                   value={queueEndDate}
@@ -886,9 +886,9 @@ export const Leaves = () => {
               </div>
             ) : teamLeaves.length === 0 ? (
               <div className="py-16 text-center text-slate-500 dark:text-slate-400">
-                <Users className="w-8 h-8 mx-auto text-slate-600 mb-2" />
+                <Users className="w-8 h-8 mx-auto text-slate-600 dark:text-slate-400 mb-2" />
                 <p className="text-sm font-medium text-slate-700 dark:text-slate-300">No leave requests matching filter</p>
-                <p className="text-xs text-slate-500 mt-1">Pending approval requests will appear here.</p>
+                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Pending approval requests will appear here.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
@@ -1166,7 +1166,7 @@ export const Leaves = () => {
               {/* Leave Meta Grid */}
               <div className="grid grid-cols-2 gap-3 text-slate-700 dark:text-slate-300">
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Leave Type</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Leave Type</span>
                   <span
                     className={`inline-block mt-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold border ${getTypeBadge(
                       selectedLeave.leaveType
@@ -1177,24 +1177,24 @@ export const Leaves = () => {
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Duration</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Duration</span>
                   <span className="font-semibold text-slate-900 dark:text-white mt-0.5 block">{selectedLeave.numberOfDays} Day(s)</span>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block text-[11px]">Start Date</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">Start Date</span>
                   <span className="font-medium text-slate-800 dark:text-slate-200 mt-0.5 block">{formatDateStr(selectedLeave.startDate)}</span>
                 </div>
 
                 <div>
-                  <span className="text-slate-500 block text-[11px]">End Date</span>
+                  <span className="text-slate-500 dark:text-slate-400 block text-[11px]">End Date</span>
                   <span className="font-medium text-slate-800 dark:text-slate-200 mt-0.5 block">{formatDateStr(selectedLeave.endDate)}</span>
                 </div>
               </div>
 
               {/* Reason */}
               <div>
-                <span className="text-slate-500 block text-[11px] mb-1">Reason for Leave</span>
+                <span className="text-slate-500 dark:text-slate-400 block text-[11px] mb-1">Reason for Leave</span>
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                   {selectedLeave.reason}
                 </div>
@@ -1204,7 +1204,7 @@ export const Leaves = () => {
               {selectedLeave.reviewedBy && (
                 <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-slate-500 text-[11px]">Reviewed By:</span>
+                    <span className="text-slate-500 dark:text-slate-400 text-[11px]">Reviewed By:</span>
                     <span className="font-medium text-slate-900 dark:text-white">
                       {selectedLeave.reviewedBy.firstName} {selectedLeave.reviewedBy.lastName}
                     </span>
@@ -1217,7 +1217,7 @@ export const Leaves = () => {
                   )}
                   {selectedLeave.reviewerComment && (
                     <div className="pt-1.5 border-t border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300">
-                      <span className="text-slate-500 text-[11px] block">Comment:</span>
+                      <span className="text-slate-500 dark:text-slate-400 text-[11px] block">Comment:</span>
                       <p className="mt-0.5 italic text-slate-700 dark:text-slate-300">{selectedLeave.reviewerComment}</p>
                     </div>
                   )}

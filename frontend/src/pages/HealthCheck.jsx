@@ -196,7 +196,7 @@ export const HealthCheck = () => {
             <Globe className="w-4 h-4 text-indigo-400" />
             <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Live Health API Payload (Axios GET /health)</h4>
           </div>
-          <span className="text-xs font-mono text-slate-500">HTTP 200 OK</span>
+          <span className="text-xs font-mono text-slate-500 dark:text-slate-400">HTTP 200 OK</span>
         </div>
 
         {error ? (

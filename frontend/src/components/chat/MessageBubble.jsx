@@ -58,16 +58,16 @@ const MessageBubble = ({ message }) => {
 
   const actionButtons = (
     <div className={`absolute top-0 ${isMine ? 'right-full mr-0' : 'left-full ml-0'} hidden group-hover:flex items-center gap-1 bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-lg p-1 z-10`}>
-      <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-1.5 text-slate-500 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="React">
+      <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="React">
         <Smile className="w-4 h-4" />
       </button>
       {isMine && !message.isDeleted && message.type === 'TEXT' && (
-        <button onClick={() => setIsEditing(true)} className="p-1.5 text-slate-500 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Edit">
+        <button onClick={() => setIsEditing(true)} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Edit">
           <Pencil className="w-4 h-4" />
         </button>
       )}
       {isMine && !message.isDeleted && (
-        <button onClick={handleDelete} className="p-1.5 text-slate-500 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Delete">
+        <button onClick={handleDelete} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-red-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="Delete">
           <Trash2 className="w-4 h-4" />
         </button>
       )}
@@ -90,19 +90,19 @@ const MessageBubble = ({ message }) => {
         
         {/* Avatar for others */}
         {!isMine && (
-          <div className="w-8 h-8 shrink-0 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-500 mb-1">
+          <div className="w-8 h-8 shrink-0 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">
             {senderName?.charAt(0).toUpperCase()}
           </div>
         )}
 
         <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'} relative`}>
-          {!isMine && <span className="text-[10px] text-slate-500 ml-1 mb-1">{senderName}</span>}
+          {!isMine && <span className="text-[10px] text-slate-500 dark:text-slate-400 ml-1 mb-1">{senderName}</span>}
           
           <div className={`relative px-4 py-2.5 shadow-sm ${
             isMine 
               ? 'bg-indigo-600 text-white rounded-2xl rounded-br-sm' 
               : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-sm'
-          } ${message.isDeleted ? 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 shadow-none' : ''}`}>
+          } ${message.isDeleted ? 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 dark:text-slate-400 shadow-none' : ''}`}>
             
             {message.isDeleted ? (
               <p className="text-sm italic flex items-center gap-2">
