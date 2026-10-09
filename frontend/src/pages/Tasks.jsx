@@ -65,6 +65,7 @@ export const Tasks = () => {
 
   // Reference data
   const [departments, setDepartments] = useState([]);
+  const [teams, setTeams] = useState([]);
   const [activeEmployees, setActiveEmployees] = useState([]);
   const [deptEmployees, setDeptEmployees] = useState([]);
 
@@ -76,6 +77,7 @@ export const Tasks = () => {
     title: '',
     description: '',
     department: '',
+    teamId: '',
     assignedTo: '',
     priority: 'MEDIUM',
     dueDate: '',
@@ -93,6 +95,7 @@ export const Tasks = () => {
     title: '',
     description: '',
     department: '',
+    teamId: '',
     assignedTo: '',
     priority: 'MEDIUM',
     dueDate: '',
@@ -110,18 +113,24 @@ export const Tasks = () => {
 
   // Fetch departments & initial reference data
   useEffect(() => {
-    const fetchDepartments = async () => {
+    const fetchDependencies = async () => {
       try {
-        const res = await api.get('/departments');
-        if (res.data?.data) {
-          setDepartments(res.data.data.filter((d) => d.isActive));
+        const [deptRes, teamRes] = await Promise.all([
+          api.get('/departments').catch(() => null),
+          api.get('/teams').catch(() => null) // Or /teams if they have access
+        ]);
+        if (deptRes?.data?.data) {
+          setDepartments(deptRes.data.data.filter((d) => d.isActive));
+        }
+        if (teamRes?.data?.data) {
+          setTeams(teamRes.data.data.filter((t) => t.isActive));
         }
       } catch (err) {
-        console.error('Failed to load departments', err);
+        console.error('Failed to load dependencies', err);
       }
     };
 
-    fetchDepartments();
+    fetchDependencies();
   }, []);
 
   // Fetch tasks
@@ -164,18 +173,45 @@ export const Tasks = () => {
   // Handle department change in Create modal
   const handleCreateDeptChange = async (deptId) => {
     setCreateForm((prev) => ({ ...prev, department: deptId, assignedTo: '' }));
-    if (!deptId) {
+    if (!deptId && !createForm.teamId) {
       setDeptEmployees([]);
       return;
     }
+    fetchEmployeesForSelect(deptId, createForm.teamId);
+  };
+  
+  const handleCreateTeamChange = async (teamId) => {
+    setCreateForm((prev) => ({ ...prev, teamId: teamId, assignedTo: '' }));
+    if (!createForm.department && !teamId) {
+      setDeptEmployees([]);
+      return;
+    }
+    fetchEmployeesForSelect(createForm.department, teamId);
+  };
 
+  const fetchEmployeesForSelect = async (deptId, teamId) => {
     try {
-      const res = await api.get(`/employees?departmentId=${deptId}&status=ACTIVE&limit=100`);
-      if (res.data?.data?.employees) {
-        setDeptEmployees(res.data.data.employees);
+      // If teamId, we can just get team members from the team obj
+      if (teamId) {
+        const team = teams.find(t => t._id === teamId);
+        if (team && team.members) {
+           const memberIds = team.members.map(m => m._id || m).join(',');
+           const res = await api.get(`/employees?ids=${memberIds}&status=ACTIVE&limit=100`);
+           if (res.data?.data?.employees) {
+             setDeptEmployees(res.data.data.employees);
+           }
+           return;
+        }
+      }
+      
+      if (deptId) {
+        const res = await api.get(`/employees?departmentId=${deptId}&status=ACTIVE&limit=100`);
+        if (res.data?.data?.employees) {
+          setDeptEmployees(res.data.data.employees);
+        }
       }
     } catch (err) {
-      console.error('Failed to fetch department employees', err);
+      console.error('Failed to fetch employees', err);
     }
   };
 
@@ -247,6 +283,7 @@ export const Tasks = () => {
         title: createForm.title.trim(),
         description: createForm.description.trim(),
         department: createForm.department,
+        teamId: createForm.teamId || undefined,
         assignedTo: createForm.assignedTo,
         priority: createForm.priority,
         dueDate: createForm.dueDate,
@@ -261,6 +298,7 @@ export const Tasks = () => {
           title: '',
           description: '',
           department: '',
+          teamId: '',
           assignedTo: '',
           priority: 'MEDIUM',
           dueDate: '',
@@ -333,13 +371,19 @@ export const Tasks = () => {
 
   // Quick Status Transition
   const handleStatusChange = async (taskId, newStatus) => {
+    let submissionNote = '';
+    if (newStatus === 'REVIEW') {
+      submissionNote = window.prompt('Please provide a submission note or PR link for review:');
+      if (submissionNote === null) return; // User cancelled
+    }
     try {
-      await api.patch(`/tasks/${taskId}/status`, { status: newStatus });
+      await api.patch(`/tasks/${taskId}/status`, { status: newStatus, submissionNote });
       fetchTasks();
       if (selectedTask && selectedTask._id === taskId) {
         setSelectedTask((prev) => ({
           ...prev,
           status: newStatus,
+          submissionNote: submissionNote || prev.submissionNote,
           completedAt: newStatus === 'COMPLETED' ? new Date().toISOString() : null,
           isOverdue: newStatus === 'COMPLETED' || newStatus === 'CANCELLED' ? false : prev.isOverdue,
         }));
@@ -954,13 +998,13 @@ export const Tasks = () => {
                 />
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                     Department <span className="text-rose-400">*</span>
                   </label>
                   <select
-                    required
+                    required={!createForm.teamId}
                     value={createForm.department}
                     onChange={(e) => handleCreateDeptChange(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
@@ -976,17 +1020,35 @@ export const Tasks = () => {
 
                 <div>
                   <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
+                    Team (Optional)
+                  </label>
+                  <select
+                    value={createForm.teamId}
+                    onChange={(e) => handleCreateTeamChange(e.target.value)}
+                    className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500"
+                  >
+                    <option value="">No Explicit Team</option>
+                    {teams.map((t) => (
+                      <option key={t._id} value={t._id}>
+                        {t.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-slate-700 dark:text-slate-300 font-medium mb-1">
                     Assignee <span className="text-rose-400">*</span>
                   </label>
                   <select
                     required
-                    disabled={!createForm.department}
+                    disabled={!createForm.department && !createForm.teamId}
                     value={createForm.assignedTo}
                     onChange={(e) => setCreateForm({ ...createForm, assignedTo: e.target.value })}
                     className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-800 dark:text-slate-200 focus:outline-none focus:border-indigo-500 disabled:opacity-50"
                   >
                     <option value="">
-                      {!createForm.department ? 'Select Dept first' : 'Select Employee'}
+                      {!createForm.department && !createForm.teamId ? 'Select Dept/Team first' : 'Select Employee'}
                     </option>
                     {deptEmployees.map((emp) => (
                       <option key={emp._id} value={emp._id}>

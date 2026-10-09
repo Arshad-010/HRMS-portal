@@ -661,3 +661,83 @@ export const resendInvitationEmail = async (req, res, next) => {
   }
 };
 
+/**
+ * Get team members for the logged-in employee
+ * @route   GET /api/employees/team
+ * @access  Private
+ */
+export const getTeamMembers = async (req, res, next) => {
+  try {
+    const employeeId = req.user.employeeId;
+    if (!employeeId) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found for current user.' });
+    }
+
+    const currentEmp = await Employee.findById(employeeId).select('reportingManagerId');
+    if (!currentEmp) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+    }
+
+    let finalQuery;
+    
+    // For EMPLOYEE: see people reporting to the same manager, including the manager
+    if (req.user.role === 'EMPLOYEE') {
+      if (!currentEmp.reportingManagerId) {
+        // If no manager, they are alone in their team
+        finalQuery = { _id: employeeId };
+      } else {
+        finalQuery = {
+          $or: [
+            { reportingManagerId: currentEmp.reportingManagerId }, // peers
+            { _id: currentEmp.reportingManagerId } // their manager
+          ]
+        };
+      }
+    } else if (req.user.role === 'MANAGER') {
+      // For MANAGER: they see their direct reports and themselves, and their manager if any
+      finalQuery = {
+        $or: [
+          { reportingManagerId: employeeId },
+          { _id: employeeId }
+        ]
+      };
+      if (currentEmp.reportingManagerId) {
+        finalQuery.$or.push({ _id: currentEmp.reportingManagerId });
+        finalQuery.$or.push({ reportingManagerId: currentEmp.reportingManagerId });
+      }
+    } else {
+      // Admin/HR
+      if (currentEmp.reportingManagerId) {
+        finalQuery = {
+          $or: [
+            { reportingManagerId: currentEmp.reportingManagerId },
+            { _id: currentEmp.reportingManagerId },
+            { reportingManagerId: employeeId },
+            { _id: employeeId }
+          ]
+        };
+      } else {
+        finalQuery = {
+          $or: [
+            { reportingManagerId: employeeId },
+            { _id: employeeId }
+          ]
+        };
+      }
+    }
+
+    const members = await Employee.find(finalQuery)
+      .select('-salary') // Always exclude salary for team view
+      .populate('departmentId', 'name code')
+      .populate('reportingManagerId', 'firstName lastName employeeCode designation')
+      .populate('userId', 'email role isActive')
+      .sort({ firstName: 1 });
+
+    res.status(200).json({
+      success: true,
+      data: members,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

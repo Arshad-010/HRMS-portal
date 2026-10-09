@@ -11,6 +11,8 @@ import Leaves from '../pages/Leaves';
 import Tasks from '../pages/Tasks';
 import Departments from '../pages/Departments';
 import Employees from '../pages/Employees';
+import MyTeam from '../pages/MyTeam';
+import TeamManagement from '../pages/TeamManagement';
 import EmployeeDetails from '../pages/EmployeeDetails';
 import Notifications from '../pages/Notifications';
 import Activity from '../pages/Activity';
@@ -130,6 +132,24 @@ export const AppRoutes = () => {
         element={
           <ProtectedRoute>
             <Employees />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/team-management"
+        element={
+          <ProtectedRoute allowedRoles={['ADMIN', 'HR']}>
+            <TeamManagement />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/my-team"
+        element={
+          <ProtectedRoute>
+            <MyTeam />
           </ProtectedRoute>
         }
       />

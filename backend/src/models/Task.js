@@ -32,6 +32,12 @@ const taskSchema = new mongoose.Schema(
       required: [true, 'Department is required'],
       index: true,
     },
+    teamId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Team',
+      default: null,
+      index: true,
+    },
     priority: {
       type: String,
       enum: {
@@ -63,6 +69,11 @@ const taskSchema = new mongoose.Schema(
     completedAt: {
       type: Date,
       default: null,
+    },
+    submissionNote: {
+      type: String,
+      trim: true,
+      default: '',
     },
   },
   {

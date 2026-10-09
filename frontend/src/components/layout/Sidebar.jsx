@@ -33,8 +33,13 @@ export const Sidebar = ({ isMobileOpen, setIsMobileOpen, isCollapsed }) => {
     {
       title: 'WORKFORCE',
       items: [
-        { name: 'Employees', path: '/employees', icon: Users },
+        { 
+          name: user?.role === 'EMPLOYEE' ? 'My Teams' : 'Employees', 
+          path: user?.role === 'EMPLOYEE' ? '/my-team' : '/employees', 
+          icon: Users 
+        },
         { name: 'Departments', path: '/departments', icon: Building2 },
+        ...(isAdmin || isHR ? [{ name: 'Team Management', path: '/team-management', icon: Sparkles, isNew: true }] : []),
         ...(isAdmin || isHR ? [{ name: 'Performance', path: '/performance', icon: Award, isNew: true }] : []),
       ]
     },

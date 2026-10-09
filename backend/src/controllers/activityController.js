@@ -99,3 +99,84 @@ export const getActivityLogs = async (req, res, next) => {
     next(error);
   }
 };
+
+/**
+ * Get team activity feed for the authenticated user
+ * @route   GET /api/activity/team
+ * @access  Private
+ */
+export const getTeamActivityLogs = async (req, res, next) => {
+  try {
+    const employeeId = req.user.employeeId;
+    if (!employeeId) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+    }
+
+    const currentEmp = await Employee.findById(employeeId).select('reportingManagerId');
+    if (!currentEmp) {
+      return res.status(404).json({ success: false, message: 'Employee profile not found' });
+    }
+
+    let teamEmployeeIds = [];
+
+    // Derive team logic matching employeeController.js
+    if (req.user.role === 'EMPLOYEE') {
+      if (!currentEmp.reportingManagerId) {
+        teamEmployeeIds = [employeeId];
+      } else {
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        teamEmployeeIds = peers.map(p => p._id);
+        teamEmployeeIds.push(currentEmp.reportingManagerId); // add manager
+      }
+    } else if (req.user.role === 'MANAGER') {
+      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+      teamEmployeeIds = reports.map(r => r._id);
+      teamEmployeeIds.push(employeeId);
+      if (currentEmp.reportingManagerId) {
+        teamEmployeeIds.push(currentEmp.reportingManagerId);
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        peers.forEach(p => teamEmployeeIds.push(p._id));
+      }
+    } else {
+      // HR/ADMIN
+      if (currentEmp.reportingManagerId) {
+        const peers = await Employee.find({ reportingManagerId: currentEmp.reportingManagerId }).select('_id');
+        teamEmployeeIds = peers.map(p => p._id);
+        teamEmployeeIds.push(currentEmp.reportingManagerId);
+      }
+      const reports = await Employee.find({ reportingManagerId: employeeId }).select('_id');
+      reports.forEach(r => teamEmployeeIds.push(r._id));
+      teamEmployeeIds.push(employeeId);
+    }
+
+    // Get User IDs for the team employees to filter actors
+    const employees = await Employee.find({ _id: { $in: teamEmployeeIds } }).select('userId');
+    const teamUserIds = employees.map(e => e.userId).filter(Boolean);
+
+    // Build query for team activity
+    // We want activities performed by these users, OR targeting these employees/users
+    // Excluding sensitive entity types if necessary (e.g. PERFORMANCE, SALARY)
+    // The current entityTypes are: 'EMPLOYEE', 'DEPARTMENT', 'LEAVE', 'TASK', 'ATTENDANCE', 'USER', 'SYSTEM'
+    // Exclude 'USER' and 'SYSTEM' for team feed noise
+    const query = {
+      $or: [
+        { actor: { $in: teamUserIds } },
+        { entityId: { $in: teamEmployeeIds } }
+      ],
+      entityType: { $in: ['EMPLOYEE', 'LEAVE', 'TASK', 'ATTENDANCE'] }
+    };
+
+    const logs = await ActivityLog.find(query)
+      .populate('actor', 'email role')
+      .sort({ createdAt: -1 })
+      .limit(10)
+      .lean();
+
+    res.status(200).json({
+      success: true,
+      data: logs
+    });
+  } catch (error) {
+    next(error);
+  }
+};
