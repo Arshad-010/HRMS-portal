@@ -31,6 +31,13 @@ export const protect = async (req, res, next) => {
       });
     }
 
+    if (decoded.role === '2FA_CHALLENGE') {
+      return res.status(401).json({
+        success: false,
+        message: 'Not authorized: 2FA challenge token cannot access protected resources',
+      });
+    }
+
     if (!user.isActive) {
       return res.status(403).json({
         success: false,
