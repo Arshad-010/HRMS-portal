@@ -103,7 +103,7 @@ export const Profile = () => {
                 {employee?.profilePicture ? (
                   <img src={employee.profilePicture} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-4xl font-bold text-slate-400 dark:text-slate-500">{initials}</span>
+                  <span className="text-4xl font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400">{initials}</span>
                 )}
                 
                 {/* Upload Overlay */}

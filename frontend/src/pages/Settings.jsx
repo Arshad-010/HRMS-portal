@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { Lock, Settings as SettingsIcon, AlertTriangle } from 'lucide-react';
-
+import { TwoFactorAuth } from '../components/profile/TwoFactorAuth';
 export const Settings = () => {
   const { changePassword } = useAuth();
   
@@ -97,6 +97,12 @@ export const Settings = () => {
             </form>
           </div>
         </div>
+
+        {/* 2FA Section */}
+        <div style={{ padding: '20px', background: 'red', color: 'white', fontWeight: 'bold' }}>
+          DEBUG: 2FA Section should appear below this box
+        </div>
+        <TwoFactorAuth />
       </div>
     </div>
   );

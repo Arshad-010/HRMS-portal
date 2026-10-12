@@ -124,17 +124,17 @@ const MyTeam = () => {
               <Users className="w-5 h-5" />
             </div>
             My Team
-            <span className="ml-2 px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-full">
+            <span className="ml-2 px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 dark:text-slate-400 dark:bg-slate-800 dark:text-slate-400 rounded-full">
               {teamMembers.length} Members
             </span>
           </h1>
-          <p className="text-sm text-slate-500 mt-1 pl-13">
+          <p className="text-sm text-slate-500 dark:text-slate-400 mt-1 pl-13">
             Collaborate and connect with your team members
           </p>
         </div>
         {teams.length > 0 && (
           <div className="flex items-center gap-2">
-            <span className="text-sm font-semibold text-slate-500">Selected Team:</span>
+            <span className="text-sm font-semibold text-slate-500 dark:text-slate-400">Selected Team:</span>
             <select
               value={selectedTeamId}
               onChange={handleTeamChange}
@@ -168,7 +168,7 @@ const MyTeam = () => {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-2xl border border-slate-100 dark:border-slate-800">
-                  <p className="text-sm text-slate-500 mb-1 font-medium">Total Assigned</p>
+                  <p className="text-sm text-slate-500 dark:text-slate-400 mb-1 font-medium">Total Assigned</p>
                   <p className="text-2xl font-black text-slate-900 dark:text-white">{teamTasks.TOTAL}</p>
                 </div>
                 <div className="p-4 bg-amber-50 dark:bg-amber-900/10 rounded-2xl border border-amber-100 dark:border-amber-900/30">
@@ -194,7 +194,7 @@ const MyTeam = () => {
               {/* Progress Bar */}
               {teamTasks.TOTAL > 0 && (
                 <div className="mt-6">
-                  <div className="flex justify-between text-xs font-semibold text-slate-500 mb-2">
+                  <div className="flex justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 mb-2">
                     <span>Team Progress</span>
                     <span>{Math.round((teamTasks.COMPLETED / teamTasks.TOTAL) * 100)}%</span>
                   </div>
@@ -259,7 +259,7 @@ const MyTeam = () => {
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">
             No Team Members Found
           </h3>
-          <p className="text-slate-500 text-sm max-w-sm mx-auto">
+          <p className="text-slate-500 dark:text-slate-400 text-sm max-w-sm mx-auto">
             {search ? 'We couldn\'t find anyone matching your search.' : 'You do not have any team members assigned yet.'}
           </p>
         </div>
@@ -278,7 +278,7 @@ const MyTeam = () => {
               >
                 {/* Role Badge */}
                 <div className="absolute top-4 right-4 flex gap-2">
-                  <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-full">
+                  <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 dark:text-slate-400 dark:bg-slate-800 dark:text-slate-400 rounded-full">
                     {member.userId?.role || 'EMPLOYEE'}
                   </span>
                   {member._id === user?.employeeId && (
@@ -312,7 +312,7 @@ const MyTeam = () => {
                     <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 truncate">
                       {member.designation}
                     </p>
-                    <p className="text-xs text-slate-500 mt-0.5 truncate">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
                       {member.employeeCode}
                     </p>
                   </div>

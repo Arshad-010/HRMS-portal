@@ -89,7 +89,7 @@ const ResetPassword = () => {
                 New Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 dark:text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input
@@ -118,7 +118,7 @@ const ResetPassword = () => {
                 Confirm New Password
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500 dark:text-slate-400">
                   <Lock className="w-4 h-4" />
                 </div>
                 <input

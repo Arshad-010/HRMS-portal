@@ -64,7 +64,7 @@ const ChatWindow = ({ onBack }) => {
         <div className="flex items-center gap-3">
           <button 
             onClick={onBack}
-            className="md:hidden p-1.5 -ml-1.5 rounded-lg text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800"
+            className="md:hidden p-1.5 -ml-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
@@ -82,7 +82,7 @@ const ChatWindow = ({ onBack }) => {
           
           <div>
             <h3 className="font-bold text-slate-900 dark:text-white leading-none">{name}</h3>
-            <p className="text-[11px] text-slate-500 mt-1">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
               {activeConversation.type === 'DIRECT' ? (isOnline ? 'Active now' : designation) : 'Group Conversation'}
             </p>
           </div>
@@ -110,7 +110,7 @@ const ChatWindow = ({ onBack }) => {
       {/* Messages Area */}
       <div className="flex-1 overflow-y-auto p-4 sm:p-6 bg-slate-50 dark:bg-[#090d16]">
         {loading && messages.length === 0 ? (
-          <div className="flex items-center justify-center h-full text-slate-500 text-sm">
+          <div className="flex items-center justify-center h-full text-slate-500 dark:text-slate-400 text-sm">
             Loading messages...
           </div>
         ) : messages.length === 0 ? (
@@ -119,7 +119,7 @@ const ChatWindow = ({ onBack }) => {
               <span className="text-2xl">👋</span>
             </div>
             <p className="text-sm font-medium text-slate-900 dark:text-white">Say hello to {name}!</p>
-            <p className="text-xs text-slate-500 mt-1">Start the conversation by sending a message below.</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">Start the conversation by sending a message below.</p>
           </div>
         ) : (
           <div className="flex flex-col justify-end min-h-full">
@@ -140,7 +140,7 @@ const ChatWindow = ({ onBack }) => {
           <div className="bg-white dark:bg-slate-800 rounded-xl shadow-xl w-full max-w-sm overflow-hidden">
             <div className="flex items-center justify-between p-4 border-b border-slate-200 dark:border-slate-700">
               <h3 className="font-bold text-slate-900 dark:text-white">Start Video Meeting</h3>
-              <button onClick={() => setShowMeetModal(false)} className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200">
+              <button onClick={() => setShowMeetModal(false)} className="text-slate-400 hover:text-slate-600 dark:text-slate-400 dark:hover:text-slate-200">
                 <X className="w-5 h-5" />
               </button>
             </div>

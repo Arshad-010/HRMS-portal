@@ -181,7 +181,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
               {/* Mobile Hamburger */}
               <button 
                 onClick={toggleMobileSidebar}
-                className="lg:hidden p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
+                className="lg:hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer"
                 aria-label="Open navigation sidebar"
               >
                 <Menu className="w-5 h-5" />
@@ -190,7 +190,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
               {/* Desktop Hamburger / Collapse Toggle */}
               <button 
                 onClick={toggleCollapse}
-                className="hidden lg:flex p-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
+                className="hidden lg:flex p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 cursor-pointer transition-colors"
                 title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
                 aria-label="Collapse sidebar"
               >
@@ -340,7 +340,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
                             <Sparkles className="w-5 h-5 text-indigo-400" />
                           </div>
                           <p className="text-xs font-medium text-slate-700 dark:text-slate-300 mb-0.5">All caught up!</p>
-                          <p className="text-[11px] text-slate-500 mb-0">No new notifications for you right now.</p>
+                          <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-0">No new notifications for you right now.</p>
                         </div>
                       ) : (
                         recentNotifications.map((notif) => (
@@ -366,7 +366,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
                               <p className="text-[11px] text-slate-500 dark:text-slate-400 line-clamp-2 leading-relaxed mb-1">
                                 {notif.message}
                               </p>
-                              <div className="flex items-center justify-between text-[10px] text-slate-500 font-mono">
+                              <div className="flex items-center justify-between text-[10px] text-slate-500 dark:text-slate-400 font-mono">
                                 <span>{formatTimeAgo(notif.createdAt)}</span>
                                 {notif.relatedEntityType && (
                                   <span className="px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 text-[9px] uppercase font-semibold">
@@ -543,7 +543,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
       {!isAuthenticated && isMobileNavOpen && (
         <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md px-4 pt-3 pb-6 space-y-2 animate-in slide-in-from-top-2 duration-200 shadow-2xl">
           <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">Navigation</span>
+            <span className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Navigation</span>
             {/* Mobile Dark/Light toggle */}
             <button
               type="button"
@@ -594,7 +594,7 @@ export const Navbar = ({ toggleMobileSidebar, isCollapsed, toggleCollapse }) => 
             <Link
               to="/login?portal=user"
               onClick={() => setIsMobileNavOpen(false)}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-indigo-600 dark:bg-slate-800 dark:hover:bg-indigo-600 text-slate-800 hover:text-white dark:text-slate-200 dark:hover:text-white text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors shadow-sm"
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-indigo-600 dark:bg-slate-800 dark:hover:bg-indigo-600 text-slate-800 dark:text-white hover:text-white dark:text-slate-200 dark:hover:text-white text-xs font-bold border border-slate-200 dark:border-slate-700 transition-colors shadow-sm"
             >
               <Users className="w-4 h-4" />
               <span>User Login</span>

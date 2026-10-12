@@ -57,7 +57,7 @@ const ChatSidebar = ({ onSelect, activeRoleTab }) => {
             placeholder="Search employees..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800/50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 placeholder:text-slate-500"
+            className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800/50 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 placeholder:text-slate-500 dark:text-slate-400"
           />
         </div>
       </div>
@@ -65,7 +65,7 @@ const ChatSidebar = ({ onSelect, activeRoleTab }) => {
       {/* People List */}
       <div className="flex-1 overflow-y-auto no-scrollbar p-2">
         {filteredUsers.length === 0 ? (
-          <div className="text-center p-4 text-xs text-slate-500">
+          <div className="text-center p-4 text-xs text-slate-500 dark:text-slate-400">
             No employees available
           </div>
         ) : (

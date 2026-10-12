@@ -178,7 +178,7 @@ export const Departments = () => {
       {/* Filter and Search Bar */}
       <div className="flex flex-col sm:flex-row gap-3 my-6">
         <div className="relative flex-1">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500" />
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 dark:text-slate-400" />
           <input
             type="text"
             placeholder="Search by department name or code..."
@@ -189,7 +189,7 @@ export const Departments = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Filter className="w-4 h-4 text-slate-500 hidden sm:block" />
+          <Filter className="w-4 h-4 text-slate-500 dark:text-slate-400 hidden sm:block" />
           <select
             value={filterActive}
             onChange={(e) => setFilterActive(e.target.value)}
@@ -215,9 +215,9 @@ export const Departments = () => {
         </div>
       ) : filteredDepartments.length === 0 ? (
         <div className="text-center py-16 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-8">
-          <Building2 className="w-10 h-10 text-slate-600 mx-auto mb-3" />
+          <Building2 className="w-10 h-10 text-slate-600 dark:text-slate-400 mx-auto mb-3" />
           <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">No departments found</h3>
-          <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto">
             {search ? 'Try adjusting your search criteria' : 'Create your first department to get started.'}
           </p>
         </div>
@@ -277,7 +277,7 @@ export const Departments = () => {
               <div className="pt-2.5 border-t border-slate-200 dark:border-slate-800 space-y-2 text-xs">
                 <div className="flex items-center justify-between text-slate-500 dark:text-slate-400">
                   <span className="flex items-center gap-1.5">
-                    <Users className="w-3.5 h-3.5 text-slate-500" />
+                    <Users className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />
                     Team Headcount:
                   </span>
                   <span className="font-bold text-slate-900 dark:text-white">

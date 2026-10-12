@@ -156,18 +156,18 @@
     --color-violet-900: #1A3027;
     --color-violet-950: #1A3027;
 
-    /* BACKGROUNDS, SURFACES, TEXT & BORDERS (Charcoal/Forest) */
-    --color-slate-50: #F1F5F2;
-    --color-slate-100: #F1F5F2;
-    --color-slate-200: #D5DED9;
-    --color-slate-300: #A5B3AC;
-    --color-slate-400: #7D8C84;
-    --color-slate-500: #56645D;
-    --color-slate-600: #30443A;
-    --color-slate-700: #30443A;
-    --color-slate-800: #24352D;
-    --color-slate-900: #111C17;
-    --color-slate-950: #080F0C;
+    /* BACKGROUNDS, SURFACES, TEXT & BORDERS (Soft Charcoal/True Gray) */
+    --color-slate-50: #f9fafb;
+    --color-slate-100: #f3f4f6;
+    --color-slate-200: #e5e7eb;
+    --color-slate-300: #d1d5db;
+    --color-slate-400: #9ca3af;
+    --color-slate-500: #6b7280;
+    --color-slate-600: #4b5563;
+    --color-slate-700: #374151;
+    --color-slate-800: #1f2937;
+    --color-slate-900: #111827;
+    --color-slate-950: #030712;
 
     /* SEMANTIC: SUCCESS */
     --color-emerald-50: #142B21;
@@ -359,18 +359,18 @@
   .theme-ocean.dark {
     --color-white: #F0F5F8;
 
-    /* BACKGROUNDS, SURFACES, TEXT & BORDERS (Midnight Slate) */
-    --color-slate-50: #F0F5F8;
-    --color-slate-100: #F0F5F8;
-    --color-slate-200: #D6E1E8;
-    --color-slate-300: #B0C0C9;
-    --color-slate-400: #8497A3;
-    --color-slate-500: #5E707C;
-    --color-slate-600: #38505E;
-    --color-slate-700: #38505E;
-    --color-slate-800: #293C49;
-    --color-slate-900: #14212B;
-    --color-slate-950: #0B1219;
+    /* BACKGROUNDS, SURFACES, TEXT & BORDERS (Soft Charcoal/True Gray) */
+    --color-slate-50: #f9fafb;
+    --color-slate-100: #f3f4f6;
+    --color-slate-200: #e5e7eb;
+    --color-slate-300: #d1d5db;
+    --color-slate-400: #9ca3af;
+    --color-slate-500: #6b7280;
+    --color-slate-600: #4b5563;
+    --color-slate-700: #374151;
+    --color-slate-800: #1f2937;
+    --color-slate-900: #111827;
+    --color-slate-950: #030712;
 
     /* PRIMARY / BRAND (Ocean Dark mapping) */
     --color-indigo-50: #193341;

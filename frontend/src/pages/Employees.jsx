@@ -229,7 +229,7 @@ export const Employees = () => {
               className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
                 activeTab === tab.key
                   ? 'bg-white dark:bg-slate-700 text-sky-600 dark:text-sky-400 shadow-xs'
-                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
+                  : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-white'
               }`}
             >
               {tab.label}
@@ -440,7 +440,7 @@ export const Employees = () => {
                         </span>
                       </td>
 
-                      <td className="p-3.5 text-slate-500 text-[11px]">
+                      <td className="p-3.5 text-slate-500 dark:text-slate-400 text-[11px]">
                         {emp.joiningDate ? new Date(emp.joiningDate).toLocaleDateString() : 'N/A'}
                       </td>
 
@@ -507,7 +507,7 @@ export const Employees = () => {
                     <p className="text-xs text-slate-400 m-0 truncate mt-0.5">{emp.designation}</p>
                   </Link>
 
-                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-500">
+                  <div className="mt-4 pt-3 border-t border-slate-100 dark:border-slate-800 space-y-1.5 text-xs text-slate-500 dark:text-slate-400">
                     <div className="flex items-center gap-2">
                       <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
                       <span className="truncate">{emp.departmentId?.name || 'General'}</span>
@@ -545,7 +545,7 @@ export const Employees = () => {
       {/* 6. Pagination Footer */}
       {pages > 1 && (
         <div className="flex items-center justify-between pt-4 border-t border-slate-200 dark:border-slate-800 text-xs">
-          <span className="text-slate-500">
+          <span className="text-slate-500 dark:text-slate-400">
             Page {page} of {pages} ({total} total personnel)
           </span>
           <div className="flex items-center gap-1.5">
@@ -572,7 +572,7 @@ export const Employees = () => {
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 max-w-md w-full shadow-2xl">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Deactivate Personnel?</h3>
-            <p className="text-xs text-slate-500 mb-6">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mb-6">
               Are you sure you want to deactivate {deleteTarget.firstName} {deleteTarget.lastName} ({deleteTarget.employeeCode})? Their access login will be suspended.
             </p>
             <div className="flex items-center justify-end gap-3">

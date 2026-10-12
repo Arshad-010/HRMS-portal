@@ -55,7 +55,7 @@ export const HRDashboard = ({ user }) => {
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
             HR Command Center
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400">
             Welcome back, {user?.employee?.firstName || 'HR Professional'}. Here's the organization-wide overview.
           </p>
         </div>
@@ -151,7 +151,7 @@ export const HRDashboard = ({ user }) => {
                       <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {leave.employee?.firstName} {leave.employee?.lastName}
                       </div>
-                      <div className="text-[11px] text-slate-400 truncate">
+                      <div className="text-[11px] text-slate-400 dark:text-slate-400 truncate">
                         {leave.leaveType} &bull; {leave.numberOfDays} days
                       </div>
                     </div>
@@ -187,7 +187,7 @@ export const HRDashboard = ({ user }) => {
                     <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${alert.severity === 'danger' ? 'text-rose-500' : 'text-amber-500'}`} />
                     <div className="min-w-0 flex-1">
                       <h4 className="text-xs font-bold text-slate-900 dark:text-white m-0">{alert.title}</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5 mb-1.5 leading-snug">{alert.description}</p>
+                      <p className="text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-400 mt-0.5 mb-1.5 leading-snug">{alert.description}</p>
                       <Link to={alert.actionUrl} className="text-[10px] font-bold text-emerald-500 hover:text-emerald-600 uppercase tracking-wider no-underline">
                         {alert.actionLabel} &rarr;
                       </Link>
