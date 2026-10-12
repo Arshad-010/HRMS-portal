@@ -1,4 +1,4 @@
-import { initializeApp } from 'firebase/app';
+import { initializeApp, getApps, getApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -10,5 +10,23 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID
 };
 
-const app = initializeApp(firebaseConfig);
-export const auth = getAuth(app);
+const isFirebaseConfigured = Boolean(
+  firebaseConfig.apiKey &&
+  firebaseConfig.apiKey !== 'your_api_key' &&
+  !firebaseConfig.apiKey.includes('your_') &&
+  firebaseConfig.projectId &&
+  firebaseConfig.projectId !== 'your_project_id'
+);
+
+let auth = null;
+
+if (isFirebaseConfigured) {
+  try {
+    const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
+    auth = getAuth(app);
+  } catch (error) {
+    console.warn('Firebase initialization failed:', error.message);
+  }
+}
+
+export { auth, isFirebaseConfigured };

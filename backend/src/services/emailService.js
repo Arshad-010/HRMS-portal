@@ -15,13 +15,17 @@ const transporter = nodemailer.createTransport({
 });
 
 // Verify connection configuration (optional startup check)
-transporter.verify((error, success) => {
-  if (error) {
-    console.warn('⚠️ Nodemailer: SMTP connection error. Emails will not be sent.', error.message);
-  } else {
-    console.log('✅ Nodemailer: SMTP server is ready to take our messages');
-  }
-});
+if (process.env.EMAIL_HOST && process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+  transporter.verify((error, success) => {
+    if (error) {
+      console.warn('⚠️ Nodemailer: SMTP connection error. Emails will not be sent.', error.message);
+    } else {
+      console.log('✅ Nodemailer: SMTP server is ready to take our messages');
+    }
+  });
+} else {
+  console.log('ℹ️ Nodemailer: SMTP credentials not fully configured. Email sending is disabled.');
+}
 
 /**
  * Send an email

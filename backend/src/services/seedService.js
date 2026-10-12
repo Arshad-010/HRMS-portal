@@ -111,11 +111,20 @@ export const seedInitialAdmin = async () => {
       { name: 'Research & Development (R&D)', code: 'RND', isActive: true },
     ];
     for (const d of DEPARTMENTS) {
-      await Department.updateOne(
-        { code: d.code },
-        { $setOnInsert: d },
-        { upsert: true }
-      );
+      try {
+        const existing = await Department.findOne({
+          $or: [{ code: d.code }, { name: d.name }]
+        });
+        if (existing) {
+          if (!existing.code) existing.code = d.code;
+          existing.isActive = true;
+          await existing.save();
+        } else {
+          await Department.create(d);
+        }
+      } catch (deptErr) {
+        logger.warn(`Department seeding notice for ${d.name}: ${deptErr.message}`);
+      }
     }
 
     let defaultDept = await Department.findOne({ isActive: true });

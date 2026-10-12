@@ -68,6 +68,11 @@ export const AuthProvider = ({ children }) => {
    */
   const loginWithGoogle = async () => {
     setError(null);
+    if (!auth) {
+      const errorMessage = 'Google Sign-In is not configured yet. Please configure Firebase API keys in frontend/.env or sign in with your email and password.';
+      setError(errorMessage);
+      return { success: false, error: errorMessage };
+    }
     try {
       const provider = new GoogleAuthProvider();
       // Force account selection to avoid auto-login loops in some cases
