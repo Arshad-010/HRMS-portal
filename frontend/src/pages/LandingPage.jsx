@@ -66,20 +66,20 @@ export const LandingPage = () => {
   }, []);
 
   return (
-    <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white dark:bg-slate-950 transition-colors">
+    <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-[#F4F7FC] dark:bg-[#0B1220] transition-colors">
       {/* Hero Section */}
       <section className="relative flex-1 flex flex-col items-center justify-center pt-20 pb-20 px-4 sm:px-6 lg:px-8 text-center max-w-7xl mx-auto w-full overflow-hidden">
         {/* Ambient background glow */}
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-indigo-500/10 dark:bg-indigo-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-3xl pointer-events-none -z-10" />
 
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-8 text-xs font-bold tracking-widest text-indigo-600 dark:text-indigo-400 uppercase bg-indigo-50 dark:bg-indigo-500/10 rounded-full border border-indigo-100 dark:border-indigo-500/20 shadow-sm animate-pulse-glow">
-          <Sparkles className="w-3.5 h-3.5 text-indigo-500 animate-spin" style={{ animationDuration: '6s' }} />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 mb-8 text-xs font-bold tracking-widest text-blue-600 dark:text-blue-400 uppercase bg-blue-50 dark:bg-blue-500/10 rounded-full border border-blue-100 dark:border-blue-500/20 shadow-sm animate-pulse-glow">
+          <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-spin" style={{ animationDuration: '6s' }} />
           <span>Next-Gen Workforce Operating System</span>
         </div>
 
         <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight text-slate-900 dark:text-white mb-6 max-w-4xl leading-[1.1]">
           Manage your workforce <br className="hidden sm:block" />
-          <span className="bg-gradient-to-r from-indigo-600 via-violet-600 to-cyan-500 dark:from-indigo-400 dark:via-violet-400 dark:to-cyan-400 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-teal-500 dark:from-blue-400 dark:via-violet-400 dark:to-teal-400 bg-clip-text text-transparent">
             seamlessly in one place.
           </span>
         </h1>
@@ -92,7 +92,7 @@ export const LandingPage = () => {
         <div className="flex flex-col sm:flex-row gap-3.5 justify-center items-center w-full sm:w-auto">
           <Link
             to="/login?portal=user"
-            className="w-full sm:w-auto px-7 py-3.5 bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm rounded-xl transition-all shadow-lg shadow-indigo-600/25 hover:shadow-indigo-600/40 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group cursor-pointer"
+            className="w-full sm:w-auto px-7 py-3.5 bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white font-semibold text-sm rounded-xl transition-all shadow-lg shadow-blue-600/25 hover:shadow-blue-600/40 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 group cursor-pointer"
           >
             <Users className="w-4 h-4 transition-transform group-hover:scale-110" />
             <span>Employee Login</span>
@@ -103,7 +103,7 @@ export const LandingPage = () => {
             to="/login?portal=admin"
             className="w-full sm:w-auto px-7 py-3.5 bg-slate-900 hover:bg-slate-800 dark:bg-slate-800 dark:hover:bg-slate-700 text-white font-semibold text-sm rounded-xl transition-all border border-slate-700/80 shadow-md hover:-translate-y-0.5 flex items-center justify-center gap-2 group cursor-pointer"
           >
-            <Shield className="w-4 h-4 text-indigo-400 transition-transform group-hover:rotate-12" />
+            <Shield className="w-4 h-4 text-violet-400 transition-transform group-hover:rotate-12" />
             <span>Admin Portal</span>
             <ArrowUpRight className="w-4 h-4 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </Link>
@@ -193,7 +193,7 @@ export const LandingPage = () => {
       <section ref={rolesRef} id="roles" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-200 dark:border-slate-800/80">
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-3 uppercase tracking-wider">
-            <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" /> Access Hierarchy
+            <ShieldCheck className="w-3.5 h-3.5 text-blue-500" /> Access Hierarchy
           </div>
           <h2 className="text-3xl md:text-4xl font-extrabold text-slate-900 dark:text-white mb-4 tracking-tight">
             Built for every organizational role
@@ -247,8 +247,8 @@ export const LandingPage = () => {
       <section id="about" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-200 dark:border-slate-800">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-6 space-y-6">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-xs font-bold text-indigo-600 dark:text-indigo-400 uppercase tracking-wider border border-indigo-100 dark:border-indigo-500/20">
-              <HeartHandshake className="w-3.5 h-3.5 text-indigo-500" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-xs font-bold text-blue-600 dark:text-blue-400 uppercase tracking-wider border border-blue-100 dark:border-blue-500/20">
+              <HeartHandshake className="w-3.5 h-3.5 text-blue-500" />
               <span>About HRMS Portal</span>
             </div>
             <h2 className="text-3xl sm:text-4xl font-extrabold text-slate-900 dark:text-white tracking-tight leading-tight">
@@ -258,20 +258,20 @@ export const LandingPage = () => {
               HRMS Portal was engineered to replace fragmented spreadsheets, manual email approvals, and disconnected trackers with a single source of truth. By unifying Attendance, Leave Balances, Task Delegations, and Real-Time Notifications, organizations can operate with complete transparency and speed.
             </p>
             <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                <span className="block text-2xl font-black text-indigo-600 dark:text-indigo-400">100%</span>
+              <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <span className="block text-2xl font-black text-blue-600 dark:text-blue-400">100%</span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">RBAC Isolated Data</span>
               </div>
-              <div className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
-                <span className="block text-2xl font-black text-indigo-600 dark:text-indigo-400">&lt; 50ms</span>
+              <div className="p-4 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
+                <span className="block text-2xl font-black text-blue-600 dark:text-blue-400">&lt; 50ms</span>
                 <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">High Performance API</span>
               </div>
             </div>
           </div>
 
-          <div className="lg:col-span-6 p-8 rounded-3xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
+          <div className="lg:col-span-6 p-8 rounded-3xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xl space-y-4">
             <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 flex items-center gap-2">
-              <Award className="w-5 h-5 text-indigo-500" />
+              <Award className="w-5 h-5 text-violet-500" />
               Enterprise Architecture Highlights
             </h3>
             <ul className="space-y-3.5 text-xs sm:text-sm text-slate-600 dark:text-slate-300">
@@ -300,7 +300,7 @@ export const LandingPage = () => {
       <section id="contact" className="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full border-t border-slate-200 dark:border-slate-800">
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-[11px] font-semibold text-slate-600 dark:text-slate-400 mb-3 uppercase tracking-wider">
-            <Mail className="w-3.5 h-3.5 text-indigo-500" /> Contact &amp; Help
+            <Mail className="w-3.5 h-3.5 text-blue-500" /> Contact &amp; Help
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white mb-2">
             Need Support or System Assistance?
@@ -313,15 +313,15 @@ export const LandingPage = () => {
         {/* 3 Animated Support & Assistance Boxes */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
           {/* Box 1: HR Administration */}
-          <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-indigo-500 hover:shadow-2xl hover:shadow-indigo-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer">
-            <div className="absolute -top-12 -right-12 w-32 h-32 bg-indigo-500/10 rounded-full blur-2xl group-hover:bg-indigo-500/25 transition-all" />
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-violet-500 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-indigo-500/35 transition-all duration-300 group-hover:scale-120 group-hover:-rotate-12 group-hover:shadow-indigo-500/50">
+          <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-blue-500 hover:shadow-2xl hover:shadow-blue-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer">
+            <div className="absolute -top-12 -right-12 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/25 transition-all" />
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-blue-500 to-violet-600 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-blue-500/35 transition-all duration-300 group-hover:scale-120 group-hover:-rotate-12 group-hover:shadow-blue-500/50">
               <Mail className="w-7 h-7 text-white drop-shadow-md transition-transform group-hover:scale-110" />
             </div>
-            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-50 dark:bg-indigo-500/15 text-indigo-600 dark:text-indigo-400 border border-indigo-200/80 dark:border-indigo-500/30 mb-3">
+            <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-50 dark:bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-200/80 dark:border-blue-500/30 mb-3">
               HR Ops &amp; Payroll
             </span>
-            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+            <h4 className="text-base font-bold text-slate-900 dark:text-white mb-1.5 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
               HR Administration
             </h4>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 leading-relaxed">
@@ -329,7 +329,7 @@ export const LandingPage = () => {
             </p>
             <a 
               href="mailto:admin@hrms.portal" 
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-indigo-600 dark:text-indigo-400 hover:bg-indigo-600 hover:text-white dark:hover:bg-indigo-600 dark:hover:text-white transition-all shadow-xs"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-xs font-mono font-bold text-blue-600 dark:text-blue-400 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600 dark:hover:text-white transition-all shadow-xs"
             >
               admin@hrms.portal
             </a>
@@ -338,7 +338,7 @@ export const LandingPage = () => {
           {/* Box 2: IT & Access Support */}
           <div className="group relative p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800 hover:border-cyan-500 hover:shadow-2xl hover:shadow-cyan-500/20 hover:-translate-y-2.5 transition-all duration-300 text-center overflow-hidden cursor-pointer">
             <div className="absolute -top-12 -right-12 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl group-hover:bg-cyan-500/25 transition-all" />
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-500 to-indigo-600 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-cyan-500/35 transition-all duration-300 group-hover:scale-120 group-hover:rotate-12 group-hover:shadow-cyan-500/50">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyan-500 via-blue-500 to-violet-600 text-white flex items-center justify-center mx-auto mb-5 shadow-lg shadow-cyan-500/35 transition-all duration-300 group-hover:scale-120 group-hover:rotate-12 group-hover:shadow-cyan-500/50">
               <Shield className="w-7 h-7 text-white drop-shadow-md transition-transform group-hover:scale-110" />
             </div>
             <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-cyan-50 dark:bg-cyan-500/15 text-cyan-700 dark:text-cyan-300 border border-cyan-200/80 dark:border-cyan-500/30 mb-3">
@@ -387,7 +387,7 @@ export const LandingPage = () => {
 
       {/* Expanded Big Terms & Conditions Modal */}
       {showTermsModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 max-w-5xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
             <button
               onClick={() => setShowTermsModal(false)}
@@ -398,7 +398,7 @@ export const LandingPage = () => {
             </button>
 
             <div className="flex items-center gap-4 mb-6 pb-6 border-b border-slate-100 dark:border-slate-800">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-indigo-500/30 shrink-0">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-violet-600 flex items-center justify-center text-white shadow-lg shadow-blue-500/30 shrink-0">
                 <FileText className="w-7 h-7" />
               </div>
               <div>
@@ -411,7 +411,7 @@ export const LandingPage = () => {
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">01</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">01</span>
                     <h4>Authorized Enterprise Use</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -421,7 +421,7 @@ export const LandingPage = () => {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">02</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">02</span>
                     <h4>Credential Confidentiality</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -431,7 +431,7 @@ export const LandingPage = () => {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">03</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">03</span>
                     <h4>Accurate Attendance Reporting</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -441,7 +441,7 @@ export const LandingPage = () => {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">04</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">04</span>
                     <h4>Role-Based Access Enforcement</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -451,7 +451,7 @@ export const LandingPage = () => {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">05</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">05</span>
                     <h4>Quota Balancing &amp; Restoration</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -461,7 +461,7 @@ export const LandingPage = () => {
 
                 <div className="p-5 rounded-2xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <div className="flex items-center gap-2 mb-2 font-bold text-slate-900 dark:text-white text-sm">
-                    <span className="w-6 h-6 rounded-lg bg-indigo-500 text-white flex items-center justify-center text-xs font-bold shrink-0">06</span>
+                    <span className="w-6 h-6 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold shrink-0">06</span>
                     <h4>Platform Updates &amp; Continuity</h4>
                   </div>
                   <p className="text-xs text-slate-500 dark:text-slate-400 m-0">
@@ -475,14 +475,14 @@ export const LandingPage = () => {
               <Link
                 to="/terms"
                 onClick={() => setShowTermsModal(false)}
-                className="text-xs font-bold text-indigo-600 dark:text-indigo-400 hover:underline flex items-center gap-1"
+                className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
               >
                 <span>Open full document page</span>
                 <ChevronRight className="w-3.5 h-3.5" />
               </Link>
               <button
                 onClick={() => setShowTermsModal(false)}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-500 hover:to-violet-500 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-indigo-600/30"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-blue-600/30"
               >
                 Accept &amp; Close Terms
               </button>
@@ -493,7 +493,7 @@ export const LandingPage = () => {
 
       {/* Expanded Big Privacy Policy Modal */}
       {showPrivacyModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/75 backdrop-blur-md animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-md animate-in fade-in duration-200">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl p-6 sm:p-10 max-w-5xl w-full shadow-2xl relative max-h-[90vh] flex flex-col">
             <button
               onClick={() => setShowPrivacyModal(false)}
@@ -588,7 +588,7 @@ export const LandingPage = () => {
               </Link>
               <button
                 onClick={() => setShowPrivacyModal(false)}
-                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-emerald-600/30"
+                className="w-full sm:w-auto px-7 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-xs sm:text-sm font-bold cursor-pointer transition-all shadow-md shadow-emerald-600/30"
               >
                 Close Privacy Policy
               </button>
@@ -612,10 +612,10 @@ const FeatureCard = ({
   title, 
   description, 
   badge, 
-  theme = 'indigo', 
+  theme = 'blue', 
   isLive = false, 
   linkTo,
-  index = 0,
+  index = 0, 
   isVisible = true 
 }) => {
   const themeStyles = {
@@ -667,17 +667,17 @@ const FeatureCard = ({
       badgeBorder: 'rgba(225, 29, 72, 0.3)',
       borderHover: 'rgba(244, 63, 94, 0.5)',
     },
-    indigo: {
-      gradient: 'linear-gradient(135deg, #6366F1 0%, #4F46E5 100%)',
-      shadow: '0 10px 25px -4px rgba(99, 102, 241, 0.45)',
-      badgeBg: 'rgba(99, 102, 241, 0.1)',
-      badgeText: '#4F46E5',
-      badgeBorder: 'rgba(79, 70, 229, 0.3)',
-      borderHover: 'rgba(99, 102, 241, 0.5)',
+    blue: {
+      gradient: 'linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%)',
+      shadow: '0 10px 25px -4px rgba(37, 99, 235, 0.45)',
+      badgeBg: 'rgba(37, 99, 235, 0.1)',
+      badgeText: '#2563EB',
+      badgeBorder: 'rgba(37, 99, 235, 0.3)',
+      borderHover: 'rgba(37, 99, 235, 0.5)',
     },
   };
 
-  const style = themeStyles[theme] || themeStyles.indigo;
+  const style = themeStyles[theme] || themeStyles.blue;
 
   return (
     <Link
@@ -718,7 +718,7 @@ const FeatureCard = ({
           )}
         </div>
 
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
           {title}
         </h3>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed m-0">
@@ -726,7 +726,7 @@ const FeatureCard = ({
         </p>
       </div>
 
-      <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+      <div className="pt-5 mt-4 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between text-xs font-semibold text-slate-700 dark:text-slate-300 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
         <span>Explore module</span>
         <ChevronRight className="w-4 h-4 transform transition-transform group-hover:translate-x-1" />
       </div>
@@ -739,7 +739,7 @@ const RoleCard = ({
   title, 
   description, 
   icon: Icon = Users, 
-  roleColor = 'indigo', 
+  roleColor = 'blue', 
   badge, 
   index = 0, 
   isVisible = true 
@@ -767,7 +767,7 @@ const RoleCard = ({
 
   return (
     <div 
-      className={`group flex flex-col items-center text-center p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl hover:border-indigo-500/40 dark:hover:border-indigo-400/40 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-out h-full ${
+      className={`group flex flex-col items-center text-center p-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl hover:border-blue-500/40 dark:hover:border-blue-400/40 hover:-translate-y-2 hover:shadow-2xl transition-all duration-500 ease-out h-full ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
       style={{
@@ -784,7 +784,7 @@ const RoleCard = ({
         <Icon className="w-6 h-6 text-white drop-shadow-sm" />
       </div>
       {badge && (
-        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400 uppercase tracking-widest mb-1.5">
+        <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
           {badge}
         </span>
       )}

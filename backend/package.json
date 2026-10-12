@@ -13,7 +13,11 @@
     "test:attendance": "node src/scripts/testAttendance.js",
     "test:leave": "node src/scripts/testLeave.js",
     "test:task": "node src/scripts/testTask.js",
-    "test:phase7": "node src/scripts/testPhase7.js"
+    "test:phase7": "node src/scripts/testPhase7.js",
+    "test:notifications": "node src/scripts/testNotificationsRealtime.js",
+    "test:chat": "node src/scripts/testDirectMessaging.js",
+    "test:groups": "node src/scripts/testGroupChat.js",
+    "test:all": "npm run test:auth && npm run test:attendance && npm run test:leave && npm run test:task && npm run test:notifications && npm run test:chat && npm run test:groups"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
@@ -33,6 +37,7 @@
   },
   "devDependencies": {
     "mongodb-memory-server": "^11.3.0",
-    "nodemon": "^3.1.9"
+    "nodemon": "^3.1.9",
+    "socket.io-client": "^4.8.4"
   }
 }

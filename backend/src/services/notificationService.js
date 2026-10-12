@@ -73,6 +73,8 @@ export const createNotification = async ({
       const io = getIO();
       if (io) {
         io.to(userId.toString()).emit('notification:new', notification);
+        const unreadCount = await Notification.countDocuments({ recipient: userId, isRead: false });
+        io.to(userId.toString()).emit('notification:unread_count', { unreadCount });
       }
     } catch (err) {
       logger.warn(`Failed to emit socket notification: ${err.message}`);
@@ -275,6 +277,78 @@ export const notifyTaskStatusChanged = async (task, updaterName = 'Assignee', ne
   }
 };
 
+/**
+ * Helper: Notify participants on incoming direct or group chat message
+ */
+export const notifyChatMessage = async ({ message, conversation, senderUser }) => {
+  try {
+    const otherParticipants = (conversation.participants || []).filter(
+      (p) => (p._id || p).toString() !== senderUser._id.toString()
+    );
+
+    const isDirect = conversation.type === 'DIRECT';
+    const senderName = senderUser.employee
+      ? `${senderUser.employee.firstName} ${senderUser.employee.lastName}`
+      : senderUser.email?.split('@')[0] || 'A colleague';
+
+    const type = isDirect ? 'DIRECT_MESSAGE' : 'GROUP_MESSAGE';
+    const title = isDirect
+      ? `New message from ${senderName}`
+      : `New message in ${conversation.name || 'Team Chat'}`;
+
+    const textPreview = message.text
+      ? message.text.length > 80
+        ? message.text.slice(0, 77) + '...'
+        : message.text
+      : message.fileName
+      ? `Shared file: ${message.fileName}`
+      : 'Sent an attachment';
+
+    const notifications = [];
+    for (const participant of otherParticipants) {
+      const notif = await createNotification({
+        recipient: participant._id || participant,
+        type,
+        title,
+        message: isDirect ? textPreview : `${senderName}: ${textPreview}`,
+        relatedEntityType: 'CHAT',
+        relatedEntityId: conversation._id,
+      });
+      if (notif) notifications.push(notif);
+    }
+    return notifications;
+  } catch (err) {
+    logger.error(`Error notifying chat message: ${err.message}`);
+    return [];
+  }
+};
+
+/**
+ * Helper: Send attendance reminder notification
+ */
+export const notifyAttendanceReminder = async (userId, customMessage) => {
+  return await createNotification({
+    recipient: userId,
+    type: 'ATTENDANCE_REMINDER',
+    title: 'Attendance Reminder',
+    message: customMessage || 'Please remember to punch in/out for your working shift today.',
+    relatedEntityType: 'ATTENDANCE',
+  });
+};
+
+/**
+ * Helper: Send general attendance notification event
+ */
+export const notifyAttendanceEvent = async ({ userId, type = 'ATTENDANCE_CHECKIN', title, message }) => {
+  return await createNotification({
+    recipient: userId,
+    type,
+    title: title || 'Attendance Logged',
+    message: message || 'Your attendance status was recorded.',
+    relatedEntityType: 'ATTENDANCE',
+  });
+};
+
 export default {
   createNotification,
   notifyUsers,
@@ -284,4 +358,7 @@ export default {
   notifyLeaveCancelled,
   notifyTaskAssigned,
   notifyTaskStatusChanged,
+  notifyChatMessage,
+  notifyAttendanceReminder,
+  notifyAttendanceEvent,
 };

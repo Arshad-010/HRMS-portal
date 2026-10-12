@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import {
   Users, UserCheck, CalendarClock, UserX,
   Calendar, Award, TrendingUp, Sparkles, 
-  CheckCircle2, AlertTriangle, ChevronRight
+  CheckCircle2, AlertTriangle, ChevronRight, Briefcase
 } from 'lucide-react';
 import {
   ResponsiveContainer, PieChart, Pie, Cell, Tooltip
@@ -47,68 +47,75 @@ export const HRDashboard = ({ user }) => {
   const alerts = overview?.alerts || [];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-      {/* Header */}
-      <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/5 dark:bg-emerald-500/10 rounded-full blur-3xl pointer-events-none" />
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-7 min-h-screen">
+      {/* Header Banner */}
+      <div className="p-6 sm:p-8 rounded-2xl bg-white dark:bg-[#111C2E] border border-slate-200 dark:border-[#263449] shadow-xs flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 dark:bg-blue-500/15 rounded-full blur-3xl pointer-events-none" />
+        
         <div className="relative z-10 space-y-1">
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight">
+          <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-500/15 text-blue-600 dark:text-blue-400 border border-blue-500/20">
+            <Users className="w-3 h-3" />
+            Human Resources Operations
+          </div>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">
             HR Command Center
           </h1>
-          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 dark:text-slate-400">
-            Welcome back, {user?.employee?.firstName || 'HR Professional'}. Here's the organization-wide overview.
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400">
+            Welcome back, {user?.employee?.firstName || 'HR Professional'}. Organization-wide personnel overview.
           </p>
         </div>
+
         <div className="relative z-10 flex flex-wrap items-center gap-2.5">
           <Link
             to="/employees"
-            className="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-md shadow-emerald-600/20 transition-all hover:-translate-y-0.5 cursor-pointer no-underline"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs sm:text-sm font-bold shadow-md shadow-blue-600/25 transition-all cursor-pointer no-underline"
           >
             <Users className="w-4 h-4" />
             <span>Employee Directory</span>
           </Link>
           <Link
             to="/departments"
-            className="inline-flex items-center gap-1 px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-800 dark:text-slate-200 border border-slate-200 dark:border-slate-700 text-xs font-bold transition-all hover:bg-slate-200 dark:hover:bg-slate-700 cursor-pointer no-underline"
+            className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-[#0B1220] text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#263449] text-xs sm:text-sm font-bold transition-all hover:bg-slate-200 dark:hover:bg-slate-800 cursor-pointer no-underline"
           >
+            <Briefcase className="w-4 h-4" />
             <span>Departments</span>
           </Link>
         </div>
       </div>
 
       {actionMessage && (
-        <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-center gap-2.5 animate-slide-reveal ${
+        <div className={`p-4 rounded-xl border text-xs font-semibold flex items-center gap-2.5 animate-fadeIn ${
           actionMessage.type === 'success'
             ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20'
             : 'bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20'
         }`}>
-          {actionMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertTriangle className="w-4 h-4 shrink-0" />}
+          {actionMessage.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0 text-emerald-500" /> : <AlertTriangle className="w-4 h-4 shrink-0 text-rose-500" />}
           <span>{actionMessage.text}</span>
         </div>
       )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-5">
-        <KpiCard title="Total Employees" value={kpis.totalEmployees?.value} icon={Users} colorClass="emerald" loading={loading} />
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+        <KpiCard title="Total Employees" value={kpis.totalEmployees?.value} icon={Users} colorClass="primary" loading={loading} />
         <KpiCard title="Present Today" value={kpis.presentToday?.value} icon={UserCheck} colorClass="success" loading={loading} />
         <KpiCard title="On Leave Today" value={kpis.onLeaveToday?.value} icon={Calendar} colorClass="warning" loading={loading} />
-        <KpiCard title="Pending Leaves" value={kpis.pendingLeaves?.value} icon={CalendarClock} colorClass="warning" loading={loading} />
-        <KpiCard title="New Joiners" badge="This Month" value={kpis.newJoiners?.value} icon={Sparkles} colorClass="primary" loading={loading} />
+        <KpiCard title="Pending Leaves" value={kpis.pendingLeaves?.value} icon={CalendarClock} colorClass="purple" loading={loading} />
+        <KpiCard title="New Joiners" badge="30 Days" value={kpis.newJoiners?.value} icon={Sparkles} colorClass="teal" loading={loading} />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Department Overview */}
         <div className="lg:col-span-4">
           <ChartCard
-            title="Department Overview"
-            subtitle="Personnel allocation per operational unit"
+            title="Department Allocation"
+            subtitle="Personnel headcount across departments"
             loading={loading}
             isEmpty={headcount.length === 0}
             minHeight={290}
           >
-            <ResponsiveContainer width="100%" height={230}>
+            <ResponsiveContainer width="100%" height={210}>
               <PieChart>
-                <Pie data={headcount} cx="50%" cy="50%" innerRadius={50} outerRadius={78} paddingAngle={4} dataKey="count">
+                <Pie data={headcount} cx="50%" cy="50%" innerRadius={48} outerRadius={75} paddingAngle={4} dataKey="count">
                   {headcount.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={RECHARTS_THEME.palette[index % RECHARTS_THEME.palette.length]} />
                   ))}
@@ -117,7 +124,7 @@ export const HRDashboard = ({ user }) => {
               </PieChart>
             </ResponsiveContainer>
             <div className="flex flex-wrap justify-center gap-2 mt-2 max-h-16 overflow-y-auto">
-              {headcount.slice(0, 4).map((d, idx) => (
+              {headcount.slice(0, 5).map((d, idx) => (
                 <div key={d.name} className="flex items-center gap-1 text-[10px] text-slate-600 dark:text-slate-300">
                   <span className="w-2 h-2 rounded-full" style={{ backgroundColor: RECHARTS_THEME.palette[idx % RECHARTS_THEME.palette.length] }}></span>
                   <span className="truncate max-w-[80px]">{d.name}</span>
@@ -129,9 +136,9 @@ export const HRDashboard = ({ user }) => {
         </div>
 
         {/* Pending Leave Requests */}
-        <div className="lg:col-span-4 p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-4 p-6 rounded-2xl bg-white dark:bg-[#111C2E] border border-slate-200 dark:border-[#263449] shadow-xs flex flex-col justify-between">
           <div>
-            <div className="pb-3 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+            <div className="pb-3 border-b border-slate-100 dark:border-[#263449]/70 flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight m-0">
                   Pending Leave Requests
@@ -141,9 +148,9 @@ export const HRDashboard = ({ user }) => {
                 {pendingLeaves.length} pending
               </span>
             </div>
-            <div className="divide-y divide-slate-100 dark:divide-slate-800/60 mt-2">
+            <div className="divide-y divide-slate-100 dark:divide-[#263449]/70 mt-2">
               {pendingLeaves.length === 0 ? (
-                <EmptyState title="All caught up!" description="No pending employee requests." compact={true} />
+                <EmptyState title="All caught up!" description="No pending employee leave requests." compact={true} />
               ) : (
                 pendingLeaves.slice(0, 4).map((leave) => (
                   <div key={leave._id} className="py-3 flex items-center justify-between gap-3">
@@ -151,7 +158,7 @@ export const HRDashboard = ({ user }) => {
                       <div className="text-xs font-bold text-slate-900 dark:text-white truncate">
                         {leave.employee?.firstName} {leave.employee?.lastName}
                       </div>
-                      <div className="text-[11px] text-slate-400 dark:text-slate-400 truncate">
+                      <div className="text-[11px] text-slate-400 truncate">
                         {leave.leaveType} &bull; {leave.numberOfDays} days
                       </div>
                     </div>
@@ -160,8 +167,8 @@ export const HRDashboard = ({ user }) => {
               )}
             </div>
           </div>
-          <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80">
-            <Link to="/leaves" className="text-xs font-bold text-emerald-500 hover:text-emerald-400 flex items-center justify-between no-underline">
+          <div className="pt-3 border-t border-slate-100 dark:border-[#263449]/70">
+            <Link to="/leaves" className="text-xs font-bold text-blue-600 hover:text-blue-500 dark:text-blue-400 flex items-center justify-between no-underline">
               <span>Manage All Leaves</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
@@ -169,33 +176,36 @@ export const HRDashboard = ({ user }) => {
         </div>
 
         {/* HR Activity & Onboarding */}
-        <div className="lg:col-span-4 p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm flex flex-col justify-between">
+        <div className="lg:col-span-4 p-6 rounded-2xl bg-white dark:bg-[#111C2E] border border-slate-200 dark:border-[#263449] shadow-xs flex flex-col justify-between">
           <div>
-            <div className="pb-3 border-b border-slate-100 dark:border-slate-800/80 flex items-center justify-between">
+            <div className="pb-3 border-b border-slate-100 dark:border-[#263449]/70 flex items-center justify-between">
               <div>
                 <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight m-0">
-                  HR Alerts & Onboarding
+                  HR Alerts & Operations
                 </h3>
               </div>
+              <span className="text-[11px] font-semibold text-slate-400">Live</span>
             </div>
-            <div className="space-y-3 mt-3">
+            <div className="divide-y divide-slate-100 dark:divide-[#263449]/70 mt-2">
               {alerts.length === 0 ? (
-                <EmptyState title="No active alerts" description="All HR processes are on track." compact={true} />
+                <div className="py-8 text-center text-xs text-slate-400">
+                  No active operational alerts.
+                </div>
               ) : (
-                alerts.map(alert => (
-                  <div key={alert.id} className="p-3 rounded-xl border flex gap-3 items-start bg-slate-50 dark:bg-slate-800/50 border-slate-200 dark:border-slate-700">
-                    <AlertTriangle className={`w-4 h-4 mt-0.5 shrink-0 ${alert.severity === 'danger' ? 'text-rose-500' : 'text-amber-500'}`} />
-                    <div className="min-w-0 flex-1">
-                      <h4 className="text-xs font-bold text-slate-900 dark:text-white m-0">{alert.title}</h4>
-                      <p className="text-[11px] text-slate-500 dark:text-slate-400 dark:text-slate-400 mt-0.5 mb-1.5 leading-snug">{alert.description}</p>
-                      <Link to={alert.actionUrl} className="text-[10px] font-bold text-emerald-500 hover:text-emerald-600 uppercase tracking-wider no-underline">
-                        {alert.actionLabel} &rarr;
-                      </Link>
-                    </div>
+                alerts.slice(0, 4).map((a, idx) => (
+                  <div key={idx} className="py-3">
+                    <p className="text-xs font-bold text-slate-900 dark:text-white">{a.title}</p>
+                    <p className="text-[11px] text-slate-400 line-clamp-1">{a.description}</p>
                   </div>
                 ))
               )}
             </div>
+          </div>
+          <div className="pt-3 border-t border-slate-100 dark:border-[#263449]/70">
+            <Link to="/activity" className="text-xs font-bold text-violet-600 hover:text-violet-500 dark:text-violet-400 flex items-center justify-between no-underline">
+              <span>View Audit Logs</span>
+              <ChevronRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>

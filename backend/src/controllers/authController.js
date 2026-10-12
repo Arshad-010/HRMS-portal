@@ -2,8 +2,9 @@ import User from '../models/User.js';
 import Employee from '../models/Employee.js';
 import Department from '../models/Department.js';
 import { generateToken, verifyToken } from '../utils/jwt.js';
-import { admin } from '../config/firebaseAdmin.js';
+import { admin, initializeFirebaseAdmin } from '../config/firebaseAdmin.js';
 import { getAuth } from 'firebase-admin/auth';
+import { getApps } from 'firebase-admin/app';
 import { generateTOTPSecret, generateProvisioningURI, encryptSecret, decryptSecret, verifyTOTPCode, generateRecoveryCodes, is2FAConfigured } from '../utils/twoFactor.js';
 import qrcode from 'qrcode';
 import bcrypt from 'bcryptjs';
@@ -263,10 +264,14 @@ export const googleLogin = async (req, res, next) => {
       });
     }
 
-    if (!admin) {
+    if (getApps().length === 0) {
+      initializeFirebaseAdmin();
+    }
+
+    if (getApps().length === 0) {
       return res.status(500).json({
         success: false,
-        message: 'Firebase Admin is not configured on the server',
+        message: 'Firebase Admin credentials are not configured in backend/.env',
       });
     }
 
@@ -275,10 +280,10 @@ export const googleLogin = async (req, res, next) => {
     try {
       decodedToken = await getAuth().verifyIdToken(idToken);
     } catch (error) {
-      console.error('Firebase token verification failed:', error);
+      console.error('Firebase token verification failed:', error.message);
       return res.status(401).json({
         success: false,
-        message: 'Google authentication failed or token expired',
+        message: `Google authentication failed: ${error.message}`,
       });
     }
 
@@ -304,7 +309,7 @@ export const googleLogin = async (req, res, next) => {
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: 'No HRMS account is associated with this Google account. Please contact your administrator.',
+        message: `No HRMS account is associated with Google email "${email}". Please contact your administrator or sign in with your registered account.`,
       });
     }
 

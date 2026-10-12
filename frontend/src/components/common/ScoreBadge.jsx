@@ -28,9 +28,9 @@ export const ScoreBadge = ({ score, band, showScore = true, showIcon = true }) =
     },
     EXCEEDS: {
       label: 'Exceeds Expectations',
-      classes: 'bg-sky-500/10 text-sky-600 dark:text-sky-400 border-sky-500/25',
+      classes: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/25',
       icon: TrendingUp,
-      barColor: 'bg-sky-500',
+      barColor: 'bg-blue-500',
     },
     MEETS: {
       label: 'Meets Expectations',

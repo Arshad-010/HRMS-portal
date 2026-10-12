@@ -4,14 +4,24 @@ import { useAuth } from '../../context/AuthContext';
 import { Send, Paperclip, CheckSquare, Calendar } from 'lucide-react';
 
 const MessageComposer = ({ conversationId }) => {
-  const { sendMessage } = useChat();
+  const { sendMessage, emitTyping } = useChat();
   const { user } = useAuth();
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
 
   // RBAC checks for specialized actions
-  const canAssignTask = user.role === 'ADMIN' || user.role === 'HR' || user.role === 'MANAGER';
-  const canCreateMeeting = user.role === 'ADMIN' || user.role === 'HR' || user.role === 'MANAGER';
+  const canAssignTask = user?.role === 'ADMIN' || user?.role === 'HR' || user?.role === 'MANAGER';
+  const canCreateMeeting = user?.role === 'ADMIN' || user?.role === 'HR' || user?.role === 'MANAGER';
+
+  const handleTextChange = (e) => {
+    const val = e.target.value;
+    setText(val);
+    if (val.trim()) {
+      emitTyping?.(conversationId, true);
+    } else {
+      emitTyping?.(conversationId, false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +29,7 @@ const MessageComposer = ({ conversationId }) => {
 
     try {
       setSending(true);
+      emitTyping?.(conversationId, false);
       await sendMessage(conversationId, {
         text: text.trim(),
         type: 'TEXT'
@@ -66,14 +77,14 @@ const MessageComposer = ({ conversationId }) => {
       
       {/* Specialized Actions Bar (RBAC protected) */}
       <div className="flex items-center gap-2 mb-3">
-        <button className="p-2 text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer" title="Attach File">
+        <button className="p-2 text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors cursor-pointer" title="Attach File">
           <Paperclip className="w-4 h-4" />
         </button>
         
         {canAssignTask && (
           <button 
             onClick={() => handleSpecialAction('TASK')}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900/30 rounded-lg transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 rounded-lg transition-colors cursor-pointer"
           >
             <CheckSquare className="w-3.5 h-3.5" />
             Assign Task
@@ -83,7 +94,7 @@ const MessageComposer = ({ conversationId }) => {
         {canCreateMeeting && (
           <button 
             onClick={() => handleSpecialAction('MEETING')}
-            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900/30 rounded-lg transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/30 rounded-lg transition-colors cursor-pointer"
           >
             <Calendar className="w-3.5 h-3.5" />
             Create Meeting
@@ -93,10 +104,10 @@ const MessageComposer = ({ conversationId }) => {
 
       {/* Input Form */}
       <form onSubmit={handleSubmit} className="flex items-end gap-2">
-        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-transparent focus-within:border-indigo-500/30 focus-within:ring-2 focus-within:ring-indigo-500/20 transition-all">
+        <div className="flex-1 bg-slate-100 dark:bg-slate-800 rounded-2xl border border-transparent focus-within:border-blue-500/30 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all">
           <textarea
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={handleTextChange}
             placeholder="Type a message..."
             className="w-full bg-transparent border-none focus:ring-0 focus:outline-none outline-none resize-none max-h-32 min-h-[44px] py-3 px-4 text-sm text-slate-900 dark:text-white placeholder:text-slate-500 dark:text-slate-400"
             rows={1}
@@ -111,7 +122,7 @@ const MessageComposer = ({ conversationId }) => {
         <button
           type="submit"
           disabled={!text.trim() || sending}
-          className="shrink-0 w-11 h-11 rounded-full bg-indigo-600 text-white flex items-center justify-center hover:bg-indigo-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
+          className="shrink-0 w-11 h-11 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed shadow-sm transition-colors"
         >
           <Send className="w-4 h-4 ml-0.5" />
         </button>

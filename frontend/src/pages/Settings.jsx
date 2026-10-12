@@ -27,7 +27,7 @@ export const Settings = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <SettingsIcon className="w-6 h-6 text-indigo-500" />
+          <SettingsIcon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
           Settings
         </h1>
         <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
@@ -40,7 +40,7 @@ export const Settings = () => {
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-sm">
           <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
             <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <Lock className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+              <Lock className="w-5 h-5 text-blue-600 dark:text-blue-400" />
               Security
             </h2>
             <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -71,7 +71,7 @@ export const Settings = () => {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
                 />
               </div>
               <div>
@@ -82,14 +82,14 @@ export const Settings = () => {
                   onChange={(e) => setNewPassword(e.target.value)}
                   required
                   minLength={8}
-                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
+                  className="w-full px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
                 />
               </div>
               <div className="pt-2">
                 <button
                   type="submit"
                   disabled={passwordStatus.loading}
-                  className="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-500 disabled:opacity-50 cursor-pointer transition-colors shadow-sm shadow-indigo-500/20"
+                  className="px-4 py-2 rounded-xl bg-blue-600 text-white text-xs font-medium hover:bg-blue-500 disabled:opacity-50 cursor-pointer transition-colors shadow-sm shadow-blue-500/20"
                 >
                   {passwordStatus.loading ? 'Updating...' : 'Change Password'}
                 </button>
@@ -99,9 +99,6 @@ export const Settings = () => {
         </div>
 
         {/* 2FA Section */}
-        <div style={{ padding: '20px', background: 'red', color: 'white', fontWeight: 'bold' }}>
-          DEBUG: 2FA Section should appear below this box
-        </div>
         <TwoFactorAuth />
       </div>
     </div>

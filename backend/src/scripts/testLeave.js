@@ -46,7 +46,7 @@ const runLeaveTests = async () => {
     if (!adminEmp) {
       adminEmp = await Employee.create({
         userId: adminUser._id,
-        employeeCode: 'EMP-8001',
+        employeeCode: 'EMP-LEV-01',
         firstName: 'Leave',
         lastName: 'Admin',
         departmentId: dept._id,
@@ -71,7 +71,7 @@ const runLeaveTests = async () => {
     if (!hrEmp) {
       hrEmp = await Employee.create({
         userId: hrUser._id,
-        employeeCode: 'EMP-8002',
+        employeeCode: 'EMP-LEV-02',
         firstName: 'Leave',
         lastName: 'HR Specialist',
         departmentId: dept._id,
@@ -96,7 +96,7 @@ const runLeaveTests = async () => {
     if (!mgrEmp) {
       mgrEmp = await Employee.create({
         userId: mgrUser._id,
-        employeeCode: 'EMP-8003',
+        employeeCode: 'EMP-LEV-03',
         firstName: 'Leave',
         lastName: 'Manager',
         departmentId: dept._id,
@@ -121,7 +121,7 @@ const runLeaveTests = async () => {
     if (!emp1) {
       emp1 = await Employee.create({
         userId: emp1User._id,
-        employeeCode: 'EMP-8004',
+        employeeCode: 'EMP-LEV-04',
         firstName: 'Sarah',
         lastName: 'Developer',
         departmentId: dept._id,
@@ -147,7 +147,7 @@ const runLeaveTests = async () => {
     if (!inactEmp) {
       inactEmp = await Employee.create({
         userId: inactUser._id,
-        employeeCode: 'EMP-8005',
+        employeeCode: 'EMP-LEV-05',
         firstName: 'Inactive',
         lastName: 'Employee',
         departmentId: dept._id,
@@ -162,6 +162,10 @@ const runLeaveTests = async () => {
 
     // Reset previous leave test records for clean test run
     await Leave.deleteMany({ employee: { $in: [emp1._id, inactEmp._id, mgrEmp._id] } });
+    await Employee.updateOne(
+      { _id: emp1._id },
+      { leaveBalances: { casual: 10, sick: 8, earned: 12, paid: 12, unpaid: 0, other: 5 } }
+    );
 
     // Generate tokens
     const adminToken = generateToken({ id: adminUser._id, role: adminUser.role, email: adminUser.email });

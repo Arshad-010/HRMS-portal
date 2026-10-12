@@ -91,7 +91,7 @@ export const Profile = () => {
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-sm">
         
         {/* Cover Photo / Header */}
-        <div className="h-32 bg-gradient-to-r from-indigo-500 to-violet-600 relative">
+        <div className="h-32 bg-gradient-to-r from-blue-600 via-violet-600 to-teal-600 relative">
           <div className="absolute inset-0 bg-white/10 dark:bg-black/10 mix-blend-overlay"></div>
         </div>
 
@@ -103,7 +103,7 @@ export const Profile = () => {
                 {employee?.profilePicture ? (
                   <img src={employee.profilePicture} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-4xl font-bold text-slate-400 dark:text-slate-500 dark:text-slate-400">{initials}</span>
+                  <span className="text-4xl font-bold text-slate-400 dark:text-slate-500">{initials}</span>
                 )}
                 
                 {/* Upload Overlay */}
@@ -155,7 +155,7 @@ export const Profile = () => {
               <h1 className="text-2xl font-bold text-slate-900 dark:text-white mb-1">
                 {employee?.firstName ? `${employee.firstName} ${employee.lastName}` : 'No Name Set'}
               </h1>
-              <p className="text-sm font-medium text-indigo-500 dark:text-indigo-400 mb-4">
+              <p className="text-sm font-medium text-blue-600 dark:text-blue-400 mb-4">
                 {employee?.designation || user?.role}
               </p>
 
@@ -164,7 +164,7 @@ export const Profile = () => {
                   {user?.role}
                 </span>
                 {employee?.employeeCode && (
-                  <span className="px-2.5 py-1 rounded-lg bg-indigo-50 dark:bg-indigo-900/20 text-indigo-600 dark:text-indigo-400 text-[11px] font-mono font-semibold border border-indigo-200 dark:border-indigo-800">
+                  <span className="px-2.5 py-1 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-[11px] font-mono font-semibold border border-blue-200 dark:border-blue-800">
                     {employee.employeeCode}
                   </span>
                 )}

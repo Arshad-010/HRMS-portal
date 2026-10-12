@@ -13,7 +13,36 @@ const conversationSchema = new mongoose.Schema({
   },
   name: {
     type: String,
-    trim: true
+    trim: true,
+  },
+  description: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  avatar: {
+    type: String,
+    trim: true,
+    default: '',
+  },
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  admins: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+  }],
+  groupType: {
+    type: String,
+    enum: ['GENERAL', 'DEPARTMENT', 'PROJECT'],
+    default: 'GENERAL',
+  },
+  departmentId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Department',
+    default: null,
   },
   lastMessage: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,7 +60,9 @@ const conversationSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Create a compound index for fast lookups of user conversations
+// Indexes for fast lookups
 conversationSchema.index({ participants: 1, lastMessageAt: -1 });
+conversationSchema.index({ type: 1, participants: 1 });
+conversationSchema.index({ departmentId: 1 });
 
 export default mongoose.model('Conversation', conversationSchema);

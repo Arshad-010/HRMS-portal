@@ -136,7 +136,7 @@ const CsvImportModal = ({ isOpen, onClose, onSuccess }) => {
                     <p className="text-xs text-slate-500 dark:text-slate-400">Use this CSV template to format your data.</p>
                   </div>
                 </div>
-                <button onClick={handleDownloadTemplate} className="text-sm font-medium text-sky-600 hover:text-sky-700 flex items-center gap-1">
+                <button onClick={handleDownloadTemplate} className="text-sm font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300 flex items-center gap-1">
                   <Download className="w-4 h-4" /> Template
                 </button>
               </div>

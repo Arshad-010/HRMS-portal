@@ -64,7 +64,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
       <div className="bg-white dark:bg-slate-900 rounded-3xl w-full max-w-md shadow-2xl border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col max-h-[80vh]">
         
         {/* Header */}
-        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-950">
+        <div className="p-4 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between bg-slate-50 dark:bg-slate-900/80">
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">New Message</h2>
           <button 
             onClick={onClose}
@@ -84,7 +84,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               autoFocus
-              className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200 placeholder:text-slate-500 dark:text-slate-400"
+              className="w-full pl-9 pr-4 py-2 bg-slate-100 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500/50 dark:text-slate-200 placeholder:text-slate-500 dark:text-slate-400"
             />
           </div>
         </div>
@@ -103,7 +103,7 @@ const NewConversationModal = ({ isOpen, onClose, onStart }) => {
                 onClick={() => handleStartChat(emp.user._id)}
                 className="w-full flex items-center gap-3 p-3 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors disabled:opacity-50 text-left"
               >
-                <div className="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-slate-800 text-indigo-600 dark:text-indigo-400 font-bold flex items-center justify-center shrink-0">
+                <div className="w-10 h-10 rounded-xl bg-blue-100 dark:bg-slate-800 text-blue-600 dark:text-blue-400 font-bold flex items-center justify-center shrink-0">
                   {emp.firstName?.charAt(0).toUpperCase()}
                 </div>
                 <div>

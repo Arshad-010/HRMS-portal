@@ -23,7 +23,7 @@ export const EmptyState = ({
 }) => {
   return (
     <div className={`flex flex-col items-center justify-center text-center w-full ${compact ? 'py-8 px-4' : 'py-12 px-6'}`}>
-      <div className={`rounded-2xl bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-100 dark:border-indigo-900/50 flex items-center justify-center text-indigo-500 dark:text-indigo-400 mb-3.5 shadow-xs ${compact ? 'w-10 h-10' : 'w-14 h-14'}`}>
+      <div className={`rounded-2xl bg-blue-50 dark:bg-blue-950/40 border border-blue-100 dark:border-blue-900/50 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-3.5 shadow-xs ${compact ? 'w-10 h-10' : 'w-14 h-14'}`}>
         <Icon className={compact ? 'w-5 h-5' : 'w-7 h-7'} />
       </div>
       <h4 className={`font-bold text-slate-800 dark:text-slate-100 mb-1 ${compact ? 'text-xs' : 'text-sm'}`}>
@@ -37,7 +37,7 @@ export const EmptyState = ({
         actionTo ? (
           <Link
             to={actionTo}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>{actionText}</span>
@@ -46,7 +46,7 @@ export const EmptyState = ({
           <button
             type="button"
             onClick={onAction}
-            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-sm shadow-blue-500/20 transition-all hover:-translate-y-0.5 active:translate-y-0 cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5" />
             <span>{actionText}</span>

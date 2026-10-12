@@ -9,7 +9,13 @@ import {
   getChatUsers,
   editMessage,
   deleteMessage,
-  reactToMessage
+  reactToMessage,
+  createGroupConversation,
+  getGroupDetails,
+  updateGroup,
+  addGroupMembers,
+  removeGroupMember,
+  leaveGroup
 } from '../controllers/chatController.js';
 
 const router = express.Router();
@@ -33,5 +39,20 @@ router.route('/conversations/:id/messages/:msgId')
 router.post('/conversations/:id/messages/:msgId/react', reactToMessage);
 
 router.put('/conversations/:id/read', markAsRead);
+
+// Group Chat Routes
+router.route('/groups')
+  .post(createGroupConversation);
+
+router.route('/groups/:id')
+  .get(getGroupDetails)
+  .put(updateGroup);
+
+router.route('/groups/:id/members')
+  .post(addGroupMembers);
+
+router.delete('/groups/:id/members/:userId', removeGroupMember);
+
+router.post('/groups/:id/leave', leaveGroup);
 
 export default router;

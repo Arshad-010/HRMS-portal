@@ -4,9 +4,11 @@ import Navbar from './components/layout/Navbar';
 import Sidebar from './components/layout/Sidebar';
 import AppRoutes from './routes/AppRoutes';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { SocketProvider } from './context/SocketContext';
 import { NotificationProvider } from './context/NotificationContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { ChatProvider } from './context/ChatContext';
+import NotificationToast from './components/common/NotificationToast';
 
 export function AppContent() {
   const [isSidebarMobileOpen, setIsSidebarMobileOpen] = useState(false);
@@ -28,7 +30,10 @@ export function AppContent() {
                      location.pathname.startsWith('/activate');
 
   return (
-    <div className={`min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex font-sans ${isAuthPage ? 'h-screen overflow-hidden' : ''}`}>
+    <div className={`min-h-screen bg-[#F4F7FC] dark:bg-[#0B1220] text-slate-900 dark:text-slate-100 flex font-sans ${isAuthPage ? 'h-screen overflow-hidden' : ''}`}>
+      {/* Global Real-Time Notification Toasts */}
+      <NotificationToast />
+
       <Sidebar 
         isMobileOpen={isSidebarMobileOpen} 
         setIsMobileOpen={setIsSidebarMobileOpen}
@@ -54,14 +59,17 @@ export function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        <NotificationProvider>
-          <ChatProvider>
-            <AppContent />
-          </ChatProvider>
-        </NotificationProvider>
+        <SocketProvider>
+          <NotificationProvider>
+            <ChatProvider>
+              <AppContent />
+            </ChatProvider>
+          </NotificationProvider>
+        </SocketProvider>
       </AuthProvider>
     </ThemeProvider>
   );
 }
 
 export default App;
+

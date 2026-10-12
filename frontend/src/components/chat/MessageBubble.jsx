@@ -21,9 +21,9 @@ const MessageBubble = ({ message }) => {
   const isRead = isMine && message.readBy && message.readBy.some(r => r.user !== user._id);
   const isDelivered = isMine && !isRead; 
 
-  const senderName = message.sender?.employee?.firstName 
-    ? `${message.sender.employee.firstName}`
-    : message.sender?.email?.split('@')[0];
+  const senderFullName = message.sender?.employee?.firstName 
+    ? `${message.sender.employee.firstName} ${message.sender.employee.lastName || ''}`.trim()
+    : message.sender?.email?.split('@')[0] || 'Teammate';
 
   const handleEditSave = async () => {
     if (editText.trim() && editText.trim() !== message.text) {
@@ -58,7 +58,7 @@ const MessageBubble = ({ message }) => {
 
   const actionButtons = (
     <div className={`absolute top-0 ${isMine ? 'right-full mr-0' : 'left-full ml-0'} hidden group-hover:flex items-center gap-1 bg-white dark:bg-slate-800 shadow-sm border border-slate-200 dark:border-slate-700 rounded-lg p-1 z-10`}>
-      <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-indigo-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="React">
+      <button onClick={() => setShowEmojiPicker(!showEmojiPicker)} className="p-1.5 text-slate-500 dark:text-slate-400 hover:text-blue-500 hover:bg-slate-100 dark:hover:bg-slate-700 rounded transition-colors" title="React">
         <Smile className="w-4 h-4" />
       </button>
       {isMine && !message.isDeleted && message.type === 'TEXT' && (
@@ -91,18 +91,18 @@ const MessageBubble = ({ message }) => {
         {/* Avatar for others */}
         {!isMine && (
           <div className="w-8 h-8 shrink-0 rounded-full bg-slate-200 dark:bg-slate-700 flex items-center justify-center text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">
-            {senderName?.charAt(0).toUpperCase()}
+            {senderFullName?.charAt(0).toUpperCase()}
           </div>
         )}
 
         <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'} relative`}>
-          {!isMine && <span className="text-[10px] text-slate-500 dark:text-slate-400 ml-1 mb-1">{senderName}</span>}
+          {!isMine && <span className="text-[10px] text-slate-500 dark:text-slate-400 ml-1 mb-1 font-semibold">{senderFullName}</span>}
           
           <div className={`relative px-4 py-2.5 shadow-sm ${
             isMine 
-              ? 'bg-indigo-600 text-white rounded-2xl rounded-br-sm' 
+              ? 'bg-blue-600 text-white rounded-2xl rounded-br-sm' 
               : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-200 rounded-2xl rounded-bl-sm'
-          } ${message.isDeleted ? 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 dark:text-slate-400 shadow-none' : ''}`}>
+          } ${message.isDeleted ? 'bg-transparent border border-slate-300 dark:border-slate-700 text-slate-400 dark:text-slate-500 shadow-none' : ''}`}>
             
             {message.isDeleted ? (
               <p className="text-sm italic flex items-center gap-2">
@@ -114,14 +114,14 @@ const MessageBubble = ({ message }) => {
                 <textarea 
                   value={editText} 
                   onChange={e => setEditText(e.target.value)}
-                  className="w-full text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border-none rounded p-2 focus:ring-2 focus:ring-indigo-400 resize-none outline-none"
+                  className="w-full text-sm text-slate-900 dark:text-white bg-white dark:bg-slate-900 border-none rounded p-2 focus:ring-2 focus:ring-blue-500 resize-none outline-none"
                   rows={2}
                 />
                 <div className="flex justify-end gap-2">
                   <button onClick={() => setIsEditing(false)} className="p-1 rounded bg-slate-200 dark:bg-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-300">
                     <X className="w-4 h-4" />
                   </button>
-                  <button onClick={handleEditSave} className="p-1 rounded bg-indigo-500 text-white hover:bg-indigo-600">
+                  <button onClick={handleEditSave} className="p-1 rounded bg-blue-600 text-white hover:bg-blue-700">
                     <CheckIcon className="w-4 h-4" />
                   </button>
                 </div>
@@ -141,7 +141,7 @@ const MessageBubble = ({ message }) => {
                       Task Assigned
                     </div>
                     <p className="text-sm font-semibold mb-1">{message.text || 'New Task'}</p>
-                    <a href={`/tasks`} className={`inline-block mt-2 text-xs font-semibold px-3 py-1.5 rounded-lg ${isMine ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700 dark:bg-slate-700 dark:text-slate-300'}`}>
+                    <a href={`/tasks`} className={`inline-block mt-2 text-xs font-semibold px-3 py-1.5 rounded-lg ${isMine ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-slate-700 dark:text-slate-300'}`}>
                       Open Tasks
                     </a>
                   </div>
@@ -161,7 +161,7 @@ const MessageBubble = ({ message }) => {
                       </p>
                     )}
                     {message.meetingDetails?.url && (
-                      <a href={message.meetingDetails.url} target="_blank" rel="noreferrer" className={`inline-block mt-1 text-xs font-semibold px-3 py-1.5 rounded-lg ${isMine ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-indigo-100 hover:bg-indigo-200 text-indigo-700 dark:bg-slate-700 dark:text-slate-300'}`}>
+                      <a href={message.meetingDetails.url} target="_blank" rel="noreferrer" className={`inline-block mt-1 text-xs font-semibold px-3 py-1.5 rounded-lg ${isMine ? 'bg-white/20 hover:bg-white/30 text-white' : 'bg-blue-100 hover:bg-blue-200 text-blue-700 dark:bg-slate-700 dark:text-slate-300'}`}>
                         Join Meeting
                       </a>
                     )}
@@ -196,7 +196,7 @@ const MessageBubble = ({ message }) => {
                   onClick={() => handleReact(emoji)}
                   className={`flex items-center gap-1 px-1.5 py-0.5 rounded-full text-[11px] font-medium border ${
                     myReactions.has(emoji) 
-                      ? 'bg-indigo-50 border-indigo-200 dark:bg-indigo-900/30 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300' 
+                      ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/30 dark:border-blue-800 text-blue-700 dark:text-blue-300' 
                       : 'bg-white border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-slate-600 dark:text-slate-300'
                   }`}
                 >
@@ -239,7 +239,7 @@ const MessageBubble = ({ message }) => {
             )}
             {isMine && (
               <span className="text-slate-400 ml-1">
-                {isRead ? <CheckCheck className="w-3 h-3 text-indigo-500" /> : <CheckCheck className="w-3 h-3 opacity-50" />}
+                {isRead ? <CheckCheck className="w-3 h-3 text-blue-500" /> : <CheckCheck className="w-3 h-3 opacity-50" />}
               </span>
             )}
           </div>

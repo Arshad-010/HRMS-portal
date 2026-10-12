@@ -127,7 +127,7 @@ export const EmployeeDetails = () => {
       <div className="flex items-center justify-between">
         <Link
           to="/employees"
-          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-sky-500 transition-colors no-underline"
+          className="inline-flex items-center gap-2 text-xs font-bold text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors no-underline"
         >
           <ArrowLeft className="w-4 h-4" />
           <span>Back to People Directory</span>
@@ -135,7 +135,7 @@ export const EmployeeDetails = () => {
         {isPrivileged && (
           <button
             onClick={handleResendInvite}
-            className="inline-flex items-center gap-2 px-3 py-1.5 bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 text-xs font-bold rounded-lg border border-sky-200 dark:border-sky-500/20 hover:bg-sky-100 dark:hover:bg-sky-500/20 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold rounded-lg border border-blue-200 dark:border-blue-500/20 hover:bg-blue-100 dark:hover:bg-blue-500/20 transition-colors cursor-pointer"
           >
             <Mail className="w-3.5 h-3.5" />
             <span>Resend Invite</span>
@@ -146,7 +146,7 @@ export const EmployeeDetails = () => {
       {/* Hero Header Card */}
       <div className="p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
         <div className="flex items-center gap-5">
-          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-sky-500 to-indigo-600 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-sky-500/20 shrink-0">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-tr from-blue-600 to-violet-600 text-white font-black text-2xl flex items-center justify-center shadow-lg shadow-blue-500/20 shrink-0">
             {employee.firstName?.[0]}{employee.lastName?.[0]}
           </div>
           <div>
@@ -154,7 +154,7 @@ export const EmployeeDetails = () => {
               <h1 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight m-0">
                 {employee.firstName} {employee.lastName}
               </h1>
-              <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded-lg bg-sky-50 dark:bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-200 dark:border-sky-500/20">
+              <span className="font-mono text-xs font-bold px-2.5 py-0.5 rounded-lg bg-blue-50 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-200 dark:border-blue-500/20">
                 {employee.employeeCode}
               </span>
             </div>
@@ -162,7 +162,7 @@ export const EmployeeDetails = () => {
               {employee.designation} &bull; {employee.departmentId?.name || 'General Operations'}
             </p>
             <div className="flex flex-wrap items-center gap-2 mt-3">
-              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-sky-500/10 text-sky-600 dark:text-sky-400 border border-sky-500/20">
+              <span className="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
                 {role}
               </span>
               <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold ${
@@ -203,7 +203,7 @@ export const EmployeeDetails = () => {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-2 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
               activeTab === tab
-                ? 'bg-sky-500 text-white shadow-sm'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
                 : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:text-white dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
             }`}
           >
@@ -219,7 +219,7 @@ export const EmployeeDetails = () => {
             {/* Personal Details */}
             <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <User className="w-4 h-4 text-sky-500" />
+                <User className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Personal Information
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -280,13 +280,13 @@ export const EmployeeDetails = () => {
           <div className="space-y-6">
             <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
-                <Shield className="w-4 h-4 text-sky-500" />
+                <Shield className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Reporting Hierarchy
               </h3>
               {employee.reportingManagerId ? (
                 <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/80 dark:border-slate-800">
                   <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">Direct Manager</span>
-                  <Link to={`/employees/${employee.reportingManagerId._id}`} className="font-bold text-slate-900 dark:text-white text-xs hover:text-sky-500 no-underline block">
+                  <Link to={`/employees/${employee.reportingManagerId._id}`} className="font-bold text-slate-900 dark:text-white text-xs hover:text-blue-600 dark:hover:text-blue-400 no-underline block">
                     {employee.reportingManagerId.firstName} {employee.reportingManagerId.lastName}
                   </Link>
                   <span className="text-[11px] text-slate-400 block">{employee.reportingManagerId.designation}</span>
@@ -309,7 +309,7 @@ export const EmployeeDetails = () => {
                     <CartesianGrid strokeDasharray="3 3" opacity={0.15} />
                     <XAxis dataKey="cycle" fontSize={10} />
                     <YAxis domain={[50, 100]} fontSize={10} />
-                    <Tooltip contentStyle={{ backgroundColor: '#0f172a', borderRadius: '10px', fontSize: '11px' }} />
+                    <Tooltip contentStyle={{ backgroundColor: '#111C2E', borderColor: '#263449', borderRadius: '12px', fontSize: '11px', color: '#F1F5F9' }} />
                     <Line type="monotone" dataKey="score" stroke={THEME_COLORS.purple.DEFAULT} strokeWidth={2.5} dot={{ r: 4 }} />
                   </LineChart>
                 </ResponsiveContainer>
@@ -349,7 +349,7 @@ export const EmployeeDetails = () => {
                         <td className="p-3 font-semibold text-slate-800 dark:text-slate-200">{sc.criterion}</td>
                         <td className="p-3 text-slate-500 dark:text-slate-400">{sc.weight}%</td>
                         <td className="p-3">
-                          <span className="font-bold text-sky-500">★ {sc.rating}/5</span>
+                          <span className="font-bold text-blue-600 dark:text-blue-400">★ {sc.rating}/5</span>
                         </td>
                         <td className="p-3 text-right font-mono font-bold text-slate-900 dark:text-white">
                           {sc.weightedScore} pts
@@ -368,10 +368,10 @@ export const EmployeeDetails = () => {
                     <div key={i} className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800">
                       <div className="flex items-center justify-between text-xs font-bold mb-1.5">
                         <span className="text-slate-900 dark:text-white">{g.title}</span>
-                        <span className="text-sky-500">{g.progress}%</span>
+                        <span className="text-blue-600 dark:text-blue-400">{g.progress}%</span>
                       </div>
                       <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-700 overflow-hidden">
-                        <div className="h-full bg-sky-500 rounded-full transition-all" style={{ width: `${g.progress}%` }} />
+                        <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${g.progress}%` }} />
                       </div>
                     </div>
                   ))}
@@ -407,7 +407,7 @@ export const EmployeeDetails = () => {
 
           <div className="p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
             <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-4 pb-3 border-b border-slate-100 dark:border-slate-800 flex items-center gap-2">
-              <Users className="w-4 h-4 text-sky-500" />
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               Direct Team Members ({teamMembers.length})
             </h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -415,7 +415,7 @@ export const EmployeeDetails = () => {
                 <Link
                   key={m._id}
                   to={`/employees/${m._id}`}
-                  className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800 hover:border-sky-500 transition-all flex items-center justify-between no-underline"
+                  className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800 hover:border-blue-500 transition-all flex items-center justify-between no-underline"
                 >
                   <div className="min-w-0">
                     <span className="font-bold text-xs text-slate-900 dark:text-white block truncate">{m.firstName} {m.lastName}</span>
@@ -493,7 +493,7 @@ export const EmployeeDetails = () => {
                     <span className="text-[10px] text-slate-400">Due: {new Date(t.dueDate).toLocaleDateString()} &bull; Prio: {t.priority}</span>
                   </div>
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                    t.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-sky-500/10 text-sky-500'
+                    t.status === 'COMPLETED' ? 'bg-emerald-500/10 text-emerald-500' : 'bg-blue-500/10 text-blue-500'
                   }`}>
                     {t.status}
                   </span>
@@ -517,7 +517,7 @@ export const EmployeeDetails = () => {
             ].map((doc, idx) => (
               <div key={idx} className="p-4 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-slate-200/60 dark:border-slate-800 flex items-center justify-between gap-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  <FileText className="w-5 h-5 text-sky-500 shrink-0" />
+                  <FileText className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0" />
                   <div className="truncate">
                     <span className="text-xs font-bold text-slate-900 dark:text-white block truncate">{doc.name}</span>
                     <span className="text-[10px] text-slate-400">{doc.size}</span>

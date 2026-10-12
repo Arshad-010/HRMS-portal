@@ -1,16 +1,51 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, useRef } from 'react';
 import api from '../api/axios';
 import { useAuth } from './AuthContext';
+import { useSocket } from './SocketContext';
 
 const NotificationContext = createContext(null);
 
 export const NotificationProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
+  const { socket, isConnected } = useSocket();
+
   const [unreadCount, setUnreadCount] = useState(0);
   const [recentNotifications, setRecentNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [toasts, setToasts] = useState([]);
 
-  // Fetch unread count
+  // Track previous connection state to detect reconnection
+  const wasConnectedRef = useRef(false);
+
+  // Add toast notification with deduplication
+  const addToast = useCallback((notification) => {
+    if (!notification || !notification._id) return;
+    const toastId = notification._id;
+
+    setToasts((prev) => {
+      // Prevent duplicate toasts
+      if (prev.some((t) => t.id === toastId)) return prev;
+      return [
+        {
+          id: toastId,
+          type: notification.type,
+          title: notification.title,
+          message: notification.message,
+          relatedEntityType: notification.relatedEntityType,
+          relatedEntityId: notification.relatedEntityId,
+          createdAt: notification.createdAt || new Date(),
+        },
+        ...prev.slice(0, 4), // Keep max 5 queued toasts
+      ];
+    });
+  }, []);
+
+  // Remove toast by id
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+
+  // Fetch unread count from REST API
   const fetchUnreadCount = useCallback(async () => {
     if (!isAuthenticated) return;
     try {
@@ -19,7 +54,6 @@ export const NotificationProvider = ({ children }) => {
         setUnreadCount(response.data.data.unreadCount || 0);
       }
     } catch (err) {
-      // Gracefully handle network/auth errors without crashing UI
       console.debug('Failed to fetch unread count:', err.message);
     }
   }, [isAuthenticated]);
@@ -92,28 +126,134 @@ export const NotificationProvider = ({ children }) => {
     return false;
   }, [fetchUnreadCount]);
 
-  // Initial load and periodic polling every 45 seconds
+  // Initial load
   useEffect(() => {
     if (!isAuthenticated) {
       setUnreadCount(0);
       setRecentNotifications([]);
+      setToasts([]);
       return;
     }
 
     fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 45000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, fetchUnreadCount]);
+    fetchRecentNotifications();
+  }, [isAuthenticated, fetchUnreadCount, fetchRecentNotifications]);
+
+  // Real-time socket event listeners & Reconnection missed notification catch-up
+  useEffect(() => {
+    if (!socket || !isAuthenticated) return;
+
+    // Handle new incoming real-time notification
+    const handleNewNotification = (notification) => {
+      if (!notification || !notification._id) return;
+
+      // Update recent notifications list
+      setRecentNotifications((prev) => {
+        const filtered = prev.filter((n) => n._id !== notification._id);
+        return [notification, ...filtered].slice(0, 10);
+      });
+
+      // Increment unread count
+      setUnreadCount((prev) => prev + 1);
+
+      // Trigger unobtrusive toast
+      addToast(notification);
+
+      // Broadcast custom DOM event for active views (like Notifications page)
+      window.dispatchEvent(
+        new CustomEvent('hrms:notification:new', { detail: notification })
+      );
+    };
+
+    // Authoritative unread count update from backend
+    const handleUnreadCount = (data) => {
+      if (data && typeof data.unreadCount === 'number') {
+        setUnreadCount(data.unreadCount);
+      }
+    };
+
+    // When a notification was read in another tab or window
+    const handleNotificationRead = (data) => {
+      if (data?.notificationId) {
+        setRecentNotifications((prev) =>
+          prev.map((n) =>
+            n._id === data.notificationId ? { ...n, isRead: true, readAt: new Date() } : n
+          )
+        );
+      }
+      if (typeof data?.unreadCount === 'number') {
+        setUnreadCount(data.unreadCount);
+      }
+    };
+
+    // When all notifications were marked read in another tab
+    const handleAllRead = () => {
+      setRecentNotifications((prev) =>
+        prev.map((n) => ({ ...n, isRead: true, readAt: new Date() }))
+      );
+      setUnreadCount(0);
+    };
+
+    // When a notification was deleted
+    const handleNotificationDeleted = (data) => {
+      if (data?.notificationId) {
+        setRecentNotifications((prev) =>
+          prev.filter((n) => n._id !== data.notificationId)
+        );
+      }
+      if (typeof data?.unreadCount === 'number') {
+        setUnreadCount(data.unreadCount);
+      }
+    };
+
+    // Handle Socket Reconnection: retrieve any missed notifications while disconnected
+    const handleReconnect = () => {
+      fetchUnreadCount();
+      fetchRecentNotifications();
+    };
+
+    socket.on('notification:new', handleNewNotification);
+    socket.on('notification:unread_count', handleUnreadCount);
+    socket.on('notification:read', handleNotificationRead);
+    socket.on('notification:all_read', handleAllRead);
+    socket.on('notification:deleted', handleNotificationDeleted);
+    socket.on('reconnect', handleReconnect);
+    socket.on('connect', handleReconnect);
+
+    return () => {
+      socket.off('notification:new', handleNewNotification);
+      socket.off('notification:unread_count', handleUnreadCount);
+      socket.off('notification:read', handleNotificationRead);
+      socket.off('notification:all_read', handleAllRead);
+      socket.off('notification:deleted', handleNotificationDeleted);
+      socket.off('reconnect', handleReconnect);
+      socket.off('connect', handleReconnect);
+    };
+  }, [socket, isAuthenticated, addToast, fetchUnreadCount, fetchRecentNotifications]);
+
+  // Track isConnected to fetch on reconnect in case socket instance was reused
+  useEffect(() => {
+    if (isConnected && !wasConnectedRef.current) {
+      // Just reconnected! Retrieve missed notifications
+      fetchUnreadCount();
+      fetchRecentNotifications();
+    }
+    wasConnectedRef.current = isConnected;
+  }, [isConnected, fetchUnreadCount, fetchRecentNotifications]);
 
   const value = {
     unreadCount,
     recentNotifications,
     loading,
+    toasts,
+    addToast,
+    removeToast,
     fetchUnreadCount,
     fetchRecentNotifications,
     markAsRead,
     markAllAsRead,
     deleteNotification,
+    isSocketConnected: isConnected,
   };
 
   return <NotificationContext.Provider value={value}>{children}</NotificationContext.Provider>;

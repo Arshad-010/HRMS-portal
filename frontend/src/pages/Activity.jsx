@@ -177,7 +177,7 @@ export const Activity = () => {
       return 'bg-cyan-500/10 text-cyan-400 border-cyan-500/30';
     }
     if (action.includes('ASSIGNED') || action.includes('STATUS')) {
-      return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/30';
+      return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/30';
     }
     return 'bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700';
   };
@@ -191,7 +191,7 @@ export const Activity = () => {
       case 'LEAVE':
         return <Calendar className="w-3.5 h-3.5 text-amber-400" />;
       case 'TASK':
-        return <CheckSquare className="w-3.5 h-3.5 text-indigo-400" />;
+        return <CheckSquare className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />;
       default:
         return <Layers className="w-3.5 h-3.5 text-slate-500 dark:text-slate-400" />;
     }
@@ -202,7 +202,7 @@ export const Activity = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-400">
+          <div className="w-10 h-10 rounded-xl bg-violet-500/10 border border-violet-500/20 flex items-center justify-center text-violet-600 dark:text-violet-400">
             <History className="w-5 h-5" />
           </div>
           <div>
@@ -233,9 +233,9 @@ export const Activity = () => {
           </button>
           <button
             onClick={() => fetchActivityLogs()}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-500' : ''}`} />
             <span>Refresh</span>
           </button>
         </div>
@@ -254,7 +254,7 @@ export const Activity = () => {
                 setActionFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-900 dark:text-white outline-none"
             >
               <option value="">All Actions</option>
               <option value="EMPLOYEE_CREATED">Employee Created</option>
@@ -284,7 +284,7 @@ export const Activity = () => {
                 setEntityTypeFilter(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-900 dark:text-white outline-none"
             >
               <option value="">All Entities</option>
               <option value="EMPLOYEE">Employee</option>
@@ -305,7 +305,7 @@ export const Activity = () => {
                 setStartDate(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-900 dark:text-white outline-none"
             />
           </div>
 
@@ -319,7 +319,7 @@ export const Activity = () => {
                 setEndDate(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+              className="w-full px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-900 dark:text-white outline-none"
             />
           </div>
         </div>
@@ -332,7 +332,7 @@ export const Activity = () => {
             </span>
             <button
               onClick={handleResetFilters}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium transition-colors cursor-pointer"
+              className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-500 font-medium transition-colors cursor-pointer"
             >
               Reset Filters
             </button>
@@ -359,7 +359,7 @@ export const Activity = () => {
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-medium">
+              <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 font-medium">
                 <th className="py-3 px-4">Timestamp</th>
                 <th className="py-3 px-4">Actor</th>
                 <th className="py-3 px-4">Action</th>
@@ -368,18 +368,18 @@ export const Activity = () => {
                 <th className="py-3 px-4 text-right">Details</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800/60">
+            <tbody className="divide-y divide-slate-200 dark:divide-slate-800">
               {loading && logs.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 dark:text-slate-400">
-                    <RefreshCw className="w-5 h-5 animate-spin text-indigo-400 mx-auto mb-2" />
+                    <RefreshCw className="w-5 h-5 animate-spin text-blue-500 mx-auto mb-2" />
                     <span>Loading audit records...</span>
                   </td>
                 </tr>
               ) : logs.length === 0 ? (
                 <tr>
                   <td colSpan="6" className="py-12 text-center text-slate-500 dark:text-slate-400">
-                    <History className="w-8 h-8 text-slate-600 dark:text-slate-400 mx-auto mb-2" />
+                    <History className="w-8 h-8 text-slate-400 dark:text-slate-500 mx-auto mb-2" />
                     <p className="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-0.5">No Activity Logs Found</p>
                     <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-0">Try clearing active filters or check back later.</p>
                   </td>
@@ -392,7 +392,7 @@ export const Activity = () => {
                     : log.actor?.email || 'System';
 
                   return (
-                    <tr key={log._id} className="hover:bg-slate-850/40 transition-colors">
+                    <tr key={log._id} className="hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors">
                       {/* Timestamp */}
                       <td className="py-3.5 px-4 whitespace-nowrap text-slate-500 dark:text-slate-400 font-mono text-[11px]">
                         <div>{new Date(log.createdAt).toLocaleDateString()}</div>
@@ -447,13 +447,13 @@ export const Activity = () => {
                         {log.metadata && Object.keys(log.metadata).length > 0 ? (
                           <button
                             onClick={() => setSelectedLog(log)}
-                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-300 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors cursor-pointer"
                             title="Inspect Metadata"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                         ) : (
-                          <span className="text-slate-600 dark:text-slate-400 font-mono text-[11px]">&mdash;</span>
+                          <span className="text-slate-400 dark:text-slate-600 font-mono text-[11px]">&mdash;</span>
                         )}
                       </td>
                     </tr>
@@ -465,7 +465,7 @@ export const Activity = () => {
         </div>
 
         {/* Footer & Pagination */}
-        <div className="py-3 px-4 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
+        <div className="py-3 px-4 bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400">
           <span>Total Records: <strong className="text-slate-800 dark:text-slate-200">{totalCount}</strong></span>
 
           {totalPages > 1 && (
@@ -473,7 +473,7 @@ export const Activity = () => {
               <button
                 onClick={() => setPage((p) => Math.max(1, p - 1))}
                 disabled={page === 1 || loading}
-                className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 disabled:opacity-40 cursor-pointer"
+                className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
@@ -483,7 +483,7 @@ export const Activity = () => {
               <button
                 onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
                 disabled={page === totalPages || loading}
-                className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 disabled:opacity-40 cursor-pointer"
+                className="p-1 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 disabled:opacity-40 cursor-pointer"
               >
                 <ChevronRight className="w-4 h-4" />
               </button>
@@ -494,25 +494,25 @@ export const Activity = () => {
 
       {/* Metadata Detail Modal */}
       {selectedLog && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl relative">
             <button
               onClick={() => setSelectedLog(null)}
-              className="absolute top-4 right-4 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:text-white transition-colors cursor-pointer"
+              className="absolute top-4 right-4 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
 
             <h3 className="text-base font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
-              <Shield className="w-4 h-4 text-indigo-400" />
+              <Shield className="w-4 h-4 text-blue-500" />
               Audit Event Metadata
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400 mb-4 font-mono">
-              Action: <span className="text-indigo-400 font-semibold">{selectedLog.action}</span> &bull; Entity ID: {selectedLog.entityId}
+              Action: <span className="text-blue-500 font-semibold">{selectedLog.action}</span> &bull; Entity ID: {selectedLog.entityId}
             </p>
 
-            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 mb-4 max-h-64 overflow-y-auto">
-              <pre className="text-xs font-mono text-emerald-400 whitespace-pre-wrap m-0">
+            <div className="bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-xl p-3.5 mb-4 max-h-64 overflow-y-auto">
+              <pre className="text-xs font-mono text-emerald-500 dark:text-emerald-400 whitespace-pre-wrap m-0">
                 {JSON.stringify(selectedLog.metadata, null, 2)}
               </pre>
             </div>
@@ -520,7 +520,7 @@ export const Activity = () => {
             <div className="flex justify-end">
               <button
                 onClick={() => setSelectedLog(null)}
-                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
+                className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-semibold cursor-pointer transition-colors"
               >
                 Close
               </button>
