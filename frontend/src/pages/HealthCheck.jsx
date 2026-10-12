@@ -49,8 +49,8 @@ export const HealthCheck = () => {
       {/* Header section */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-8 border-b border-slate-200 dark:border-slate-800">
         <div>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-xs font-semibold mb-3">
-            <span className="w-2 h-2 rounded-full bg-indigo-400 animate-ping" />
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-semibold mb-3">
+            <span className="w-2 h-2 rounded-full bg-blue-500 animate-ping" />
             System Architecture Foundation
           </div>
           <h2 className="text-3xl font-extrabold text-slate-900 dark:text-white tracking-tight">Full-Stack Environment Health</h2>
@@ -62,7 +62,7 @@ export const HealthCheck = () => {
         <button
           onClick={fetchHealth}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white font-medium text-sm transition-all shadow-lg shadow-indigo-600/25 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 active:scale-95 text-white font-medium text-sm transition-all shadow-lg shadow-blue-600/25 disabled:opacity-50 disabled:pointer-events-none cursor-pointer"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
           {loading ? 'Pinging API...' : 'Run Diagnostics Ping'}
@@ -74,7 +74,7 @@ export const HealthCheck = () => {
         {/* Frontend Status */}
         <div className="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl p-6 backdrop-blur-sm hover:border-slate-600/60 transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <span className="p-2.5 bg-sky-500/10 text-sky-400 rounded-xl border border-sky-500/20">
+            <span className="p-2.5 bg-blue-500/10 text-blue-500 rounded-xl border border-blue-500/20">
               <Code2 className="w-5 h-5" />
             </span>
             <span className="inline-flex items-center gap-1.5 text-xs font-medium text-emerald-400 bg-emerald-500/10 px-2.5 py-1 rounded-full border border-emerald-500/20">
@@ -107,7 +107,7 @@ export const HealthCheck = () => {
         {/* Backend Status */}
         <div className="bg-slate-100 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 rounded-2xl p-6 backdrop-blur-sm hover:border-slate-600/60 transition-colors">
           <div className="flex items-center justify-between mb-4">
-            <span className="p-2.5 bg-indigo-500/10 text-indigo-400 rounded-xl border border-indigo-500/20">
+            <span className="p-2.5 bg-blue-500/10 text-blue-500 rounded-xl border border-blue-500/20">
               <Server className="w-5 h-5" />
             </span>
             {healthData?.status === 'ok' ? (
@@ -144,7 +144,7 @@ export const HealthCheck = () => {
             </div>
             <div className="flex justify-between py-1">
               <span className="text-slate-500 dark:text-slate-400">Round-trip Ping:</span>
-              <span className="font-mono font-medium text-indigo-300">{pingLatency ? `${pingLatency} ms` : 'N/A'}</span>
+              <span className="font-mono font-medium text-blue-500 dark:text-blue-400">{pingLatency ? `${pingLatency} ms` : 'N/A'}</span>
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ export const HealthCheck = () => {
       <div className="mt-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6">
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-slate-800">
           <div className="flex items-center gap-2">
-            <Globe className="w-4 h-4 text-indigo-400" />
+            <Globe className="w-4 h-4 text-blue-500" />
             <h4 className="text-sm font-semibold text-slate-800 dark:text-slate-200">Live Health API Payload (Axios GET /health)</h4>
           </div>
           <span className="text-xs font-mono text-slate-500 dark:text-slate-400">HTTP 200 OK</span>
@@ -209,17 +209,17 @@ export const HealthCheck = () => {
             </div>
           </div>
         ) : (
-          <pre className="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-emerald-400 font-mono text-xs overflow-x-auto">
+          <pre className="mt-4 p-4 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-emerald-400 font-mono text-xs overflow-x-auto">
             {JSON.stringify(healthData || { status: 'loading...' }, null, 2)}
           </pre>
         )}
       </div>
 
       {/* Next Steps Card */}
-      <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-white dark:from-slate-900 via-indigo-950/30 to-slate-100 dark:to-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="mt-8 p-6 rounded-2xl bg-gradient-to-r from-white dark:from-slate-900 via-blue-950/20 to-slate-100 dark:to-slate-900 border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <h4 className="text-base font-semibold text-slate-900 dark:text-white flex items-center gap-2">
-            <ShieldCheck className="w-5 h-5 text-indigo-400" />
+            <ShieldCheck className="w-5 h-5 text-blue-500" />
             Baseline Scaffolding Complete
           </h4>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-2xl">

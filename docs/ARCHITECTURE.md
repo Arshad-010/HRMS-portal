@@ -63,6 +63,10 @@ erDiagram
     Employee ||--o{ Task : "assigned to"
     Employee ||--o{ Task : "created by"
     Employee ||--o{ Notification : "receives"
+    User ||--o{ Conversation : "participates in"
+    Conversation ||--o{ Message : "contains"
+    User ||--o{ Message : "sends"
+
 
     User {
         ObjectId _id PK
@@ -139,6 +143,29 @@ erDiagram
         string title
         string message
         boolean isRead
+    }
+
+    Conversation {
+        ObjectId _id PK
+        array participants "Array of User ObjectIds"
+        string type "DIRECT | GROUP"
+        string name
+        string description
+        ObjectId creator FK
+        array admins "Array of User ObjectIds"
+        ObjectId lastMessage FK
+        date lastMessageAt
+    }
+
+    Message {
+        ObjectId _id PK
+        ObjectId conversationId FK
+        ObjectId sender FK
+        string text
+        string type "TEXT | FILE | TASK | MEETING"
+        array readBy "Array of User & ReadAt"
+        boolean isDeleted
+        date createdAt
     }
 ```
 
@@ -287,6 +314,46 @@ erDiagram
 * **Indexes**:
   * `{ recipientId: 1, isRead: 1, createdAt: -1 }`
 
+#### 8. Conversation Model
+* **Collection**: `conversations`
+* **Purpose**: Manages 1-to-1 direct messaging and department/project group chat rooms.
+* **Fields**:
+  * `participants` (Array of ObjectId, ref: `'User'`, required, indexed): User members in the conversation.
+  * `type` (String, enum: `['DIRECT', 'GROUP']`, default: `'DIRECT'`).
+  * `name` (String, trim, required for GROUP): Channel title.
+  * `description` (String, trim, optional): Group purpose or topic.
+  * `avatar` (String, optional): Group visual icon/avatar URL.
+  * `creator` (ObjectId, ref: `'User'`, optional): Group founder.
+  * `admins` (Array of ObjectId, ref: `'User'`): Users with group administrative privileges.
+  * `groupType` (String, enum: `['GENERAL', 'DEPARTMENT', 'PROJECT']`, default: `'GENERAL'`).
+  * `departmentId` (ObjectId, ref: `'Department'`, optional): Scoped department for team groups.
+  * `lastMessage` (ObjectId, ref: `'Message'`): Pointer to latest message.
+  * `lastMessageAt` (Date, default: `Date.now`, indexed): Timestamp of latest message activity.
+  * `metadata` (Map of String): Extensible configuration map.
+  * `timestamps` (Boolean, default: `true`).
+* **Compound Indexes**:
+  * `{ participants: 1, updatedAt: -1 }`
+  * `{ type: 1, participants: 1 }`
+  * `{ departmentId: 1, type: 1 }`
+
+#### 9. Message Model
+* **Collection**: `messages`
+* **Purpose**: Persisted chat messages with metadata, read tracking, and reactions.
+* **Fields**:
+  * `conversationId` (ObjectId, ref: `'Conversation'`, required, indexed): Target conversation channel.
+  * `sender` (ObjectId, ref: `'User'`, required): Author user account.
+  * `text` (String, trim, max 5000 chars): Message content.
+  * `type` (String, enum: `['TEXT', 'FILE', 'TASK', 'MEETING']`, default: `'TEXT'`).
+  * `fileUrl` (String, optional): Cloudinary attachment URL.
+  * `fileName`, `fileType`, `fileSize`: File metadata.
+  * `readBy` (Array of `{ user: ObjectId, readAt: Date }`): Accurate per-user read receipts.
+  * `reactions` (Array of `{ user: ObjectId, emoji: String }`): User reaction emojis.
+  * `isDeleted` (Boolean, default: `false`): Soft deletion flag.
+  * `isEdited` (Boolean, default: `false`): Edit indicator.
+  * `timestamps` (Boolean, default: `true`).
+* **Compound Indexes**:
+  * `{ conversationId: 1, createdAt: -1 }`
+
 ---
 
 ## 4. Role-Based Access Control (RBAC) Permission Matrix
@@ -325,6 +392,84 @@ The application supports four hierarchical and functional roles:
 | **Dashboards & Reports** | Executive Organization Metrics | ✅ | ✅ | ❌ | ❌ |
 | | Team Productivity & Attendance Overview | ✅ | ✅ | ✅ (Team Scope) | ❌ |
 | | Personal Dashboard Hub | ✅ | ✅ | ✅ | ✅ |
+| **Messaging & Team Chat** | Send Direct Message to Colleague | ✅ | ✅ | ✅ | ✅ |
+| | Create Group Channel | ✅ (Org-wide) | ✅ (Org-wide) | ✅ (Team/Dept) | ❌ |
+| | Add/Remove Members in Group | ✅ | ✅ | ✅ (If Group Admin) | ❌ |
+| | Rename Group / Update Description | ✅ | ✅ | ✅ (If Group Admin) | ❌ |
+| | Leave Group Channel | ✅ | ✅ | ✅ | ✅ |
+| | Delete Message | ✅ (Any) | ✅ (Any) | Own Only | Own Only |
+
+---
+
+### 4.5 Real-Time Communication Architecture (Socket.IO)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Client as React Client (Socket.IO)
+    participant Gateway as Socket.IO Gateway (port 5001)
+    participant Auth as JWT Auth Middleware
+    participant Mongo as MongoDB
+    actor Peer as Recipient Client
+
+    Client->>Gateway: Connect with { auth: { token } }
+    Gateway->>Auth: Verify JWT signature & active User doc
+    Auth-->>Gateway: Verified socket.user
+    Gateway->>Gateway: Auto-join isolated room: user._id
+    Gateway->>Gateway: Broadcast presence:online
+    
+    rect rgb(240, 248, 255)
+    Note over Client, Peer: Direct Messaging / Group Chat Flow
+    Client->>Gateway: emit("join_conversation", conversationId)
+    Gateway->>Mongo: Conversation.findOne({ _id, participants: user._id })
+    alt Authorized Member
+        Gateway->>Gateway: socket.join("conversation:" + conversationId)
+    else Unauthorized
+        Gateway-->>Client: emit("socket:error", "Not authorized")
+    end
+
+    Client->>Gateway: REST POST /api/chat/conversations/:id/messages
+    Gateway->>Mongo: Persist Message document
+    Gateway->>Gateway: io.to("conversation:" + id).emit("message:new", message)
+    Gateway-->>Peer: Real-time message payload delivered
+    end
+```
+
+#### Real-Time System Characteristics:
+1. **Isolated Personal User Rooms (`socket.join(userId)`)**: Every authenticated socket automatically joins a room keyed strictly to its verified MongoDB `user._id`. Real-time notifications and private toasts are emitted strictly to `userId`, preventing cross-user eavesdropping.
+2. **Channel-Scoped Conversation Rooms (`conversation:<id>`)**: Sockets only join a conversation room after server-side database validation confirms that `socket.user._id` exists in the `conversation.participants` array.
+3. **Immediate Revocation & Dynamic Room Eviction**: When an admin removes a user from a group (`DELETE /api/chat/groups/:id/members/:userId`), the server queries all active connected sockets for that user and forcibly invokes `socket.leave("conversation:" + id)`, immediately terminating their ability to receive further events or messages, and emits `group:removed_you` to clear their viewport.
+4. **Heartbeat, Ping/Pong, and Reconnection Strategy**: The client maintains persistent reconnection with exponential backoff (`reconnectionDelay: 1000ms`, `reconnectionDelayMax: 5000ms`). When internet reconnects, the client re-authenticates and catches up on missed messages and unread counts.
+
+---
+
+### 4.6 Security Architecture & Threat Mitigation
+
+1. **Zero Client Trust**: All user identifiers (`req.user._id`, `req.user.role`, `socket.user`) are derived solely from verified server-side JWT verification. Client-supplied IDs are never trusted to establish identity or room authorization.
+2. **Strict RBAC & Tenant Scoping**:
+   - `EMPLOYEE`: Scoped strictly to own attendance, leave, tasks, and conversations.
+   - `MANAGER`: Scoped strictly to direct reports within their department. Cross-department actions trigger `403 Forbidden`.
+   - `HR` & `ADMIN`: Organization-wide governance.
+3. **Sensitive Field Sanitization**: Salary, emergency contact, and hashed passwords are stripped from JSON payloads for non-privileged roles.
+4. **Production CORS Configuration**: Express and Socket.IO enforce strict origin validation against `process.env.CORS_ORIGIN` and `process.env.FRONTEND_URL`. In development, localhost ports are whitelisted, while production rejects non-whitelisted domains.
+5. **No Committed Secrets Policy**: All credentials, private keys, database connection strings, and JWT secrets are stored in untracked `.env` files. Sanitized `.env.example` templates document every configuration key with dummy values.
+
+---
+
+### 4.7 Shared Frontend Design System & Theme Engine
+
+1. **Design System & Semantic Tokens (`designTokens.js`, `themeColors.js`, `index.css`)**:
+   - Primary: Indigo/Blue modern gradient palette.
+   - Neutral: Slate gray scale tailored for contrast and readability.
+   - Accents: Emerald (Success), Amber (Warning), Rose (Error), Purple (Manager/Admin).
+2. **Dynamic Light & Dark Theme Consistency**:
+   - Driven by React `ThemeContext` persisting to `localStorage` and syncing with system preference.
+   - Semantic CSS classes (`bg-slate-900`, `text-slate-100`, `border-slate-800` vs `bg-white`, `text-slate-900`, `border-slate-200`) applied across every layout, card, modal, and drawer.
+3. **Responsive Breakpoints & Mobile Adaptability**:
+   - **Desktop (1024px+)**: Dual-pane layouts (sidebar + chat window, master-detail tables).
+   - **Tablet (768px - 1023px)**: Responsive navigation drawer, collapsible panels.
+   - **Mobile (< 768px)**: Single-pane viewports with back buttons, floating drawer overlays, and responsive touch targets.
+4. **Consistent UI States**: Every component implements standardized loading skeletons, empty states (`EmptyState.jsx`), and error alerts.
 
 ---
 
@@ -483,6 +628,23 @@ The application supports four hierarchical and functional roles:
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/activity` | List chronological organizational audit logs | Required | Scoped by Role (ADMIN: all, HR: HR/org, MANAGER: team, EMPLOYEE: self) | Query: `?page=1&limit=15&action=&entityType=&actor=&startDate=&endDate=` | `200 OK`: `{ logs: [...], total, pages }` | `401 Unauthorized` |
 
+#### 10. Direct Messaging & Group Chat (`/api/chat`)
+
+| Method | Endpoint | Purpose | Auth | Roles | Request Body / Query | Success Response | Error Responses |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/chat/users` | List eligible colleagues for chat | Required | Authenticated | None | `200 OK`: `{ users: [...] }` | `401 Unauthorized` |
+| `POST` | `/chat/conversations` | Get or create direct 1-to-1 conversation | Required | Authenticated | `{ participantId }` | `200 OK`: `{ conversation }` | `400 Self-Chat`<br>`404 User Not Found` |
+| `GET` | `/chat/conversations` | List user's active conversations | Required | Authenticated | None | `200 OK`: `{ conversations: [...] }` | `401 Unauthorized` |
+| `GET` | `/chat/conversations/:id/messages` | Load paginated message history | Required | Member Only | Query: `?limit=50&before=` | `200 OK`: `{ messages: [...], hasMore }` | `403 Forbidden` |
+| `POST` | `/chat/conversations/:id/messages` | Post text/file message & broadcast | Required | Member Only | `{ text, attachments? }` | `201 Created`: `{ message }` | `400 Empty`<br>`403 Forbidden` |
+| `PUT` | `/chat/conversations/:id/read` | Mark channel incoming messages read | Required | Member Only | None | `200 OK`: `{ success: true }` | `403 Forbidden` |
+| `POST` | `/chat/groups` | Create group channel | Required | ADMIN, HR, MANAGER | `{ name, description?, members: [...] }` | `201 Created`: `{ group }` | `403 Forbidden`<br>`400 Validation` |
+| `GET` | `/chat/groups/:id` | View group metadata & members | Required | Member, ADMIN, HR | None | `200 OK`: `{ group }` | `403 Forbidden`<br>`404 Not Found` |
+| `PUT` | `/chat/groups/:id` | Update group name / description | Required | Group Admin, ADMIN, HR | `{ name?, description? }` | `200 OK`: `{ group }` | `403 Forbidden` |
+| `POST` | `/chat/groups/:id/members` | Add new members to group | Required | Group Admin, ADMIN, HR | `{ memberIds: [...] }` | `200 OK`: `{ group }` | `403 Forbidden` |
+| `DELETE` | `/chat/groups/:id/members/:userId` | Remove member & evict from room | Required | Group Admin, ADMIN, HR | None | `200 OK`: `{ message }` | `403 Forbidden` |
+| `POST` | `/chat/groups/:id/leave` | Voluntarily leave group | Required | Active Member | None | `200 OK`: `{ message }` | `403 Forbidden` |
+
 ---
 
 ## 6. Implementation Phases & Milestones
@@ -502,25 +664,110 @@ gantt
     section Phase 4: Time & Attendance
     Attendance Clock & Work Hours APIs       :done, p4_1, 2026-10-13, 3d
     Attendance Calendar & Clock UI           :done, p4_2, 2026-10-13, 3d
-    section Phase 5: Leaves & Quotas
-    Leave Model & Balance Quotas APIs        :done, p5_1, 2026-10-16, 2d
-    Leave Requests & Approval Queue UI       :done, p5_2, 2026-10-16, 2d
-    section Phase 6: Tasks & Tracking
-    Task Model, Workflow APIs & Test Suite   :done, p6_1, 2026-10-18, 2d
-    Task Management Board & Dashboard Card   :done, p6_2, 2026-10-18, 2d
-    section Phase 7: Notifications & Activity
-    Notification & Audit Log Models/Services :done, p7_1, 2026-10-20, 2d
-    Navbar Bell, /notifications & /activity  :done, p7_2, 2026-10-20, 2d
-    section Phase 8: Advanced Analytics
-    Organizational Metrics & Release Polish  :active, p8, 2026-10-22, 2d
+    section Phase 5: Real-Time Notifications
+    Socket.IO Gateway & Notification Center  :done, p5_1, 2026-10-15, 2d
+    Live Badges & Toast Notifications        :done, p5_2, 2026-10-15, 2d
+    section Phase 6: Direct Messaging
+    Direct Conversations & Read Receipts     :done, p6_1, 2026-10-17, 2d
+    Chat UI & Pagination                     :done, p6_2, 2026-10-17, 2d
+    section Phase 7: Group Chat & Teams
+    Group Channels & Membership Governance   :done, p7_1, 2026-10-19, 2d
+    Dynamic Room Eviction & Real-Time Sync   :done, p7_2, 2026-10-19, 2d
+    section Phase 8: Final Integration & Release
+    Audit, Hardening & Production Build      :done, p8, 2026-10-21, 2d
 ```
 
 * **Phase 1 (Completed)**: Architecture scaffolding, dev server pipelines, health check diagnostic endpoint, Git configuration.
 * **Phase 2 (Completed)**: Backend authentication endpoints, JWT token generation, bcrypt hashing, User/Department/Employee models, and React auth state with protected routes.
 * **Phase 3 (Completed)**: Department & Employee management (CRUD APIs, soft deactivation, atomic sequential employee code generator EMP-100x, RBAC salary field protection, and full React frontend directory pages).
 * **Phase 4 (Completed)**: Attendance Management (Mongoose Attendance model with UTC midnight normalization and compound unique index `{ employee: 1, date: 1 }`, server-calculated `workHours = checkOut - checkIn`, self-service punch-in/out endpoints, RBAC-scoped team and organization attendance listing/filtering, automated test suite, live digital punch clock, metrics summary, and React UI).
-* **Phase 5 (Completed)**: Leave Management (Mongoose Leave model with UTC midnight normalization, multi-type annual quotas with atomic balance deductions on approval and restoration on cancellation, 21-case automated test suite, Attendance ON_LEAVE integration, and full React self-service & manager approval queue UI).
-* **Phase 6 (Completed)**: Task Management & Tracking (Mongoose Task model with compound indexes and dynamic `isOverdue` virtual, full REST endpoints `/api/tasks`, employee self-service `/api/tasks/my`, status lifecycle transitions with automated `completedAt` timestamp maintenance, 21-case automated test suite, React task board with filters and modals, and dashboard integration).
-* **Phase 7 (Completed)**: Notifications & Activity Management (Mongoose Notification and ActivityLog models with compound indexing, backend NotificationService with 5-second duplicate suppression, ActivityService with zero-secret metadata sanitation, automated event dispatch across Leave, Task, Employee, and Department workflows, ownership-enforced REST endpoints `/api/notifications` and RBAC-scoped `/api/activity`, 23-case backend test suite, Navbar notification bell with live unread counter badge and popover dropdown, dedicated `/notifications` management center, dedicated `/activity` audit timeline, and Dashboard alert/audit previews).
-* **Phase 8 (Next)**: Advanced Analytics & Reporting, Executive Metrics Dashboard, and Production Release Hardening.
+* **Phase 5 (Completed)**: Real-Time Notification System (Socket.IO integration with strict JWT handshake, isolated personal rooms, offline persistence in MongoDB before dispatch, automatic unread count badge synchronization, non-blocking toast popups, and 100% passing test suite).
+* **Phase 6 (Completed)**: Direct Messaging Module (One-to-one conversation creation, idempotency, MongoDB message persistence before broadcasting, unauthorized room access rejection, cursor/limit pagination, read receipts, unread badge indicators, and 25-case automated test suite).
+* **Phase 7 (Completed)**: Group Chat & Team Management (Group channel creation with RBAC authorization, organization-wide vs team scope validation, dynamic member addition/removal with immediate real-time socket room eviction, group rename broadcasts, voluntary leaving, and 24-case automated test suite).
+* **Phase 8 (Completed)**: Final Integration, Security & Release Check (End-to-end integration audit, zero committed secrets verification, sanitized `.env.example` configurations, production CORS setup, 100% pass across all 7 backend test suites, and clean Vite frontend production build).
+
+---
+
+## 7. Production Deployment & Operations Architecture
+
+### 7.1 Architecture Topology
+```text
+[ Browser / Mobile Client ]
+            │  HTTPS / WSS (Port 443)
+            ▼
+[ Nginx Reverse Proxy & SSL Termination ]
+      │                            │
+      │ / (Static SPA Assets)      │ /api & /socket.io (WebSocket)
+      ▼                            ▼
+[ Vite /dist Static Files ]   [ Node.js Cluster / PM2 (Port 5001) ]
+                                           │
+                                           ▼
+                                 [ MongoDB 6.x / 7.x ]
+```
+
+### 7.2 Nginx Production Reverse Proxy Configuration
+```nginx
+server {
+    listen 80;
+    server_name hrms.yourcompany.com;
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name hrms.yourcompany.com;
+
+    ssl_certificate /etc/letsencrypt/live/hrms.yourcompany.com/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/hrms.yourcompany.com/privkey.pem;
+
+    # Frontend Single Page Application
+    root /var/www/hrms-portal/frontend/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    # Backend REST API
+    location /api/ {
+        proxy_pass http://127.0.0.1:5001/api/;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # WebSocket & Socket.IO Reverse Proxy
+    location /socket.io/ {
+        proxy_pass http://127.0.0.1:5001/socket.io/;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "Upgrade";
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_read_timeout 86400s;
+        proxy_send_timeout 86400s;
+    }
+}
+```
+
+### 7.3 Process Management with PM2
+```bash
+# In backend directory
+npm run build # (if applicable)
+pm2 start src/server.js --name "hrms-api" -i max --env production
+pm2 save
+pm2 startup
+```
+
+### 7.4 Pre-Release Verification Checklist
+- [x] All 7 backend test suites pass with 0 failures (`npm run test:all`).
+- [x] Frontend builds without syntax or bundling errors (`npm run build`).
+- [x] `.env` files excluded from Git (`.gitignore` verified).
+- [x] Production CORS set to authoritative domain URL.
+- [x] WebSocket transports configured for `['websocket', 'polling']`.
+- [x] Database compound indexes deployed and verified.
+
 

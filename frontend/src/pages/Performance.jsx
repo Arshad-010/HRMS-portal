@@ -84,12 +84,12 @@ export const Performance = () => {
   const nineBoxMatrix = [
     [
       { label: 'Enigma / Inconsistent', key: '3-1', color: 'bg-amber-500/10 text-amber-500 border-amber-500/20' },
-      { label: 'High Potential', key: '3-2', color: 'bg-sky-500/10 text-sky-500 border-sky-500/20' },
+      { label: 'High Potential', key: '3-2', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' },
       { label: 'Star / Top Talent', key: '3-3', color: 'bg-violet-500/10 text-violet-500 border-violet-500/20' },
     ],
     [
       { label: 'Dilemma', key: '2-1', color: 'bg-rose-500/10 text-rose-500 border-rose-500/20' },
-      { label: 'Core Player', key: '2-2', color: 'bg-sky-500/10 text-sky-500 border-sky-500/20' },
+      { label: 'Core Player', key: '2-2', color: 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20' },
       { label: 'High Performer', key: '2-3', color: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20' },
     ],
     [
@@ -221,7 +221,7 @@ export const Performance = () => {
                         #{idx + 1}
                       </div>
                       <div className="truncate">
-                        <Link to={`/employees/${p.id}`} className="font-bold text-xs text-slate-900 dark:text-white hover:text-sky-500 no-underline block truncate">
+                        <Link to={`/employees/${p.id}`} className="font-bold text-xs text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 no-underline block truncate">
                           {p.name}
                         </Link>
                         <span className="text-[11px] text-slate-400 truncate block">{p.designation} &bull; {p.department}</span>
@@ -253,7 +253,7 @@ export const Performance = () => {
                           !
                         </div>
                         <div className="truncate">
-                          <Link to={`/employees/${p.id}`} className="font-bold text-xs text-slate-900 dark:text-white hover:text-sky-500 no-underline block truncate">
+                          <Link to={`/employees/${p.id}`} className="font-bold text-xs text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 no-underline block truncate">
                             {p.name}
                           </Link>
                           <span className="text-[11px] text-slate-400 truncate block">{p.designation} &bull; {p.department}</span>

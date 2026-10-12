@@ -444,7 +444,7 @@ export const Attendance = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Clock className="w-6 h-6 text-indigo-400" />
+            <Clock className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             Attendance Management
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -459,7 +459,7 @@ export const Attendance = () => {
               fetchSummary();
               if (activeTab === 'team') fetchTeamAttendance();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -468,7 +468,7 @@ export const Attendance = () => {
           {isManagerOrAbove && (
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Log Attendance</span>
@@ -480,13 +480,13 @@ export const Attendance = () => {
       {/* Hero Grid: Real-time Punch Card + Organization Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 my-6">
         {/* Real-time Punch Clock (5 cols on lg) */}
-        <div className="lg:col-span-5 bg-gradient-to-br from-white dark:from-slate-900 via-slate-50 dark:via-slate-900 to-indigo-100 dark:to-indigo-950 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-xl">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-indigo-500/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="lg:col-span-5 bg-gradient-to-br from-white dark:from-slate-900 via-slate-50 dark:via-slate-900 to-blue-50/50 dark:to-blue-950/20 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden flex flex-col justify-between shadow-sm">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/5 rounded-full blur-2xl pointer-events-none" />
 
           <div>
             <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
               <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-                <Timer className="w-4 h-4 text-indigo-400" />
+                <Timer className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Live Punch Clock
               </span>
               <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400">
@@ -511,7 +511,7 @@ export const Attendance = () => {
                     Checked In / Working
                   </span>
                 ) : isCheckedIn && isCheckedOut ? (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-indigo-500/10 text-indigo-400 border border-indigo-500/30">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/30">
                     <CheckCircle2 className="w-3.5 h-3.5" />
                     Workday Completed
                   </span>
@@ -540,7 +540,7 @@ export const Attendance = () => {
                 value={punchRemarks}
                 onChange={(e) => setPunchRemarks(e.target.value)}
                 disabled={isCheckedIn && isCheckedOut}
-                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50 transition-colors"
+                className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none disabled:opacity-50 transition-colors"
               />
             </div>
           </div>
@@ -631,7 +631,7 @@ export const Attendance = () => {
         <div className="lg:col-span-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 backdrop-blur-sm flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-slate-800">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-indigo-400" />
+              <TrendingUp className="w-4 h-4 text-blue-600 dark:text-blue-400" />
               Today's Work Summary
             </span>
             <span className="text-xs text-slate-500 dark:text-slate-400">
@@ -674,7 +674,7 @@ export const Attendance = () => {
 
             <div className="flex flex-col gap-1">
               <span className="text-xs text-slate-500 dark:text-slate-400 font-medium">Work Duration</span>
-              <span className="text-lg font-bold text-indigo-500">
+              <span className="text-lg font-bold text-blue-600 dark:text-blue-400">
                 {todayRecord?.workHours ? `${todayRecord.workHours}h` : calculateElapsed() || '0h 0m 0s'}
               </span>
             </div>
@@ -696,7 +696,7 @@ export const Attendance = () => {
           onClick={() => setActiveTab('my')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
             activeTab === 'my'
-              ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-500/5'
               : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
           }`}
         >
@@ -709,7 +709,7 @@ export const Attendance = () => {
             onClick={() => setActiveTab('team')}
             className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
               activeTab === 'team'
-                ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-500/5'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
             }`}
           >
@@ -742,11 +742,11 @@ export const Attendance = () => {
             </div>
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Total Hours</span>
-              <p className="text-xl font-bold text-indigo-400 mt-1">{myStats.totalWorkHours || 0}h</p>
+              <p className="text-xl font-bold text-blue-600 dark:text-blue-400 mt-1">{myStats.totalWorkHours || 0}h</p>
             </div>
             <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-3 text-center">
               <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-slate-400">Avg Daily Hours</span>
-              <p className="text-xl font-bold text-violet-400 mt-1">{myStats.avgWorkHours || 0}h</p>
+              <p className="text-xl font-bold text-violet-600 dark:text-violet-400 mt-1">{myStats.avgWorkHours || 0}h</p>
             </div>
           </div>
 
@@ -761,7 +761,7 @@ export const Attendance = () => {
 
             {myLoading ? (
               <div className="py-16 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 dark:text-blue-400" />
                 <span className="text-xs">Loading personal logs...</span>
               </div>
             ) : myRecords.length === 0 ? (
@@ -774,7 +774,7 @@ export const Attendance = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Date</th>
                       <th className="py-3.5 px-4">Status</th>
                       <th className="py-3.5 px-4">Check-In</th>
@@ -800,7 +800,7 @@ export const Attendance = () => {
                         <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkOut)}</td>
                         <td className="py-3 px-4">
                           {rec.workHours !== undefined && rec.workHours !== null ? (
-                            <span className="font-mono font-semibold text-indigo-300 bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
+                            <span className="font-mono font-semibold text-blue-600 dark:text-blue-300 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">
                               {rec.workHours} hrs
                             </span>
                           ) : (
@@ -832,7 +832,7 @@ export const Attendance = () => {
                   placeholder="Search name, code..."
                   value={filterSearch}
                   onChange={(e) => setFilterSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
+                  className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
                 />
               </div>
 
@@ -847,7 +847,7 @@ export const Attendance = () => {
                     setFilterEndDate('');
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
 
@@ -859,7 +859,7 @@ export const Attendance = () => {
                     setFilterDept(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Departments</option>
                   {departments.map((dept) => (
@@ -878,7 +878,7 @@ export const Attendance = () => {
                     setFilterStatus(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Statuses</option>
                   <option value="PRESENT">PRESENT</option>
@@ -924,7 +924,7 @@ export const Attendance = () => {
                     setFilterDate('');
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
                 <span className="text-slate-500 dark:text-slate-400">to</span>
                 <input
@@ -936,7 +936,7 @@ export const Attendance = () => {
                     setFilterDate('');
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
             </div>
@@ -946,7 +946,7 @@ export const Attendance = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
             {teamLoading ? (
               <div className="py-20 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 dark:text-blue-400" />
                 <span className="text-xs">Loading workforce attendance records...</span>
               </div>
             ) : teamRecords.length === 0 ? (
@@ -959,7 +959,7 @@ export const Attendance = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Employee</th>
                       <th className="py-3.5 px-4">Department</th>
                       <th className="py-3.5 px-4">Date</th>
@@ -981,7 +981,7 @@ export const Attendance = () => {
                           {/* Employee Info */}
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xs font-bold">
+                              <div className="w-7 h-7 rounded-lg bg-blue-600/15 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center justify-center text-xs font-bold">
                                 {emp.firstName ? emp.firstName[0] : 'E'}
                               </div>
                               <div>
@@ -1021,7 +1021,7 @@ export const Attendance = () => {
                           <td className="py-3 px-4 font-mono text-slate-700 dark:text-slate-300">{formatTimeStr(rec.checkOut)}</td>
 
                           {/* Work Hours */}
-                          <td className="py-3 px-4 font-mono font-semibold text-indigo-300">
+                          <td className="py-3 px-4 font-mono font-semibold text-blue-600 dark:text-blue-400">
                             {rec.workHours !== undefined && rec.workHours !== null ? `${rec.workHours}h` : '--'}
                           </td>
 
@@ -1034,7 +1034,7 @@ export const Attendance = () => {
                               <button
                                 onClick={() => openEditModal(rec)}
                                 title="Edit Record"
-                                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                                className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 transition-colors cursor-pointer"
                               >
                                 <Edit2 className="w-3.5 h-3.5" />
                               </button>
@@ -1089,11 +1089,11 @@ export const Attendance = () => {
 
       {/* MANUAL RECORD MODAL (Create & Edit) */}
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Clock className="w-4 h-4 text-indigo-400" />
+                <Clock className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 {editingRecord ? 'Modify Attendance Record' : 'Log Manual Attendance Record'}
               </h3>
               <button
@@ -1113,7 +1113,7 @@ export const Attendance = () => {
                   disabled={Boolean(editingRecord)}
                   value={modalForm.employeeId}
                   onChange={(e) => setModalForm({ ...modalForm, employeeId: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
                 >
                   <option value="">Select Employee</option>
                   {employeeOptions.map((e) => (
@@ -1134,7 +1134,7 @@ export const Attendance = () => {
                     disabled={Boolean(editingRecord)}
                     value={modalForm.date}
                     onChange={(e) => setModalForm({ ...modalForm, date: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none disabled:opacity-60"
                   />
                 </div>
 
@@ -1144,7 +1144,7 @@ export const Attendance = () => {
                     required
                     value={modalForm.status}
                     onChange={(e) => setModalForm({ ...modalForm, status: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   >
                     <option value="PRESENT">PRESENT</option>
                     <option value="HALF_DAY">HALF_DAY</option>
@@ -1164,7 +1164,7 @@ export const Attendance = () => {
                     type="time"
                     value={modalForm.checkInTime}
                     onChange={(e) => setModalForm({ ...modalForm, checkInTime: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
 
@@ -1174,7 +1174,7 @@ export const Attendance = () => {
                     type="time"
                     value={modalForm.checkOutTime}
                     onChange={(e) => setModalForm({ ...modalForm, checkOutTime: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
               </div>
@@ -1187,11 +1187,11 @@ export const Attendance = () => {
                   placeholder="e.g. Regular punch adjusted by Manager, Field duty, Approved overtime..."
                   value={modalForm.remarks}
                   onChange={(e) => setModalForm({ ...modalForm, remarks: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
                 />
               </div>
 
-              <div className="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-[11px]">
+              <div className="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-300 text-[11px]">
                 ℹ️ <strong>Server-side Calculation:</strong> Total work hours and status will be computed automatically
                 from check-in and check-out timestamps.
               </div>
@@ -1222,7 +1222,7 @@ export const Attendance = () => {
                 <button
                   type="submit"
                   disabled={modalSubmitting}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer disabled:opacity-60"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer disabled:opacity-60"
                 >
                   {modalSubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                   <span>{editingRecord ? 'Save Changes' : 'Create Record'}</span>

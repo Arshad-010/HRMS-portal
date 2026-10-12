@@ -3,13 +3,13 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-  // Default to light mode as requested
+  // Theme mode: 'light' | 'dark'
   const [themeMode, setThemeMode] = useState(() => {
     return localStorage.getItem('hrms_theme') || 'light';
   });
 
   const [themeFamily, setThemeFamily] = useState(() => {
-    return localStorage.getItem('hrms_theme_family') || 'sage';
+    return localStorage.getItem('hrms_theme_family') || 'corporate';
   });
 
   useEffect(() => {
@@ -19,11 +19,6 @@ export const ThemeProvider = ({ children }) => {
       root.classList.add('dark');
     } else {
       root.classList.remove('dark');
-    }
-
-    root.classList.remove('theme-ocean');
-    if (themeFamily === 'ocean') {
-      root.classList.add('theme-ocean');
     }
 
     localStorage.setItem('hrms_theme', themeMode);
@@ -55,3 +50,5 @@ export const useTheme = () => {
   }
   return context;
 };
+
+export default ThemeContext;

@@ -1,93 +1,147 @@
 import { Server } from 'socket.io';
 import jwt from 'jsonwebtoken';
 import User from './models/User.js';
+import Conversation from './models/Conversation.js';
+import { logger } from './utils/logger.js';
 
 let io;
 
 export const initSocket = (server) => {
+  const allowedOrigins = (process.env.CORS_ORIGIN || process.env.FRONTEND_URL || 'http://localhost:5173,http://localhost:5174')
+    .split(',')
+    .map((o) => o.trim())
+    .filter(Boolean);
+
   io = new Server(server, {
     cors: {
-      origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+      origin: (origin, callback) => {
+        if (!origin) return callback(null, true);
+        if (allowedOrigins.includes(origin) || allowedOrigins.includes('*')) {
+          return callback(null, true);
+        }
+        const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:[0-9]+)?$/.test(origin);
+        if (isLocalhost) {
+          return callback(null, true);
+        }
+        callback(new Error(`Origin ${origin} not allowed by CORS`));
+      },
       methods: ['GET', 'POST'],
       credentials: true
-    }
+    },
+    pingTimeout: 30000,
+    pingInterval: 25000,
   });
 
-  // Authentication middleware
+  // Strict JWT Authentication Middleware
   io.use(async (socket, next) => {
     try {
-      const token = socket.handshake.auth.token;
+      const token =
+        socket.handshake.auth?.token ||
+        socket.handshake.headers?.authorization?.replace(/^Bearer\s+/i, '') ||
+        socket.handshake.query?.token;
+
       if (!token) {
         return next(new Error('Authentication error: No token provided'));
       }
 
+      // Verify token
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      if (!decoded || !decoded.id) {
+        return next(new Error('Authentication error: Invalid token structure'));
+      }
+
+      // Fetch user from DB and confirm active state
       const user = await User.findById(decoded.id).select('-password');
-      
       if (!user) {
         return next(new Error('Authentication error: User not found'));
       }
 
-      // Attach user to socket
+      if (user.isActive === false) {
+        return next(new Error('Authentication error: User account is inactive'));
+      }
+
+      // Associate verified user with socket (never trust client-supplied ID)
       socket.user = user;
       next();
     } catch (error) {
-      next(new Error('Authentication error: Invalid token'));
+      // Do not log raw token or sensitive details
+      logger.warn(`Socket authentication failed: ${error.message}`);
+      next(new Error('Authentication error: Invalid or expired token'));
     }
   });
 
   io.on('connection', (socket) => {
-    console.log(`User connected to chat socket: ${socket.user.email} (${socket.user._id})`);
+    const userIdStr = socket.user._id.toString();
 
-    // Join a personal room for direct user-targeted events (like new conversation invites)
-    socket.join(socket.user._id.toString());
+    // Automatically join the user's isolated private personal room
+    socket.join(userIdStr);
 
     // Broadcast presence: online
     io.emit('presence:online', { userId: socket.user._id });
 
-    // Join conversation room
-    socket.on('join_conversation', (conversationId) => {
-      // In a production app, you'd verify if socket.user is a participant of conversationId here
-      socket.join(`conversation:${conversationId}`);
-      console.log(`User ${socket.user.email} joined conversation ${conversationId}`);
+    // Join conversation room with participant authorization check
+    socket.on('join_conversation', async (conversationId) => {
+      try {
+        if (!conversationId) return;
+
+        // Verify that the connected user is actually a participant of this conversation
+        const conversation = await Conversation.findOne({
+          _id: conversationId,
+          participants: socket.user._id,
+        });
+
+        if (!conversation) {
+          socket.emit('socket:error', {
+            message: 'Not authorized to join this conversation room',
+          });
+          return;
+        }
+
+        socket.join(`conversation:${conversationId}`);
+      } catch (err) {
+        logger.debug(`Error joining conversation ${conversationId}: ${err.message}`);
+      }
     });
 
     // Leave conversation room
     socket.on('leave_conversation', (conversationId) => {
-      socket.leave(`conversation:${conversationId}`);
+      if (conversationId) {
+        socket.leave(`conversation:${conversationId}`);
+      }
     });
 
-    // Typing indicators
-    socket.on('typing:start', (conversationId) => {
+    // Typing indicators (with participant safety check)
+    socket.on('typing:start', async (conversationId) => {
+      if (!conversationId) return;
       socket.to(`conversation:${conversationId}`).emit('typing:start', {
         conversationId,
         userId: socket.user._id,
-        user: { _id: socket.user._id, email: socket.user.email } // Add name if populated
+        user: { _id: socket.user._id, email: socket.user.email },
       });
     });
 
     socket.on('typing:stop', (conversationId) => {
+      if (!conversationId) return;
       socket.to(`conversation:${conversationId}`).emit('typing:stop', {
         conversationId,
-        userId: socket.user._id
+        userId: socket.user._id,
       });
     });
 
     // Mark messages as read
     socket.on('message:read', (data) => {
-      // data = { conversationId, messageIds: [] }
-      // This could also be a REST API, but handling over socket is fast
-      socket.to(`conversation:${data.conversationId}`).emit('message:read', {
-        conversationId: data.conversationId,
-        userId: socket.user._id,
-        messageIds: data.messageIds,
-        readAt: new Date()
-      });
+      if (data && data.conversationId) {
+        socket.to(`conversation:${data.conversationId}`).emit('message:read', {
+          conversationId: data.conversationId,
+          userId: socket.user._id,
+          messageIds: data.messageIds || [],
+          readAt: new Date(),
+        });
+      }
     });
 
+    // Disconnect event
     socket.on('disconnect', () => {
-      console.log(`User disconnected from chat socket: ${socket.user.email}`);
-      // Broadcast presence: offline
       io.emit('presence:offline', { userId: socket.user._id, lastSeen: new Date() });
     });
   });
@@ -100,4 +154,27 @@ export const getIO = () => {
     throw new Error('Socket.io not initialized!');
   }
   return io;
+};
+
+/**
+ * Emit a real-time event to a specific user's isolated room
+ */
+export const emitToUser = (userId, event, payload) => {
+  if (!io || !userId) return false;
+  try {
+    io.to(userId.toString()).emit(event, payload);
+    return true;
+  } catch (err) {
+    logger.warn(`Failed to emit ${event} to user ${userId}: ${err.message}`);
+    return false;
+  }
+};
+
+/**
+ * Emit a real-time event to multiple users' isolated rooms
+ */
+export const emitToUsers = (userIds, event, payload) => {
+  if (!io || !Array.isArray(userIds)) return false;
+  userIds.forEach((id) => emitToUser(id, event, payload));
+  return true;
 };

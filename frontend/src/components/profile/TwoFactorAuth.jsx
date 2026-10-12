@@ -139,7 +139,7 @@ export const TwoFactorAuth = () => {
     <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 md:p-8 shadow-sm mt-8">
       <div className="mb-6 border-b border-slate-100 dark:border-slate-800 pb-4">
         <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-          <Shield className="w-5 h-5 text-indigo-500 dark:text-indigo-400" />
+          <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           Two-Factor Authentication (2FA)
         </h2>
         <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -173,7 +173,7 @@ export const TwoFactorAuth = () => {
           <button
             onClick={handleStartSetup}
             disabled={loading}
-            className="px-4 py-2 bg-indigo-600 text-white text-xs font-medium rounded-xl hover:bg-indigo-500 transition shadow-sm shadow-indigo-500/20"
+            className="px-4 py-2 bg-blue-600 text-white text-xs font-medium rounded-xl hover:bg-blue-500 transition shadow-sm shadow-blue-500/20 cursor-pointer"
           >
             {loading ? 'Initializing...' : 'Enable 2FA'}
           </button>
@@ -212,14 +212,14 @@ export const TwoFactorAuth = () => {
                 placeholder="6-digit code" 
                 maxLength={6}
                 value={setupCode}
-                onChange={e => setSetupCode(e.target.value.replace(/\\D/g, ''))}
+                onChange={e => setSetupCode(e.target.value.replace(/\D/g, ''))}
                 required
-                className="flex-1 px-3.5 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
+                className="flex-1 px-3.5 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
               />
               <button 
-                type="submit"
+                type="submit" 
                 disabled={loading || setupCode.length !== 6}
-                className="px-4 py-2 bg-indigo-600 text-white text-xs font-medium rounded-xl hover:bg-indigo-500 disabled:opacity-50 transition shadow-sm shadow-indigo-500/20"
+                className="px-4 py-2 bg-blue-600 text-white text-xs font-medium rounded-xl hover:bg-blue-500 disabled:opacity-50 transition shadow-sm shadow-blue-500/20 cursor-pointer"
               >
                 Confirm & Enable
               </button>
@@ -227,7 +227,7 @@ export const TwoFactorAuth = () => {
             <button 
               type="button" 
               onClick={() => { setStatus('idle'); setQrCodeUrl(''); setManualKey(''); setSetupCode(''); }}
-              className="mt-3 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition"
+              className="mt-3 text-xs text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300 transition cursor-pointer"
             >
               Cancel enrollment
             </button>
@@ -258,14 +258,14 @@ export const TwoFactorAuth = () => {
               </p>
               <div className="grid grid-cols-2 md:grid-cols-5 gap-2 font-mono text-xs">
                 {recoveryCodes.map(code => (
-                  <div key={code} className="bg-white dark:bg-slate-950 border border-amber-200 dark:border-amber-800 px-2 py-1.5 rounded text-slate-800 dark:text-slate-200 select-all text-center">
+                  <div key={code} className="bg-white dark:bg-slate-900 border border-amber-200 dark:border-amber-800 px-2 py-1.5 rounded text-slate-800 dark:text-slate-200 select-all text-center">
                     {code}
                   </div>
                 ))}
               </div>
               <button 
                 onClick={() => setRecoveryCodes([])}
-                className="mt-4 px-3 py-1.5 bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 text-xs font-medium rounded-lg hover:bg-amber-300 dark:hover:bg-amber-700 transition"
+                className="mt-4 px-3 py-1.5 bg-amber-200 dark:bg-amber-800 text-amber-900 dark:text-amber-100 text-xs font-medium rounded-lg hover:bg-amber-300 dark:hover:bg-amber-700 transition cursor-pointer"
               >
                 I have saved them
               </button>
@@ -275,7 +275,7 @@ export const TwoFactorAuth = () => {
           <div className="pt-6 border-t border-slate-100 dark:border-slate-800">
             <h4 className="text-sm font-semibold text-slate-900 dark:text-white mb-4">Manage 2FA Settings</h4>
             
-            <form className="max-w-md space-y-4 bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
+            <form className="max-w-md space-y-4 bg-slate-50 dark:bg-slate-900 p-4 rounded-xl border border-slate-200 dark:border-slate-800">
               <p className="text-xs text-slate-500 dark:text-slate-400 pb-2">Verify your identity to disable 2FA or generate new recovery codes.</p>
               
               <div>
@@ -284,7 +284,7 @@ export const TwoFactorAuth = () => {
                   type="password"
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
+                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
                 />
               </div>
               <div>
@@ -293,8 +293,8 @@ export const TwoFactorAuth = () => {
                   type="text"
                   maxLength={6}
                   value={confirmCode}
-                  onChange={(e) => setConfirmCode(e.target.value.replace(/\\D/g, ''))}
-                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
+                  onChange={(e) => setConfirmCode(e.target.value.replace(/\D/g, ''))}
+                  className="w-full px-3.5 py-2 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-sm text-slate-900 dark:text-slate-100 outline-none transition-colors"
                 />
               </div>
               <div className="flex gap-2 pt-2">
@@ -302,7 +302,7 @@ export const TwoFactorAuth = () => {
                   type="button"
                   onClick={handleDisable2FA}
                   disabled={loading || !confirmPassword || confirmCode.length !== 6}
-                  className="px-4 py-2 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-xs font-medium rounded-xl hover:bg-rose-200 dark:hover:bg-rose-900/50 disabled:opacity-50 transition"
+                  className="px-4 py-2 bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-400 text-xs font-medium rounded-xl hover:bg-rose-200 dark:hover:bg-rose-900/50 disabled:opacity-50 transition cursor-pointer"
                 >
                   Disable 2FA
                 </button>
@@ -310,7 +310,7 @@ export const TwoFactorAuth = () => {
                   type="button"
                   onClick={handleRegenerateCodes}
                   disabled={loading || !confirmPassword || confirmCode.length !== 6}
-                  className="px-4 py-2 flex items-center gap-1.5 bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-xs font-medium rounded-xl hover:bg-slate-300 dark:hover:bg-slate-700 disabled:opacity-50 transition"
+                  className="px-4 py-2 flex items-center gap-1.5 bg-slate-200 text-slate-700 dark:bg-slate-800 dark:text-slate-300 text-xs font-medium rounded-xl hover:bg-slate-300 dark:hover:bg-slate-700 disabled:opacity-50 transition cursor-pointer"
                 >
                   <RefreshCw className="w-3.5 h-3.5" />
                   Regenerate Recovery Codes

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Shield, Key, AlertCircle, CheckCircle2, Loader2, ArrowRight } from 'lucide-react';
+import { BrandLogo } from '../components/common/BrandLogo';
 import api from '../api/axios';
 
 export const ActivateAccount = () => {
@@ -44,15 +45,18 @@ export const ActivateAccount = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col items-center justify-center p-4">
+    <div className="min-h-screen bg-[#F4F7FC] dark:bg-[#0B1220] flex flex-col items-center justify-center p-4">
+      <div className="mb-6 flex justify-center">
+        <BrandLogo variant="vertical" size="lg" linkTo="/" />
+      </div>
       <div className="w-full max-w-md bg-white dark:bg-slate-900 rounded-3xl shadow-2xl overflow-hidden border border-slate-200 dark:border-slate-800">
         
         {/* Header */}
-        <div className="bg-gradient-to-r from-sky-500 to-indigo-600 p-8 text-center relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-violet-600 p-8 text-center relative overflow-hidden">
           <div className="absolute top-0 left-0 w-full h-full bg-white/10" style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 80%)' }}></div>
           <Shield className="w-12 h-12 text-white mx-auto mb-4 relative z-10 drop-shadow-md" />
           <h1 className="text-2xl font-black text-white relative z-10 tracking-tight">Activate Account</h1>
-          <p className="text-sky-100 text-sm mt-1 relative z-10">Set your permanent password to securely access the HRMS Portal.</p>
+          <p className="text-blue-100 text-sm mt-1 relative z-10">Set your permanent password to securely access the HRMS Portal.</p>
         </div>
 
         {/* Form Body */}
@@ -85,7 +89,7 @@ export const ActivateAccount = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   disabled={loading || success}
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -103,7 +107,7 @@ export const ActivateAccount = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   disabled={loading || success}
-                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition-all disabled:opacity-50"
+                  className="w-full pl-11 pr-4 py-3 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl text-sm font-medium text-slate-800 dark:text-slate-200 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all disabled:opacity-50"
                 />
               </div>
             </div>
@@ -111,7 +115,7 @@ export const ActivateAccount = () => {
             <button
               type="submit"
               disabled={loading || success}
-              className="w-full py-3.5 mt-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-white font-bold shadow-lg shadow-sky-500/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-3.5 mt-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold shadow-lg shadow-blue-600/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>

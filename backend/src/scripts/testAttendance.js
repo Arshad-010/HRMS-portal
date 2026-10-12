@@ -45,7 +45,7 @@ const runAttendanceTests = async () => {
     if (!adminEmp) {
       adminEmp = await Employee.create({
         userId: adminUser._id,
-        employeeCode: 'EMP-7001',
+        employeeCode: 'EMP-ATT-01',
         firstName: 'Att',
         lastName: 'Admin',
         departmentId: dept._id,
@@ -69,7 +69,7 @@ const runAttendanceTests = async () => {
     if (!mgrEmp) {
       mgrEmp = await Employee.create({
         userId: mgrUser._id,
-        employeeCode: 'EMP-7002',
+        employeeCode: 'EMP-ATT-02',
         firstName: 'Team',
         lastName: 'Manager',
         departmentId: dept._id,
@@ -93,7 +93,7 @@ const runAttendanceTests = async () => {
     if (!emp1) {
       emp1 = await Employee.create({
         userId: emp1User._id,
-        employeeCode: 'EMP-7003',
+        employeeCode: 'EMP-ATT-03',
         firstName: 'Direct',
         lastName: 'Report',
         departmentId: dept._id,
@@ -118,7 +118,7 @@ const runAttendanceTests = async () => {
     if (!emp2) {
       emp2 = await Employee.create({
         userId: emp2User._id,
-        employeeCode: 'EMP-7004',
+        employeeCode: 'EMP-ATT-04',
         firstName: 'Other',
         lastName: 'Colleague',
         departmentId: dept._id,

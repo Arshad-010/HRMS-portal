@@ -15,7 +15,7 @@ export const Unauthorized = () => {
         </p>
         <Link
           to="/dashboard"
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-colors"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-600/20 transition-all cursor-pointer"
         >
           <ArrowLeft className="w-4 h-4" />
           Return to Dashboard

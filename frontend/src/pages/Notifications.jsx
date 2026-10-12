@@ -18,7 +18,8 @@ import {
   ChevronRight,
   Sparkles,
   RefreshCw,
-  AlertCircle
+  AlertCircle,
+  MessageSquare
 } from 'lucide-react';
 
 export const Notifications = () => {
@@ -64,6 +65,25 @@ export const Notifications = () => {
   useEffect(() => {
     fetchNotifications();
   }, [fetchNotifications]);
+
+  // Real-time listener for newly arrived notifications while user is on this page
+  useEffect(() => {
+    const handleNewRealtimeNotif = (e) => {
+      const notif = e.detail;
+      if (!notif || !notif._id) return;
+      if (page === 1) {
+        setNotifications((prev) => {
+          if (prev.some((n) => n._id === notif._id)) return prev;
+          return [notif, ...prev];
+        });
+      }
+      setTotalCount((prev) => prev + 1);
+      setUnreadCount((prev) => prev + 1);
+    };
+
+    window.addEventListener('hrms:notification:new', handleNewRealtimeNotif);
+    return () => window.removeEventListener('hrms:notification:new', handleNewRealtimeNotif);
+  }, [page]);
 
   const handleMarkAsRead = async (id, e) => {
     if (e) e.stopPropagation();
@@ -115,6 +135,8 @@ export const Notifications = () => {
       navigate('/leaves');
     } else if (notif.relatedEntityType === 'TASK') {
       navigate('/tasks');
+    } else if (notif.relatedEntityType === 'CHAT' || notif.type === 'DIRECT_MESSAGE' || notif.type === 'GROUP_MESSAGE') {
+      navigate('/chat');
     } else if (notif.relatedEntityType === 'ATTENDANCE') {
       navigate('/attendance');
     } else if (notif.relatedEntityType === 'EMPLOYEE') {
@@ -134,14 +156,17 @@ export const Notifications = () => {
       case 'LEAVE_CANCELLED':
         return <XCircle className="w-4 h-4 text-rose-400" />;
       case 'TASK_ASSIGNED':
-        return <CheckSquare className="w-4 h-4 text-indigo-400" />;
+        return <CheckSquare className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
       case 'TASK_STATUS_CHANGED':
       case 'TASK_COMPLETED':
-        return <CheckCircle className="w-4 h-4 text-cyan-400" />;
+        return <CheckCircle className="w-4 h-4 text-cyan-500" />;
+      case 'DIRECT_MESSAGE':
+      case 'GROUP_MESSAGE':
+        return <MessageSquare className="w-4 h-4 text-violet-400" />;
       case 'ATTENDANCE_REMINDER':
-        return <Clock className="w-4 h-4 text-blue-400" />;
+        return <Clock className="w-4 h-4 text-blue-500" />;
       default:
-        return <Info className="w-4 h-4 text-indigo-400" />;
+        return <Info className="w-4 h-4 text-blue-600 dark:text-blue-400" />;
     }
   };
 
@@ -151,7 +176,7 @@ export const Notifications = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center text-indigo-400">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400">
               <Bell className="w-5 h-5" />
             </div>
             <div>
@@ -167,7 +192,7 @@ export const Notifications = () => {
             <button
               onClick={handleMarkAllAsRead}
               disabled={actionLoading}
-              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-indigo-300 border border-indigo-500/30 transition-colors cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-blue-600 dark:text-blue-400 border border-blue-500/30 transition-colors cursor-pointer disabled:opacity-50"
             >
               <CheckCheck className="w-3.5 h-3.5" />
               <span>Mark All Read</span>
@@ -177,9 +202,9 @@ export const Notifications = () => {
           <button
             onClick={() => fetchNotifications()}
             title="Refresh"
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
           >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-indigo-400' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-500' : ''}`} />
           </button>
         </div>
       </div>
@@ -194,7 +219,7 @@ export const Notifications = () => {
             }}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
               !unreadOnly
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/30'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:bg-slate-800'
             }`}
           >
@@ -208,7 +233,7 @@ export const Notifications = () => {
             }}
             className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer flex items-center gap-1.5 ${
               unreadOnly
-                ? 'bg-indigo-600 text-white shadow-sm shadow-indigo-600/30'
+                ? 'bg-blue-600 text-white shadow-sm shadow-blue-600/30'
                 : 'text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200 hover:bg-slate-100 dark:bg-slate-800'
             }`}
           >
@@ -230,12 +255,12 @@ export const Notifications = () => {
 
       {/* Error state */}
       {error && (
-        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-xs flex items-center gap-2">
+        <div className="p-4 rounded-2xl bg-rose-500/10 border border-rose-500/20 text-rose-500 dark:text-rose-300 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
           <button
             onClick={fetchNotifications}
-            className="ml-auto underline hover:text-rose-200 cursor-pointer"
+            className="ml-auto underline hover:text-rose-600 dark:hover:text-rose-200 cursor-pointer"
           >
             Try Again
           </button>
@@ -246,13 +271,13 @@ export const Notifications = () => {
       <div className="space-y-2.5">
         {loading && notifications.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
-            <RefreshCw className="w-6 h-6 animate-spin text-indigo-400 mx-auto mb-3" />
+            <RefreshCw className="w-6 h-6 animate-spin text-blue-500 mx-auto mb-3" />
             <p className="text-xs text-slate-500 dark:text-slate-400">Loading your notifications...</p>
           </div>
         ) : notifications.length === 0 ? (
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-12 text-center">
             <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-3 text-slate-500 dark:text-slate-400">
-              <Sparkles className="w-6 h-6 text-indigo-400" />
+              <Sparkles className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
             <h3 className="text-sm font-semibold text-slate-900 dark:text-white mb-1">
               {unreadOnly ? 'No unread notifications' : 'No notifications yet'}
@@ -270,7 +295,7 @@ export const Notifications = () => {
               onClick={() => handleNavigateToEntity(notif)}
               className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                 !notif.isRead
-                  ? 'bg-indigo-50 dark:bg-indigo-950/20 hover:bg-indigo-100 dark:hover:bg-indigo-950/30 border-indigo-200 dark:border-indigo-500/30 shadow-sm'
+                  ? 'bg-blue-50/60 dark:bg-blue-950/20 hover:bg-blue-100/60 dark:hover:bg-blue-950/30 border-blue-200 dark:border-blue-500/30 shadow-sm'
                   : 'bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 border-slate-200 dark:border-slate-800'
               }`}
             >
@@ -285,7 +310,7 @@ export const Notifications = () => {
                       {notif.title}
                     </span>
                     {!notif.isRead && (
-                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-indigo-500/20 text-indigo-400 border border-indigo-500/30">
+                      <span className="px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-blue-500/20 text-blue-600 dark:text-blue-400 border border-blue-500/30">
                         NEW
                       </span>
                     )}
@@ -300,7 +325,7 @@ export const Notifications = () => {
 
                   <div className="flex items-center gap-2">
                     {notif.relatedEntityType && (
-                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-indigo-400 border border-slate-300 dark:border-slate-700 uppercase">
+                      <span className="px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-[10px] font-mono text-blue-600 dark:text-blue-400 border border-slate-300 dark:border-slate-700 uppercase">
                         {notif.relatedEntityType}
                       </span>
                     )}
@@ -321,7 +346,7 @@ export const Notifications = () => {
                       e.stopPropagation();
                       handleNavigateToEntity(notif);
                     }}
-                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-indigo-100 dark:bg-indigo-600/20 hover:bg-indigo-200 dark:hover:bg-indigo-600/30 text-indigo-700 dark:text-indigo-300 border border-indigo-200 dark:border-indigo-500/30 transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl text-xs font-semibold bg-blue-100 dark:bg-blue-600/20 hover:bg-blue-200 dark:hover:bg-blue-600/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-500/30 transition-colors cursor-pointer"
                   >
                     <span>View</span>
                     <ArrowRight className="w-3 h-3" />
@@ -332,7 +357,7 @@ export const Notifications = () => {
                   <button
                     onClick={(e) => handleMarkAsRead(notif._id, e)}
                     title="Mark as read"
-                    className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 border border-transparent hover:border-indigo-500/20 transition-colors cursor-pointer"
+                    className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 border border-transparent hover:border-blue-500/20 transition-colors cursor-pointer"
                   >
                     <CheckCheck className="w-4 h-4" />
                   </button>
@@ -341,7 +366,7 @@ export const Notifications = () => {
                 <button
                   onClick={(e) => handleDelete(notif._id, e)}
                   title="Delete notification"
-                  className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-colors cursor-pointer"
+                  className="p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-rose-500 hover:bg-rose-500/10 border border-transparent hover:border-rose-500/20 transition-colors cursor-pointer"
                 >
                   <Trash2 className="w-4 h-4" />
                 </button>

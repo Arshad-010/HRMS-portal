@@ -115,16 +115,16 @@ const MyTeam = () => {
   });
 
   return (
-    <div className="flex flex-col h-full bg-slate-50 dark:bg-[#090d16] p-4 sm:p-6 lg:p-8 overflow-y-auto">
+    <div className="flex flex-col h-full bg-[#F4F7FC] dark:bg-[#0B1220] p-4 sm:p-6 lg:p-8 overflow-y-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-2xl font-black text-slate-900 dark:text-white flex items-center gap-3">
-            <div className="w-10 h-10 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 rounded-xl flex items-center justify-center">
+            <div className="w-10 h-10 bg-blue-500/10 text-blue-600 dark:text-blue-400 rounded-xl flex items-center justify-center">
               <Users className="w-5 h-5" />
             </div>
             My Team
-            <span className="ml-2 px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 dark:text-slate-400 dark:bg-slate-800 dark:text-slate-400 rounded-full">
+            <span className="ml-2 px-2.5 py-0.5 text-xs font-bold bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-full">
               {teamMembers.length} Members
             </span>
           </h1>
@@ -138,7 +138,7 @@ const MyTeam = () => {
             <select
               value={selectedTeamId}
               onChange={handleTeamChange}
-              className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold text-indigo-600 dark:text-indigo-400 focus:outline-none focus:border-indigo-500 cursor-pointer"
+              className="px-3 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold text-blue-600 dark:text-blue-400 focus:outline-none focus:border-blue-500 cursor-pointer"
             >
               {teams.map(t => (
                 <option key={t._id} value={t._id}>{t.name}</option>
@@ -156,12 +156,12 @@ const MyTeam = () => {
           <div className="bg-white dark:bg-slate-900 p-6 rounded-3xl shadow-sm border border-slate-200 dark:border-slate-800 transition-all duration-300">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <CheckSquare className="w-5 h-5 text-indigo-500" />
+                  <CheckSquare className="w-5 h-5 text-blue-600 dark:text-blue-400" />
                   Team Tasks
                 </h2>
                 <button
                   onClick={() => navigate('/tasks')}
-                  className="text-sm font-semibold text-indigo-600 dark:text-indigo-400 hover:text-indigo-700 dark:hover:text-indigo-300 flex items-center gap-1"
+                  className="text-sm font-semibold text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 flex items-center gap-1 cursor-pointer"
                 >
                   View Tasks <ChevronRight className="w-4 h-4" />
                 </button>
@@ -177,11 +177,11 @@ const MyTeam = () => {
                   </p>
                   <p className="text-2xl font-black text-amber-700 dark:text-amber-400">{teamTasks.TODO}</p>
                 </div>
-                <div className="p-4 bg-sky-50 dark:bg-sky-900/10 rounded-2xl border border-sky-100 dark:border-sky-900/30">
-                  <p className="text-sm text-sky-600 dark:text-sky-500 mb-1 font-medium flex items-center gap-1.5">
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-900/30">
+                  <p className="text-sm text-blue-600 dark:text-blue-500 mb-1 font-medium flex items-center gap-1.5">
                     <Briefcase className="w-4 h-4" /> In Progress
                   </p>
-                  <p className="text-2xl font-black text-sky-700 dark:text-sky-400">{teamTasks.IN_PROGRESS}</p>
+                  <p className="text-2xl font-black text-blue-700 dark:text-blue-400">{teamTasks.IN_PROGRESS}</p>
                 </div>
                 <div className="p-4 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/30">
                   <p className="text-sm text-emerald-600 dark:text-emerald-500 mb-1 font-medium flex items-center gap-1.5">
@@ -205,7 +205,7 @@ const MyTeam = () => {
                       title="Completed"
                     />
                     <div 
-                      className="bg-sky-500 h-full transition-all" 
+                      className="bg-blue-500 h-full transition-all" 
                       style={{ width: `${(teamTasks.IN_PROGRESS / teamTasks.TOTAL) * 100}%` }} 
                       title="In Progress"
                     />
@@ -230,7 +230,7 @@ const MyTeam = () => {
             placeholder="Search by name, role or ID..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-indigo-500/50 dark:text-slate-200"
+            className="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-slate-800 border-none rounded-xl text-sm focus:ring-2 focus:ring-blue-500/50 dark:text-slate-200"
           />
         </div>
       </div>
@@ -266,19 +266,16 @@ const MyTeam = () => {
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredMembers.map((member) => {
-            const isManager = member._id === user?.employeeId || member.userId?.role === 'MANAGER';
-            // Wait, to properly know if someone is YOUR manager, we check if their ID matches your manager ID.
-            // But since we just fetch the team, anyone who has the manager role or is explicitly the manager will do.
             const initials = `${member.firstName.charAt(0)}${member.lastName?.charAt(0) || ''}`.toUpperCase();
 
             return (
               <div 
                 key={member._id}
-                className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col relative group transition-all duration-300 hover:shadow-lg hover:border-indigo-500/30"
+                className="bg-white dark:bg-slate-900 rounded-3xl p-6 shadow-sm border border-slate-200 dark:border-slate-800 flex flex-col relative group transition-all duration-300 hover:shadow-lg hover:border-blue-500/30"
               >
                 {/* Role Badge */}
                 <div className="absolute top-4 right-4 flex gap-2">
-                  <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 dark:text-slate-400 dark:bg-slate-800 dark:text-slate-400 rounded-full">
+                  <span className="px-2.5 py-1 text-[10px] font-black uppercase tracking-wider bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 rounded-full">
                     {member.userId?.role || 'EMPLOYEE'}
                   </span>
                   {member._id === user?.employeeId && (
@@ -297,7 +294,7 @@ const MyTeam = () => {
                         className="w-16 h-16 rounded-2xl object-cover shadow-sm"
                       />
                     ) : (
-                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-xl flex items-center justify-center shadow-sm">
+                      <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-violet-600 text-white font-bold text-xl flex items-center justify-center shadow-sm">
                         {initials}
                       </div>
                     )}
@@ -309,7 +306,7 @@ const MyTeam = () => {
                     <h3 className="font-bold text-slate-900 dark:text-white text-lg leading-tight truncate">
                       {member.firstName} {member.lastName}
                     </h3>
-                    <p className="text-xs text-indigo-600 dark:text-indigo-400 font-semibold mt-1 truncate">
+                    <p className="text-xs text-blue-600 dark:text-blue-400 font-semibold mt-1 truncate">
                       {member.designation}
                     </p>
                     <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 truncate">
@@ -339,7 +336,7 @@ const MyTeam = () => {
 
                 <button
                   onClick={() => handleMessage(member.userId?._id)}
-                  className="w-full bg-slate-50 hover:bg-indigo-50 dark:bg-slate-800/50 dark:hover:bg-indigo-500/10 text-slate-700 hover:text-indigo-600 dark:text-slate-300 dark:hover:text-indigo-400 font-semibold text-sm py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 border border-transparent hover:border-indigo-200 dark:hover:border-indigo-500/20"
+                  className="w-full bg-slate-50 hover:bg-blue-50 dark:bg-slate-800/50 dark:hover:bg-blue-500/10 text-slate-700 hover:text-blue-600 dark:text-slate-300 dark:hover:text-blue-400 font-semibold text-sm py-2.5 px-4 rounded-xl transition-colors flex items-center justify-center gap-2 border border-transparent hover:border-blue-200 dark:hover:border-blue-500/20 cursor-pointer"
                 >
                   <MessageSquare className="w-4 h-4" />
                   Message

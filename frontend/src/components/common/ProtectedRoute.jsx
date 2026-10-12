@@ -10,7 +10,7 @@ export const ProtectedRoute = ({ children, allowedRoles }) => {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex flex-col items-center justify-center gap-3">
-        <Loader2 className="w-8 h-8 text-indigo-500 animate-spin" />
+        <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
         <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Authenticating session...</p>
       </div>
     );

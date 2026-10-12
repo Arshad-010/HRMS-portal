@@ -59,6 +59,17 @@ export const checkIn = async (req, res, next) => {
 
     await record.populate('employee', 'firstName lastName employeeCode designation departmentId');
 
+    // Emit real-time notification to user
+    try {
+      const { notifyAttendanceEvent } = await import('../services/notificationService.js');
+      await notifyAttendanceEvent({
+        userId: req.user._id,
+        type: 'ATTENDANCE_CHECKIN',
+        title: 'Workday Check-In Recorded',
+        message: `You successfully checked in at ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}.`,
+      });
+    } catch (_) {}
+
     res.status(201).json({
       success: true,
       message: 'Check-in recorded successfully',
@@ -127,6 +138,17 @@ export const checkOut = async (req, res, next) => {
     await record.save();
 
     await record.populate('employee', 'firstName lastName employeeCode designation departmentId');
+
+    // Emit real-time notification to user
+    try {
+      const { notifyAttendanceEvent } = await import('../services/notificationService.js');
+      await notifyAttendanceEvent({
+        userId: req.user._id,
+        type: 'ATTENDANCE_CHECKOUT',
+        title: 'Workday Check-Out Completed',
+        message: `You checked out at ${now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}. Duration: ${record.workHours}h.`,
+      });
+    } catch (_) {}
 
     res.status(200).json({
       success: true,

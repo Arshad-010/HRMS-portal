@@ -4,16 +4,6 @@ import SkeletonLoader from './SkeletonLoader';
 
 /**
  * ChartCard - Container card for analytics charts
- * @param {string} title - Chart title
- * @param {string} subtitle - One-line plain-English subtitle
- * @param {React.ReactNode} children - Chart component
- * @param {React.ReactNode} action - Header action (e.g. dropdown, tabs, export)
- * @param {boolean} loading - Loading state
- * @param {boolean} isEmpty - True if data array is empty
- * @param {string} emptyTitle - Fallback heading
- * @param {string} emptyDesc - Fallback description
- * @param {string} className - Optional container styling
- * @param {number} minHeight - Minimum height (default 320px)
  */
 export const ChartCard = ({
   title,
@@ -28,9 +18,9 @@ export const ChartCard = ({
   minHeight = 320,
 }) => {
   return (
-    <div className={`p-6 rounded-2xl bg-white dark:bg-slate-900 border border-slate-200/90 dark:border-slate-800/90 shadow-sm flex flex-col justify-between transition-all duration-200 hover:shadow-md ${className}`}>
+    <div className={`p-6 rounded-2xl bg-white dark:bg-[#111C2E] border border-slate-200 dark:border-[#263449] shadow-xs flex flex-col justify-between transition-all duration-200 hover:shadow-md ${className}`}>
       {/* Card Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-slate-100 dark:border-slate-800/80">
+      <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 pb-4 border-b border-slate-100 dark:border-[#263449]/70">
         <div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-tight m-0">
             {title}
@@ -65,7 +55,7 @@ export const ChartCard = ({
             compact={true}
           />
         ) : (
-          <div className="w-full h-full min-h-full">
+          <div className="w-full h-full">
             {children}
           </div>
         )}

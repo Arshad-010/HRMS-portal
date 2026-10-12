@@ -123,7 +123,7 @@ export const Leaves = () => {
   const getTypeBadge = (type) => {
     switch (type) {
       case 'CASUAL':
-        return 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20';
+        return 'bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-500/20';
       case 'SICK':
         return 'bg-rose-500/10 text-rose-400 border-rose-500/20';
       case 'EARNED':
@@ -404,7 +404,7 @@ export const Leaves = () => {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-6 border-b border-slate-200 dark:border-slate-800">
         <div>
           <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Calendar className="w-6 h-6 text-indigo-400" />
+            <Calendar className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             Leave Management
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
@@ -419,7 +419,7 @@ export const Leaves = () => {
               fetchMyLeaves();
               if (activeTab === 'queue') fetchTeamLeaves();
             }}
-            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 text-xs font-medium border border-slate-300 dark:border-slate-700 transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -430,7 +430,7 @@ export const Leaves = () => {
               setApplyFeedback({ message: '', error: '' });
               setApplyModalOpen(true);
             }}
-            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Apply for Leave</span>
@@ -444,7 +444,7 @@ export const Leaves = () => {
         <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 backdrop-blur-sm">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-slate-700 dark:text-slate-300">Casual Leave</span>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+            <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-600 dark:text-blue-400 border border-blue-500/20">
               Paid
             </span>
           </div>
@@ -455,9 +455,9 @@ export const Leaves = () => {
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.casual ?? 0}</span>
           </div>
-          <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div
-              className="bg-indigo-500 h-1.5 rounded-full"
+              className="bg-blue-600 h-1.5 rounded-full"
               style={{
                 width: `${Math.min(
                   100,
@@ -483,7 +483,7 @@ export const Leaves = () => {
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.sick ?? 0}</span>
           </div>
-          <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div
               className="bg-rose-500 h-1.5 rounded-full"
               style={{
@@ -511,7 +511,7 @@ export const Leaves = () => {
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.earned ?? 0}</span>
           </div>
-          <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div
               className="bg-emerald-500 h-1.5 rounded-full"
               style={{
@@ -541,7 +541,7 @@ export const Leaves = () => {
             </div>
             <span className="text-[11px] text-slate-500 dark:text-slate-400">Used: {usedBalances.other ?? 0}</span>
           </div>
-          <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div
               className="bg-purple-500 h-1.5 rounded-full"
               style={{
@@ -569,7 +569,7 @@ export const Leaves = () => {
             </div>
             <span className="text-[10px] text-slate-500 dark:text-slate-400">No balance deduction</span>
           </div>
-          <div className="w-full bg-slate-50 dark:bg-slate-950 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-800">
+          <div className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-1.5 mt-3 overflow-hidden border border-slate-200 dark:border-slate-700/50">
             <div className="bg-slate-600 h-1.5 rounded-full w-full" />
           </div>
         </div>
@@ -581,7 +581,7 @@ export const Leaves = () => {
           onClick={() => setActiveTab('my')}
           className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
             activeTab === 'my'
-              ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
+              ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-500/5'
               : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
           }`}
         >
@@ -599,7 +599,7 @@ export const Leaves = () => {
             onClick={() => setActiveTab('queue')}
             className={`flex items-center gap-2 px-4 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer ${
               activeTab === 'queue'
-                ? 'border-indigo-500 text-indigo-400 bg-indigo-500/5'
+                ? 'border-blue-600 text-blue-600 dark:text-blue-400 bg-blue-500/5'
                 : 'border-transparent text-slate-500 dark:text-slate-400 hover:text-slate-800 dark:text-slate-200'
             }`}
           >
@@ -619,7 +619,7 @@ export const Leaves = () => {
                 <select
                   value={myFilterStatus}
                   onChange={(e) => setMyFilterStatus(e.target.value)}
-                  className="px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Statuses</option>
                   <option value="PENDING">PENDING</option>
@@ -633,7 +633,7 @@ export const Leaves = () => {
                 <select
                   value={myFilterType}
                   onChange={(e) => setMyFilterType(e.target.value)}
-                  className="px-3 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-3 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Leave Types</option>
                   <option value="CASUAL">CASUAL</option>
@@ -650,7 +650,7 @@ export const Leaves = () => {
                     setMyFilterStatus('');
                     setMyFilterType('');
                   }}
-                  className="text-xs text-indigo-400 hover:underline cursor-pointer"
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline cursor-pointer"
                 >
                   Reset filters
                 </button>
@@ -666,7 +666,7 @@ export const Leaves = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
             {myLoading ? (
               <div className="py-20 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 dark:text-blue-400" />
                 <span className="text-xs">Loading leave requests...</span>
               </div>
             ) : myLeaves.length === 0 ? (
@@ -681,7 +681,7 @@ export const Leaves = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Leave Type</th>
                       <th className="py-3.5 px-4">Start Date</th>
                       <th className="py-3.5 px-4">End Date</th>
@@ -729,7 +729,7 @@ export const Leaves = () => {
                             <button
                               onClick={() => openDetailsModal(leave)}
                               title="View Details"
-                              className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-indigo-400 hover:bg-indigo-500/10 transition-colors cursor-pointer"
+                              className="p-1.5 rounded-lg text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-blue-500/10 transition-colors cursor-pointer"
                             >
                               <Eye className="w-3.5 h-3.5" />
                             </button>
@@ -769,7 +769,7 @@ export const Leaves = () => {
                   placeholder="Search name, code..."
                   value={queueSearch}
                   onChange={(e) => setQueueSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
+                  className="w-full pl-9 pr-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 placeholder-slate-500 outline-none"
                 />
               </div>
 
@@ -781,7 +781,7 @@ export const Leaves = () => {
                     setQueueStatus(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Statuses</option>
                   <option value="PENDING">PENDING (Action Required)</option>
@@ -799,7 +799,7 @@ export const Leaves = () => {
                     setQueueType(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Leave Types</option>
                   <option value="CASUAL">CASUAL</option>
@@ -818,7 +818,7 @@ export const Leaves = () => {
                     setQueueDept(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-xs text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="">All Departments</option>
                   {departments.map((dept) => (
@@ -851,7 +851,7 @@ export const Leaves = () => {
             {/* Date Range Row */}
             <div className="mt-3 pt-3 border-t border-slate-200 dark:border-slate-800 flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400">
               <span className="font-medium flex items-center gap-1">
-                <Filter className="w-3.5 h-3.5 text-indigo-400" /> Date Range:
+                <Filter className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" /> Date Range:
               </span>
               <div className="flex items-center gap-2">
                 <input
@@ -861,7 +861,7 @@ export const Leaves = () => {
                     setQueueStartDate(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
                 <span className="text-slate-500 dark:text-slate-400">to</span>
                 <input
@@ -871,7 +871,7 @@ export const Leaves = () => {
                     setQueueEndDate(e.target.value);
                     setTeamPage(1);
                   }}
-                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
+                  className="px-2.5 py-1.5 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-lg text-xs text-slate-800 dark:text-slate-200 outline-none"
                 />
               </div>
             </div>
@@ -881,7 +881,7 @@ export const Leaves = () => {
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-sm">
             {teamLoading ? (
               <div className="py-20 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center justify-center gap-3">
-                <Loader2 className="w-6 h-6 animate-spin text-indigo-400" />
+                <Loader2 className="w-6 h-6 animate-spin text-blue-600 dark:text-blue-400" />
                 <span className="text-xs">Loading queue records...</span>
               </div>
             ) : teamLeaves.length === 0 ? (
@@ -894,7 +894,7 @@ export const Leaves = () => {
               <div className="overflow-x-auto">
                 <table className="w-full text-left border-collapse text-xs">
                   <thead>
-                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-semibold">
+                    <tr className="border-b border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/60 text-slate-500 dark:text-slate-400 font-semibold">
                       <th className="py-3.5 px-4">Employee</th>
                       <th className="py-3.5 px-4">Department</th>
                       <th className="py-3.5 px-4">Leave Type</th>
@@ -914,7 +914,7 @@ export const Leaves = () => {
                         <tr key={leave._id} className="hover:bg-slate-100 dark:bg-slate-800 transition-colors">
                           <td className="py-3 px-4">
                             <div className="flex items-center gap-2.5">
-                              <div className="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 border border-indigo-500/30 flex items-center justify-center text-xs font-bold">
+                              <div className="w-7 h-7 rounded-lg bg-blue-600/15 text-blue-600 dark:text-blue-400 border border-blue-500/20 flex items-center justify-center text-xs font-bold">
                                 {emp.firstName ? emp.firstName[0] : 'E'}
                               </div>
                               <div>
@@ -959,7 +959,7 @@ export const Leaves = () => {
                               onClick={() => openDetailsModal(leave)}
                               className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                                 leave.status === 'PENDING'
-                                  ? 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-md shadow-indigo-600/20 active:scale-95'
+                                  ? 'bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-500/20 active:scale-95'
                                   : 'bg-slate-100 dark:bg-slate-800 hover:bg-slate-700 text-slate-700 dark:text-slate-300'
                               }`}
                             >
@@ -1005,11 +1005,11 @@ export const Leaves = () => {
 
       {/* SECTION 8: APPLY LEAVE MODAL */}
       {applyModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <Calendar className="w-4 h-4 text-indigo-400" />
+                <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Apply for Leave
               </h3>
               <button
@@ -1028,7 +1028,7 @@ export const Leaves = () => {
                   required
                   value={applyForm.leaveType}
                   onChange={(e) => setApplyForm({ ...applyForm, leaveType: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                 >
                   <option value="CASUAL">Casual Leave (Paid)</option>
                   <option value="SICK">Sick Leave (Paid)</option>
@@ -1039,7 +1039,7 @@ export const Leaves = () => {
 
                 <div className="mt-1.5 text-[11px] text-slate-500 dark:text-slate-400 flex items-center justify-between">
                   <span>Available Balance:</span>
-                  <strong className="text-indigo-400 font-mono">
+                  <strong className="text-blue-600 dark:text-blue-400 font-mono">
                     {availableForForm === 'Unlimited' ? 'Unlimited' : `${availableForForm} days`}
                   </strong>
                 </div>
@@ -1054,7 +1054,7 @@ export const Leaves = () => {
                     required
                     value={applyForm.startDate}
                     onChange={(e) => setApplyForm({ ...applyForm, startDate: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
 
@@ -1065,13 +1065,13 @@ export const Leaves = () => {
                     required
                     value={applyForm.endDate}
                     onChange={(e) => setApplyForm({ ...applyForm, endDate: e.target.value })}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none"
                   />
                 </div>
               </div>
 
               {/* Calculated Duration Preview */}
-              <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs flex items-center justify-between">
+              <div className="p-3 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-600 dark:text-blue-300 text-xs flex items-center justify-between">
                 <span>Calculated Duration:</span>
                 <span className="font-bold text-slate-900 dark:text-white font-mono">{formDays} working day(s)</span>
               </div>
@@ -1085,7 +1085,7 @@ export const Leaves = () => {
                   placeholder="Provide context for your manager / reviewer..."
                   value={applyForm.reason}
                   onChange={(e) => setApplyForm({ ...applyForm, reason: e.target.value })}
-                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
+                  className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
                 />
               </div>
 
@@ -1115,7 +1115,7 @@ export const Leaves = () => {
                 <button
                   type="submit"
                   disabled={applySubmitting}
-                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold shadow-lg shadow-indigo-600/20 active:scale-95 transition-all cursor-pointer disabled:opacity-60"
+                  className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold shadow-md shadow-blue-500/20 active:scale-95 transition-all cursor-pointer disabled:opacity-60"
                 >
                   {applySubmitting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : null}
                   <span>Submit Application</span>
@@ -1128,11 +1128,11 @@ export const Leaves = () => {
 
       {/* SECTION 9: LEAVE DETAILS & REVIEW MODAL */}
       {detailsModalOpen && selectedLeave && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-50 dark:bg-slate-950 backdrop-blur-sm animate-in fade-in duration-200">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-fadeIn">
           <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-3xl w-full max-w-lg overflow-hidden shadow-2xl">
             <div className="flex items-center justify-between px-6 py-4 border-b border-slate-200 dark:border-slate-800">
               <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <FileText className="w-4 h-4 text-indigo-400" />
+                <FileText className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                 Leave Request Details
               </h3>
               <button
@@ -1145,7 +1145,7 @@ export const Leaves = () => {
 
             <div className="p-6 space-y-4 text-xs">
               {/* Employee Info Header */}
-              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800">
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800">
                 <div>
                   <span className="font-bold text-slate-900 dark:text-white block text-sm">
                     {selectedLeave.employee?.firstName} {selectedLeave.employee?.lastName}
@@ -1195,14 +1195,14 @@ export const Leaves = () => {
               {/* Reason */}
               <div>
                 <span className="text-slate-500 dark:text-slate-400 block text-[11px] mb-1">Reason for Leave</span>
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 whitespace-pre-wrap">
                   {selectedLeave.reason}
                 </div>
               </div>
 
               {/* Reviewer / Review details (if reviewed) */}
               {selectedLeave.reviewedBy && (
-                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 space-y-1.5">
+                <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500 dark:text-slate-400 text-[11px]">Reviewed By:</span>
                     <span className="font-medium text-slate-900 dark:text-white">
@@ -1235,7 +1235,7 @@ export const Leaves = () => {
                     placeholder="Provide approval notes or reason for rejection..."
                     value={reviewComment}
                     onChange={(e) => setReviewComment(e.target.value)}
-                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 focus:border-indigo-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
+                    className="w-full px-3 py-2 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 rounded-xl text-slate-800 dark:text-slate-200 outline-none resize-none"
                   />
 
                   {/* Feedback inside review */}

@@ -101,6 +101,18 @@ export const markAsRead = async (req, res, next) => {
     notification.readAt = new Date();
     await notification.save();
 
+    // Emit real-time synchronization event
+    try {
+      const { getIO } = await import('../socket.js');
+      const io = getIO();
+      if (io) {
+        const userIdStr = req.user._id.toString();
+        const unreadCount = await Notification.countDocuments({ recipient: req.user._id, isRead: false });
+        io.to(userIdStr).emit('notification:read', { notificationId: notification._id, unreadCount });
+        io.to(userIdStr).emit('notification:unread_count', { unreadCount });
+      }
+    } catch (_) {}
+
     res.status(200).json({
       success: true,
       message: 'Notification marked as read',
@@ -122,6 +134,17 @@ export const markAllAsRead = async (req, res, next) => {
       { recipient: req.user._id, isRead: false },
       { $set: { isRead: true, readAt: new Date() } }
     );
+
+    // Emit real-time synchronization event
+    try {
+      const { getIO } = await import('../socket.js');
+      const io = getIO();
+      if (io) {
+        const userIdStr = req.user._id.toString();
+        io.to(userIdStr).emit('notification:all_read', { unreadCount: 0 });
+        io.to(userIdStr).emit('notification:unread_count', { unreadCount: 0 });
+      }
+    } catch (_) {}
 
     res.status(200).json({
       success: true,
@@ -160,6 +183,18 @@ export const deleteNotification = async (req, res, next) => {
     }
 
     await notification.deleteOne();
+
+    // Emit real-time synchronization event
+    try {
+      const { getIO } = await import('../socket.js');
+      const io = getIO();
+      if (io) {
+        const userIdStr = req.user._id.toString();
+        const unreadCount = await Notification.countDocuments({ recipient: req.user._id, isRead: false });
+        io.to(userIdStr).emit('notification:deleted', { notificationId: req.params.id, unreadCount });
+        io.to(userIdStr).emit('notification:unread_count', { unreadCount });
+      }
+    } catch (_) {}
 
     res.status(200).json({
       success: true,

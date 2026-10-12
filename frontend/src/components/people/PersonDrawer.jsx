@@ -143,7 +143,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
         {/* Drawer Header */}
         <div className="p-6 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-500/10 text-sky-500 flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -160,7 +160,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
         </div>
 
         {/* Multi-step progress bar */}
-        <div className="px-6 pt-4 pb-2 bg-slate-50 dark:bg-slate-850 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
+        <div className="px-6 pt-4 pb-2 bg-slate-50 dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 flex items-center gap-2">
           {[
             { num: 1, label: 'Basic Info', icon: User },
             { num: 2, label: 'Job Details', icon: Briefcase },
@@ -175,7 +175,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                   isCompleted
                     ? 'bg-emerald-500 text-white'
                     : isCurrent
-                    ? 'bg-sky-500 text-white shadow-sm'
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/25'
                     : 'bg-slate-200 dark:bg-slate-700 text-slate-500 dark:text-slate-400'
                 }`}>
                   {isCompleted ? <Check className="w-4 h-4" /> : s.num}
@@ -209,7 +209,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     placeholder="e.g. Maya"
                     value={formData.firstName}
                     onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
                 <div>
@@ -220,7 +220,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     placeholder="e.g. Sharma"
                     value={formData.lastName}
                     onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -233,7 +233,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                   placeholder="maya.sharma@company.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
@@ -244,13 +244,13 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                   placeholder="+91 98765 43210"
                   value={formData.phone}
                   onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
               </div>
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1.5">Profile Photo</label>
-                <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 text-center hover:border-sky-500 transition-colors">
+                <div className="border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-2xl p-6 text-center hover:border-blue-500 transition-colors">
                   <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                   <p className="text-xs font-medium text-slate-600 dark:text-slate-400">Drag photo here or browse image</p>
                   <span className="text-[10px] text-slate-400">PNG, JPG, WebP up to 2MB</span>
@@ -276,7 +276,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                       onClick={() => setFormData({ ...formData, role: r.role })}
                       className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
                         formData.role === r.role
-                          ? 'bg-sky-500/10 border-sky-500 text-sky-600 dark:text-sky-400 font-bold'
+                          ? 'bg-blue-500/10 border-blue-500 text-blue-600 dark:text-blue-400 font-bold'
                           : 'bg-slate-50 dark:bg-slate-800 border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300'
                       }`}
                     >
@@ -293,7 +293,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                   <select
                     value={formData.departmentId}
                     onChange={(e) => setFormData({ ...formData, departmentId: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                   >
                     {departments.map((d) => (
                       <option key={d._id} value={d._id}>{d.name} ({d.code})</option>
@@ -308,7 +308,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     placeholder="e.g. Lead Software Engineer"
                     value={formData.designation}
                     onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -318,7 +318,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                 <select
                   value={formData.reportingManagerId}
                   onChange={(e) => setFormData({ ...formData, reportingManagerId: e.target.value })}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                 >
                   <option value="">No Direct Manager (Top Level)</option>
                   {managers.map((m) => (
@@ -336,7 +336,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     type="date"
                     value={formData.joiningDate}
                     onChange={(e) => setFormData({ ...formData, joiningDate: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500 cursor-pointer"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer"
                   />
                 </div>
                 <div>
@@ -346,7 +346,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                     placeholder="e.g. 950000"
                     value={formData.salary}
                     onChange={(e) => setFormData({ ...formData, salary: e.target.value })}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-sky-500"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                   />
                 </div>
               </div>
@@ -356,9 +356,9 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
           {/* STEP 3: Account & Credentials */}
           {step === 3 && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-sky-50/70 dark:bg-sky-950/30 border border-sky-200 dark:border-sky-800/60">
+              <div className="p-4 rounded-2xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800/60">
                 <div className="flex items-start gap-3">
-                  <Shield className="w-5 h-5 text-sky-500 shrink-0 mt-0.5" />
+                  <Shield className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
                   <div>
                     <h4 className="text-xs font-bold text-slate-900 dark:text-white mb-1">Provisioning Summary</h4>
                     <p className="text-xs text-slate-600 dark:text-slate-300">
@@ -372,7 +372,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
 
               <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex items-center justify-between">
                 <div className="flex items-center gap-2.5">
-                  <Send className="w-4 h-4 text-sky-500" />
+                  <Send className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                   <div>
                     <div className="text-xs font-bold text-slate-900 dark:text-white">Send Welcome &amp; Invite Email</div>
                     <div className="text-[11px] text-slate-400">Includes a secure account activation link</div>
@@ -382,7 +382,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
                   type="checkbox"
                   checked={formData.sendInviteEmail}
                   onChange={(e) => setFormData({ ...formData, sendInviteEmail: e.target.checked })}
-                  className="w-4 h-4 text-sky-500 rounded focus:ring-sky-500 cursor-pointer"
+                  className="w-4 h-4 text-blue-600 rounded focus:ring-blue-500 cursor-pointer"
                 />
               </div>
             </div>
@@ -390,7 +390,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
         </div>
 
         {/* Drawer Footer Actions */}
-        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-850/50 flex items-center justify-between gap-3">
+        <div className="p-6 border-t border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/50 flex items-center justify-between gap-3">
           {step > 1 ? (
             <button
               type="button"
@@ -414,7 +414,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
             <button
               type="button"
               onClick={handleNext}
-              className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/25 transition-all cursor-pointer"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all cursor-pointer"
             >
               Continue to Step {step + 1}
             </button>
@@ -423,7 +423,7 @@ export const PersonDrawer = ({ isOpen, onClose, onSuccess, initialRole = 'EMPLOY
               type="button"
               onClick={handleSubmit}
               disabled={submitting}
-              className="px-6 py-2.5 rounded-xl bg-sky-500 hover:bg-sky-400 text-white text-xs font-bold shadow-md shadow-sky-500/25 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+              className="px-6 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold shadow-md shadow-blue-600/25 transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
             >
               {submitting ? (
                 <>

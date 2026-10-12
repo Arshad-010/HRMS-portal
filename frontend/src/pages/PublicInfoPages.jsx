@@ -18,10 +18,10 @@ import {
 import PublicFooter from '../components/common/PublicFooter';
 
 const PageWrapper = ({ title, subtitle, badge, maxWidth = 'max-w-5xl', children }) => (
-  <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-white dark:bg-slate-950 transition-colors">
+  <div className="flex flex-col min-h-[calc(100vh-4rem)] bg-[#F4F7FC] dark:bg-[#0B1220] transition-colors">
     <div className={`flex-1 py-16 px-4 sm:px-6 lg:px-8 ${maxWidth} mx-auto w-full`}>
       {badge && (
-        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-500/10 text-xs font-bold text-indigo-600 dark:text-indigo-400 mb-4 border border-indigo-100 dark:border-indigo-500/20">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-50 dark:bg-blue-500/10 text-xs font-bold text-blue-600 dark:text-blue-400 mb-4 border border-blue-100 dark:border-blue-500/20">
           {badge}
         </div>
       )}
@@ -46,7 +46,7 @@ export const AboutPage = () => (
       Our goal is to keep employee information, departments, attendance, leave and workplace activities organized in one system, 
       reducing administrative overhead and providing a unified experience for the entire organization.
     </p>
-    <div className="mt-8 p-6 bg-slate-50 dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700">
+    <div className="mt-8 p-6 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800">
       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">Built for every role</h3>
       <ul className="space-y-3">
         <li><strong>Employees:</strong> Access attendance, leave, tasks and personal employee information.</li>
@@ -64,33 +64,33 @@ export const FeaturesPage = () => (
       Explore the core capabilities of the HRMS Portal designed to manage your workforce efficiently.
     </p>
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <Users className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <Users className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Employee Management</h3>
         <p>Maintain employee information and organizational details in one place securely.</p>
       </div>
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <Clock className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <Clock className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Attendance</h3>
         <p>Track employee attendance and working hours through a centralized system.</p>
       </div>
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <Calendar className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <Calendar className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Leave Management</h3>
         <p>Submit, review and manage employee leave requests with role-based access.</p>
       </div>
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <CheckSquare className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <CheckSquare className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Task Management</h3>
         <p>Create, assign and track workplace tasks and their progress across the team.</p>
       </div>
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <Building2 className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <Building2 className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Departments</h3>
         <p>Organize and manage structural departments across your organization.</p>
       </div>
-      <div className="p-6 border border-slate-200 dark:border-slate-800 rounded-2xl">
-        <Bell className="w-8 h-8 text-indigo-500 mb-4" />
+      <div className="p-6 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
+        <Bell className="w-8 h-8 text-blue-600 dark:text-blue-400 mb-4" />
         <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Activity & Notifications</h3>
         <p>Stay informed about important workplace activities and system updates.</p>
       </div>
@@ -100,7 +100,7 @@ export const FeaturesPage = () => (
 
 export const PublicAttendancePage = () => (
   <PageWrapper title="Attendance Information">
-    <div className="flex items-center gap-3 mb-6 text-indigo-600 dark:text-indigo-400">
+    <div className="flex items-center gap-3 mb-6 text-blue-600 dark:text-blue-400">
       <Clock className="w-8 h-8" />
       <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Track time and presence</h2>
     </div>
@@ -112,7 +112,7 @@ export const PublicAttendancePage = () => (
       <li>Managers and HR administrators can monitor team attendance and review anomalies.</li>
       <li>The system maintains a reliable record of hours worked across different departments.</li>
     </ul>
-    <p className="mt-6 text-sm bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
+    <p className="mt-6 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl">
       Note: To view your personal attendance data or manage your team's records, you must log in to the HRMS Portal.
     </p>
   </PageWrapper>
@@ -120,7 +120,7 @@ export const PublicAttendancePage = () => (
 
 export const PublicLeavePage = () => (
   <PageWrapper title="Leave Management Information">
-    <div className="flex items-center gap-3 mb-6 text-indigo-600 dark:text-indigo-400">
+    <div className="flex items-center gap-3 mb-6 text-blue-600 dark:text-blue-400">
       <Calendar className="w-8 h-8" />
       <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Centralized time-off requests</h2>
     </div>
@@ -132,7 +132,7 @@ export const PublicLeavePage = () => (
       <li>Managers receive instant notifications for pending requests in their queue.</li>
       <li>Managers and HR can approve or reject requests directly from their dashboard.</li>
     </ul>
-    <p className="mt-6 text-sm bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
+    <p className="mt-6 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl">
       Note: To view your available leave balances or submit a request, you must log in to the HRMS Portal.
     </p>
   </PageWrapper>
@@ -140,7 +140,7 @@ export const PublicLeavePage = () => (
 
 export const PublicTasksPage = () => (
   <PageWrapper title="Task Management Information">
-    <div className="flex items-center gap-3 mb-6 text-indigo-600 dark:text-indigo-400">
+    <div className="flex items-center gap-3 mb-6 text-blue-600 dark:text-blue-400">
       <CheckSquare className="w-8 h-8" />
       <h2 className="text-2xl font-bold text-slate-900 dark:text-white">Organize responsibilities</h2>
     </div>
@@ -152,7 +152,7 @@ export const PublicTasksPage = () => (
       <li>Employees can update task statuses, add notes, and mark work as complete.</li>
       <li>Dashboards provide continuous visibility into project progress and individual workload.</li>
     </ul>
-    <p className="mt-6 text-sm bg-slate-50 dark:bg-slate-800 p-4 rounded-xl">
+    <p className="mt-6 text-sm bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 p-4 rounded-xl">
       Note: To view your assigned tasks or manage your team's workload, you must log in to the HRMS Portal.
     </p>
   </PageWrapper>
@@ -164,9 +164,9 @@ export const PrivacyPage = () => (
     subtitle="Enterprise Data Governance, Role-Based Access Isolation, and System Cryptographic Safeguards"
     badge="Enterprise Governance &amp; Security"
   >
-    <div className="p-6 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 mb-8">
+    <div className="p-6 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/60 mb-8">
       <div className="flex items-start gap-4">
-        <ShieldCheck className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0 mt-1" />
+        <ShieldCheck className="w-8 h-8 text-blue-600 dark:text-blue-400 shrink-0 mt-1" />
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Our Privacy Commitment</h3>
           <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -178,9 +178,9 @@ export const PrivacyPage = () => (
     </div>
 
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 flex items-center justify-center font-bold">
+          <div className="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold">
             <Lock className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">01. Cryptographic Security</h3>
@@ -191,9 +191,9 @@ export const PrivacyPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold">
+          <div className="w-9 h-9 rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 flex items-center justify-center font-bold">
             <UserCheck className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">02. Role-Based Access Isolation</h3>
@@ -204,7 +204,7 @@ export const PrivacyPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
           <div className="w-9 h-9 rounded-xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold">
             <Database className="w-5 h-5" />
@@ -216,9 +216,9 @@ export const PrivacyPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-600 dark:text-cyan-400 flex items-center justify-center font-bold">
+          <div className="w-9 h-9 rounded-xl bg-teal-500/10 text-teal-600 dark:text-teal-400 flex items-center justify-center font-bold">
             <KeyRound className="w-5 h-5" />
           </div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">04. Credential Confidentiality</h3>
@@ -237,9 +237,9 @@ export const TermsPage = () => (
     subtitle="Enterprise Operational Policies, Guidelines, and Acceptable Usage Rules"
     badge="Enterprise Master Terms"
   >
-    <div className="p-6 rounded-2xl bg-indigo-50/70 dark:bg-indigo-950/30 border border-indigo-200/80 dark:border-indigo-800/60 mb-8">
+    <div className="p-6 rounded-2xl bg-blue-50/70 dark:bg-blue-950/30 border border-blue-200/80 dark:border-blue-800/60 mb-8">
       <div className="flex items-start gap-4">
-        <FileText className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0 mt-1" />
+        <FileText className="w-8 h-8 text-blue-600 dark:text-blue-400 shrink-0 mt-1" />
         <div>
           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">Acceptable Use Terms</h3>
           <p className="text-sm text-slate-600 dark:text-slate-300">
@@ -251,9 +251,9 @@ export const TermsPage = () => (
     </div>
 
     <div className="grid md:grid-cols-2 gap-6">
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">01</span>
+          <span className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-black">01</span>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Authorized Personnel Only</h3>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -261,9 +261,9 @@ export const TermsPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">02</span>
+          <span className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-black">02</span>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Attendance &amp; Leave Accuracy</h3>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -271,9 +271,9 @@ export const TermsPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">03</span>
+          <span className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-black">03</span>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Data Integrity &amp; RBAC Compliance</h3>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -281,9 +281,9 @@ export const TermsPage = () => (
         </p>
       </div>
 
-      <div className="p-6 rounded-2xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
+      <div className="p-6 rounded-2xl bg-white dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 shadow-xs">
         <div className="flex items-center gap-3 mb-3">
-          <span className="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-xs font-black">04</span>
+          <span className="w-8 h-8 rounded-xl bg-blue-600 text-white flex items-center justify-center text-xs font-black">04</span>
           <h3 className="text-base font-bold text-slate-900 dark:text-white m-0">Maintenance &amp; Audit Rights</h3>
         </div>
         <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
@@ -299,8 +299,8 @@ export const ContactPage = () => (
     <p className="text-lg">
       If you need assistance with the HRMS Portal, your internal administrators are here to help.
     </p>
-    <div className="mt-8 p-6 bg-indigo-50 dark:bg-indigo-500/10 rounded-2xl border border-indigo-100 dark:border-indigo-500/20 flex items-start gap-4">
-      <Shield className="w-8 h-8 text-indigo-600 dark:text-indigo-400 shrink-0" />
+    <div className="mt-8 p-6 bg-blue-50 dark:bg-blue-500/10 rounded-2xl border border-blue-100 dark:border-blue-500/20 flex items-start gap-4">
+      <Shield className="w-8 h-8 text-blue-600 dark:text-blue-400 shrink-0" />
       <div>
         <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-2">Reach out to your Administrator</h3>
         <p className="text-slate-700 dark:text-slate-300">
@@ -345,7 +345,7 @@ export const HelpPage = () => (
 
       <div>
         <h3 className="text-lg font-bold text-slate-900 dark:text-white">What should I do if I cannot access my account?</h3>
-        <p className="mt-2">If you have forgotten your password or your account is locked, please refer to the <a href="/contact" className="text-indigo-600 dark:text-indigo-400 hover:underline">Contact</a> page to reach out to your system administrator.</p>
+        <p className="mt-2">If you have forgotten your password or your account is locked, please refer to the <a href="/contact" className="text-blue-600 dark:text-blue-400 hover:underline">Contact</a> page to reach out to your system administrator.</p>
       </div>
     </div>
   </PageWrapper>
