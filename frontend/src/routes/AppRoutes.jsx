@@ -48,7 +48,7 @@ export const AppRoutes = () => {
         path="/"
         element={
           loading ? (
-            <div className="min-h-[50vh]" />
+            <div className="min-h-[50vh]" />            // conditional rendering if he autheticated go to dashboard else landing page else loading
           ) : isAuthenticated ? (
             <Navigate to="/dashboard" replace />
           ) : (
@@ -69,10 +69,10 @@ export const AppRoutes = () => {
       {/* Mixed Public / Protected Routes */}
       <Route
         path="/attendance"
-        element={
+        element={            // only authenticated once can go to attendence thats why protected route
           isAuthenticated ? (
             <ProtectedRoute>
-              <Attendance />
+              <Attendance />         
             </ProtectedRoute>
           ) : (
             <PublicAttendancePage />
